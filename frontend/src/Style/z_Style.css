@@ -1,3 +1,143 @@
 body{
-   margin: 0%;
+   margin: 0;
+   padding: 0;
+}
+
+/* Modal Overlay */
+.Z_modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Container */
+.Z_modalContainer {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  width: 100%;
+  max-width: 370px;
+  position: relative;
+  animation: Z_fadeIn 0.3s;
+}
+
+@keyframes Z_fadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.Z_closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.Z_closeBtn:hover {
+  color: #222;
+}
+
+.Z_modalTitle {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.Z_form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.Z_formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.Z_label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.2rem;
+}
+
+.Z_input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.Z_input:focus {
+  border: 1.5px solid #007bff;
+}
+
+.Z_error {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+}
+
+.Z_submitBtn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+.Z_submitBtn:hover {
+  background: #0056b3;
+}
+
+.Z_toggleText {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.Z_toggleBtn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+  margin-left: 0.2rem;
+  transition: color 0.2s;
+}
+.Z_toggleBtn:hover {
+  color: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .Z_modalContainer {
+    max-width: 95vw;
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+  }
+  .Z_modalTitle {
+    font-size: 1.2rem;
+  }
+  .Z_submitBtn, .Z_input {
+    font-size: 1rem;
+  }
 }
