@@ -1,3 +1,271 @@
-body{
-   margin: 0%;
+:root {
+  --d-primary: #d35400; /* deep orange */
+  --d-primary-dark: #a04000;
+  --d-bg: #fff8f0; /* light cream */
+  --d-sidebar-bg: #fff3e0;
+  --d-navbar-bg: #fff8f0;
+  --d-accent: #ffd700; /* gold */
+  --d-text: #3e2723; /* dark brown */
+  --d-text-light: #fff;
+  --d-shadow: 0 2px 8px rgba(211, 84, 0, 0.07);
+  --d-border: #ffe0b2;
+}
+
+body {
+  margin: 0%;
+  background: var(--d-bg);
+  color: var(--d-text);
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+/* Navbar Styles */
+.d_navbar {
+  z-index: 1050;
+  box-shadow: var(--d-shadow);
+  background: var(--d-navbar-bg);
+  border-bottom: 1px solid var(--d-border);
+  height: 56px;
+  transition: background 0.2s;
+}
+.d_navbarBrand {
+  font-size: 1.5rem;
+  color: var(--d-primary) !important;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+.d_navbarRole {
+  font-size: 1rem;
+  color: var(--d-text);
+}
+.d_navbarLogout {
+  margin-left: 0.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--d-primary);
+  color: var(--d-primary);
+  background: var(--d-accent);
+  transition: background 0.2s, color 0.2s;
+}
+.d_navbarLogout:hover {
+  background: var(--d-primary);
+  color: var(--d-text-light);
+}
+.d_navbarToggler {
+  border: none;
+  color: var(--d-primary);
+}
+
+/* Sidebar Styles */
+.d_sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 220px;
+  background: var(--d-sidebar-bg);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.2s, width 0.2s;
+  border-right: 1px solid var(--d-border);
+  z-index: 1100;
+  box-shadow: 2px 0 8px rgba(211, 84, 0, 0.04);
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-right-radius: 18px;
+  display: flex;
+  flex-direction: column;
+}
+.d_sidebarClosed {
+  transform: translateX(-100%);
+}
+.d_sidebarOpen {
+  transform: translateX(0);
+}
+.d_sidebarLogo {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--d-primary);
+  padding: 1rem 1.2rem 0.5rem 1.2rem;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 var(--d-accent);
+}
+.d_sidebarHeader {
+  background: var(--d-navbar-bg);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--d-primary-dark);
+}
+.d_sidebarNav {
+  padding-left: 0;
+}
+.d_sidebarNavItem {
+  margin-bottom: 0.5rem;
+}
+.d_sidebarNavLink {
+  color: var(--d-text);
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  display: block;
+  margin: 0 0.5rem;
+}
+.d_sidebarNavLink.active, .d_sidebarNavLink:focus, .d_sidebarNavLink:hover {
+  background: var(--d-primary);
+  color: var(--d-text-light) !important;
+  box-shadow: 0 2px 8px rgba(211, 84, 0, 0.10);
+}
+.d_sidebarCloseBtn {
+  font-size: 1.5rem;
+  border: none;
+  background: none;
+  color: var(--d-primary-dark);
+}
+
+/* Sidebar Backdrop for mobile */
+.d_sidebarBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(62, 39, 35, 0.18);
+  z-index: 1099;
+  display: none;
+}
+.d_sidebarBackdrop.d_show {
+  display: block;
+}
+
+/* Layout padding for fixed navbar/sidebar */
+.d_mainContent {
+  margin-top: 56px;
+  margin-left: 220px;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  background: var(--d-bg);
+  transition: margin-left 0.3s;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(211, 84, 0, 0.04);
+}
+@media (max-width: 991.98px) {
+  .d_sidebar {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    height: 100vh;
+    border-radius: 0 18px 18px 0;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    z-index: 1200;
+  }
+  .d_sidebarOpen {
+    transform: translateX(0);
+  }
+  .d_sidebarClosed {
+    transform: translateX(-100%);
+  }
+  .d_mainContent {
+    margin-left: 0;
+    border-radius: 0;
+  }
+  .d_sidebarBackdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(62, 39, 35, 0.18);
+    z-index: 1199;
+  }
+}
+
+/* User Card */
+.d_userCard {
+  background: var(--d-sidebar-bg);
+  border-radius: 12px;
+  padding: 0.5rem 0.7rem;
+  box-shadow: 0 1px 4px rgba(211, 84, 0, 0.04);
+  min-width: 0;
+}
+
+/* Section Headings */
+.d_sidebarSectionHeading {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.2rem;
+}
+
+/* Active Indicator */
+.d_activeIndicator {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 5px;
+  border-radius: 4px;
+  background: var(--d-accent);
+  box-shadow: 0 0 6px var(--d-accent);
+  transition: background 0.2s;
+}
+
+/* Collapsed Sidebar */
+.d_sidebarCollapsed {
+  width: 64px !important;
+  min-width: 64px;
+  max-width: 64px;
+  overflow-x: hidden;
+}
+.d_sidebarCollapsed:hover {
+  width: 220px !important;
+  min-width: 220px;
+  max-width: 220px;
+  box-shadow: 2px 0 16px rgba(211, 84, 0, 0.10);
+}
+.d_sidebarCollapsed .d_sidebarLogo,
+.d_sidebarCollapsed .d_userCard,
+.d_sidebarCollapsed .d_sidebarSectionHeading,
+.d_sidebarCollapsed .d_sidebarHeader span,
+.d_sidebarCollapsed .d_sidebarLogoutBtn,
+.d_sidebarCollapsed .d_sidebarCollapseBtn span {
+  display: none !important;
+}
+.d_sidebarCollapsed .d_sidebarNavLink {
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.d_sidebarCollapsed .d_sidebarNavItem {
+  margin-bottom: 0.7rem;
+}
+
+/* Search Input */
+.d_searchInput {
+  background: var(--d-bg);
+  color: var(--d-text);
+  border: 1px solid var(--d-border);
+  border-radius: 20px;
+  padding-left: 1.2rem;
+  transition: border 0.2s;
+}
+.d_searchInput:focus {
+  border: 1.5px solid var(--d-primary);
+  background: #fff;
+}
+
+/* Sidebar Collapse/Logout Buttons */
+.d_sidebarCollapseBtn, .d_sidebarLogoutBtn {
+  width: 100%;
+  justify-content: center;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  transition: background 0.2s, color 0.2s;
+}
+.d_sidebarCollapseBtn:hover {
+  background: var(--d-accent);
+  color: var(--d-primary-dark);
+}
+.d_sidebarLogoutBtn:hover {
+  background: var(--d-primary-dark);
+  color: var(--d-text-light);
 }

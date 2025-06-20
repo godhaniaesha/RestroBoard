@@ -1,3 +1,293 @@
-body{
-   margin: 0%;
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap");
+
+:root {
+  --primary-bg-color: #d8e1e9;
+  --white-color: #eceff3;
+
+  --dark-color: #1f2e3d;
+  --button-color: #1f2e3d;
+  --hover-button-color: #163b60;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #1a1a1a;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+}
+
+.Z_Register_Page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.Z_Register_Page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.Z_Register_Right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  z-index: 2;
+  position: relative;
+}
+
+.Z_Right_Form_Container {
+  background-color: #1f2e3d;
+  padding: 40px;
+  width: 100%;
+  max-width: 500px;
+  color: #fff;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+}
+
+.Z_Logo_Container {
+  border: 1px solid var(--primary-bg-color);
+  padding: 10px 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+.Z_Logo_Container h2 {
+  margin: 0;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  letter-spacing: 2px;
+}
+
+.Z_Logo_Container p {
+  margin: 0;
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.Z_Promo_Text {
+  margin-bottom: 30px;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: #ccc;
+}
+
+.Z_Register_Right form .Z_custom_input {
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  border: 1px solid var(--primary-bg-color);
+  padding: 15px;
+  color: #fff;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  margin-bottom: 20px;
+}
+
+.Z_Register_Right form .Z_custom_input::placeholder {
+  color: #888;
+}
+
+.Z_Register_Right form .Z_custom_input:focus {
+  outline: none;
+  border: 1px solid var(--primary-bg-color);
+}
+
+.Z_Checkbox_Container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+  font-size: 0.8rem;
+}
+
+.Z_Checkbox_Container .Z_custom_input {
+  margin-right: 10px;
+  width: auto;
+}
+
+.Z_Checkbox_Container label {
+  color: #ccc;
+}
+
+.Z_Register_Right button {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--primary-bg-color);
+  border: none;
+  color: var(--button-color);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.Z_Register_Right button:hover {
+  background-color: var(--white-color);
+}
+
+.Z_Sign_In_Link {
+  text-align: center;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: #ccc;
+}
+
+.Z_Sign_In_Link a {
+  color: var(--primary-bg-color);
+  text-decoration: none;
+}
+
+.Z_Sign_In_Link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .Z_Register_Page {
+    flex-direction: column;
+  }
+  .Z_Register_Left,
+  .Z_Register_Right {
+    flex: 1;
+    min-height: 50vh;
+  }
+  .Z_Left_Text_Container h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .Z_Left_Text_Container h1 {
+    font-size: 2rem;
+  }
+  .Z_Register_Left {
+    padding: 20px;
+  }
+  .Z_Register_Right {
+    padding: 20px;
+  }
+  .Z_Left_Text_Container {
+    padding: 20px;
+  }
+  .Z_Logo_Container h2 {
+    font-size: 1.1rem;
+  }
+  .Z_Right_Form_Container {
+    font-size: 0.95rem;
+  }
+  .Z_Promo_Text {
+    font-size: 0.9rem;
+  }
+  .Z_Register_Right form .Z_custom_input {
+    font-size: 0.95rem;
+  }
+  .Z_Sign_In_Link {
+    font-size: 0.85rem;
+  }
+}
+
+/* Forgot Password Modal Styles */
+.Z_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.Z_modal_content {
+  background: #222f3e;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  min-width: 320px;
+  max-width: 90vw;
+  width: 100%;
+  max-width: 400px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+}
+
+.Z_modal_content h3 {
+  margin: 0 0 10px 0;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  text-align: center;
+  color: var(--primary-bg-color);
+}
+
+.Z_modal_btn {
+  background: var(--primary-bg-color);
+  color: #1f2e3d;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.Z_modal_btn:hover {
+  background: var(--primary-bg-color);
+}
+
+.Z_modal_close {
+  background: transparent;
+  color: #ccc;
+  border: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: -10px;
+}
+
+.Z_submit_register {
+  width: 50%;
+  margin: auto;
+}
+
+@media (max-width: 576px) {
+  .Z_modal_content {
+    min-width: 90vw;
+    padding: 18px 8px;
+  }
+  .Z_Right_Form_Container {
+    padding: 22px;
+  }
+  .z_reset_resp {
+    width: 70%;
+    margin: auto;
+  }
+  .z_reset_resp button {
+    font-size: 14px;
+  }
+}
+
+.Z_password_eye_icon {
+  position: absolute;
+  right: 30px;
+  top: 36%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--primary-bg-color);
+  font-size: 1.2rem;
+  z-index: 3;
 }
