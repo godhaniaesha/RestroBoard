@@ -25,8 +25,8 @@ function AdminLayout({ children }) {
 
   return (
     <div>
-      <Header userRole={userRole} onLogout={() => alert('Logout')} onSidebarToggle={handleSidebarToggle} />
-      <Sidebar userRole={userRole} isOpen={sidebarOpen} onClose={handleSidebarClose} />
+      {/* <Header userRole={userRole} onLogout={() => alert('Logout')} onSidebarToggle={handleSidebarToggle} /> */}
+      {/* <Sidebar userRole={userRole} isOpen={sidebarOpen} onClose={handleSidebarClose} /> */}
       <main className="d_mainContent">{children}</main>
     </div>
   );
@@ -34,13 +34,17 @@ function AdminLayout({ children }) {
 
 function AdminRoutes() {
   return (
-    <AdminLayout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/header" element={<Header />} />
-        <Route path="/Register" element={<Register />} />
-      </Routes>
-    </AdminLayout>
+    // <AdminLayout>
+    //   <Routes>
+    //     {/* <Route path="/" element={<Home />} /> */}
+    //     {/* <Route path="/header" element={<Header />} /> */}
+    //   </Routes>
+    // </AdminLayout>
+    <Routes>
+    {/* <Route path="/" element={<Home />} /> */}
+    {/* <Route path="/header" element={<Header />} /> */}
+    <Route path="/register" element={<Register />} />
+  </Routes>
   );
 }
 
