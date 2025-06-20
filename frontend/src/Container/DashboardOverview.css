@@ -1,0 +1,164 @@
+:root {
+  --primary-bg-color: #d8e1e9;
+  --white-color: #eceff3;
+  --dark-color: #1f2e3d;
+  --button-color: #1f2e3d;
+  --hover-button-color: #163b60;
+}
+
+.d_dashboard-container {
+  padding: 20px;
+  background-color: var(--primary-bg-color);
+  min-height: 100vh;
+}
+
+.d_dashboard-title {
+  color: var(--dark-color);
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.d_stats-row .col-md-3, .d_stats-row .col-sm-6 {
+  display: flex;
+  justify-content: center;
+}
+
+.d_stat-card {
+  background-color: var(--white-color);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+  max-width: 300px; /* Limit card width for better aesthetics */
+}
+
+.d_stat-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Specific card colors (optional, but good for visual distinction) */
+.d_users-card .d_card-icon { color: #007bff; } /* Blue */
+.d_orders-card .d_card-icon { color: #28a745; } /* Green */
+.d_sales-card .d_card-icon { color: #ffc107; } /* Yellow/Orange */
+.d_stock-card .d_card-icon { color: #dc3545; } /* Red */
+
+.d_card-body {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.d_card-icon {
+  font-size: 3rem;
+  color: var(--button-color);
+  margin-right: 20px;
+}
+
+.d_card-content {
+  flex-grow: 1;
+}
+
+.d_card-title {
+  color: var(--dark-color);
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.d_card-text {
+  color: var(--dark-color);
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.d_charts-row .col-md-6 {
+  display: flex;
+  justify-content: center;
+}
+
+.d_chart-card, .d_activity-card {
+  background-color: var(--white-color);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+}
+
+.d_chart-title, .d_activity-title {
+  color: var(--dark-color);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.d_chart-placeholder {
+  background-color: var(--primary-bg-color);
+  border-radius: 10px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-color);
+  font-style: italic;
+}
+
+.d_activity-list {
+  list-style: none;
+  padding: 0;
+}
+
+.d_activity-list li {
+  background-color: var(--primary-bg-color);
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .d_dashboard-title {
+    font-size: 1.8rem;
+  }
+
+  .d_card-icon {
+    font-size: 2.5rem;
+  }
+
+  .d_card-title {
+    font-size: 1rem;
+  }
+
+  .d_card-text {
+    font-size: 1.5rem;
+  }
+
+  .d_chart-title, .d_activity-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .d_dashboard-container {
+    padding: 15px;
+  }
+
+  .d_dashboard-title {
+    font-size: 1.5rem;
+  }
+
+  .d_card-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .d_card-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .d_stat-card {
+    max-width: unset; /* Remove max-width on small screens */
+  }
+}

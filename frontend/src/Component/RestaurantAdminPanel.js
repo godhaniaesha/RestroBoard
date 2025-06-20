@@ -8,6 +8,7 @@ import {
   FaUserPlus, FaUserMinus, FaClock, FaCheck
 } from 'react-icons/fa';
 import './RestaurantAdminPanel.css';
+import DashboardOverview from '../Container/DashboardOverview';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -450,29 +451,9 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'dashboard':
       case 'dashboard-overview':
         return (
-          <div className="content-section">
-            <h2>Dashboard Overview</h2>
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-card-body">
-                  <h5 className="stat-title">Revenue</h5>
-                  <h3 className="stat-value text-success">₹45,230</h3>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-card-body">
-                  <h5 className="stat-title">Active Tables</h5>
-                  <h3 className="stat-value text-warning">12</h3>
-                </div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-card-body">
-                  <h5 className="stat-title">Staff Online</h5>
-                  <h3 className="stat-value text-info">8</h3>
-                </div>
-              </div>
-            </div>
-          </div>
+          <>
+            <DashboardOverview />
+          </>
         );
 
       case 'dashboard-analytics':
@@ -746,7 +727,8 @@ const RestaurantAdminPanel = () => {
   };
 
   return (
-    <div className={`admin-panel ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
+  <div className='d_main_admin'>
+      <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
       <Sidebar 
         activeItem={activeItem}
         setActiveItem={setActiveItem}
@@ -787,6 +769,7 @@ const RestaurantAdminPanel = () => {
         </select>
       </div>
     </div>
+  </div>
   );
 };
 
