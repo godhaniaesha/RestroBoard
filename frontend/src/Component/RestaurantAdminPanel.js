@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  FaHome, FaUsers, FaClipboardList, FaBoxOpen, FaReceipt, 
+import {
+  FaHome, FaUsers, FaClipboardList, FaBoxOpen, FaReceipt,
   FaChartBar, FaCog, FaCalendarAlt, FaUtensils, FaConciergeBell,
   FaBroom, FaDesktop, FaBell, FaUser, FaSignOutAlt, FaBars,
   FaTimes, FaUserShield, FaUserTie, FaUserFriends, FaChevronDown,
@@ -9,6 +9,8 @@ import {
 } from 'react-icons/fa';
 import './RestaurantAdminPanel.css';
 import DashboardOverview from '../Container/DashboardOverview';
+import AddEmployee from '../Container/AddEmployee';
+import EmployeeList from '../Container/EmployeeList';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -21,18 +23,18 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
 
   const menuItems = {
     Admin: [
-      { 
-        id: 'dashboard', 
-        label: 'Dashboard', 
+      {
+        id: 'dashboard',
+        label: 'Dashboard',
         icon: <FaHome />,
         subItems: [
           { id: 'dashboard-overview', label: 'Overview', icon: <FaEye /> },
           { id: 'dashboard-analytics', label: 'Analytics', icon: <FaChartBar /> }
         ]
       },
-      { 
-        id: 'employees', 
-        label: 'Employee Management', 
+      {
+        id: 'employees',
+        label: 'Employee Management',
         icon: <FaUsers />,
         subItems: [
           { id: 'employees-list', label: 'All Employees', icon: <FaUsers /> },
@@ -40,9 +42,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
           { id: 'employees-roles', label: 'Manage Roles', icon: <FaUserShield /> }
         ]
       },
-      { 
-        id: 'inventory', 
-        label: 'Inventory', 
+      {
+        id: 'inventory',
+        label: 'Inventory',
         icon: <FaBoxOpen />,
         subItems: [
           { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
@@ -50,9 +52,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
           { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
         ]
       },
-      { 
-        id: 'orders', 
-        label: 'Orders', 
+      {
+        id: 'orders',
+        label: 'Orders',
         icon: <FaClipboardList />,
         subItems: [
           { id: 'orders-active', label: 'Active Orders', icon: <FaClock /> },
@@ -62,9 +64,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
       },
       { id: 'billing', label: 'Billing', icon: <FaReceipt /> },
       { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
-      { 
-        id: 'leaves', 
-        label: 'Leave Management', 
+      {
+        id: 'leaves',
+        label: 'Leave Management',
         icon: <FaCalendarAlt />,
         subItems: [
           { id: 'leaves-pending', label: 'Pending Requests', icon: <FaClock /> },
@@ -76,9 +78,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
     ],
     Manager: [
       { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
-      { 
-        id: 'inventory', 
-        label: 'Inventory', 
+      {
+        id: 'inventory',
+        label: 'Inventory',
         icon: <FaBoxOpen />,
         subItems: [
           { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
@@ -91,9 +93,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
     ],
     Chef: [
       { id: 'ingredients', label: 'Ingredients', icon: <FaUtensils /> },
-      { 
-        id: 'orders', 
-        label: 'Orders', 
+      {
+        id: 'orders',
+        label: 'Orders',
         icon: <FaClipboardList />,
         subItems: [
           { id: 'orders-pending', label: 'Pending Orders', icon: <FaClock /> },
@@ -109,9 +111,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
       { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
     ],
     Housekeeping: [
-      { 
-        id: 'cleaning-tasks', 
-        label: 'Cleaning Tasks', 
+      {
+        id: 'cleaning-tasks',
+        label: 'Cleaning Tasks',
         icon: <FaBroom />,
         subItems: [
           { id: 'tasks-pending', label: 'Pending Tasks', icon: <FaClock /> },
@@ -133,7 +135,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
   const toggleSubmenu = (menuId) => {
     setExpandedMenus(prev => {
       const isCurrentlyExpanded = prev[menuId];
-      
+
       if (isCurrentlyExpanded) {
         return {
           ...prev,
@@ -244,7 +246,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         setExpandedMenus({});
 
       }, 300); // 300ms delay
-    
+
       setHoverTimeout(timeout);
     }
   };
@@ -278,8 +280,8 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
       {isMobile && isOpen && (
         <div className="sidebar-overlay" onClick={toggleSidebar}></div>
       )}
-      
-      <div 
+
+      <div
         className={`sidebar ${isOpen ? 'sidebar-open' : 'sidebar-closed'} ${isMobile ? 'sidebar-mobile' : ''} ${isHovered ? 'sidebar-hovered' : ''}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -301,17 +303,16 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
             </button>
           )}
         </div>
-        
+
         <nav className="sidebar-nav">
           <ul className="nav-list">
             {currentMenuItems.map((item) => (
               <li key={item.id} className="nav-item">
                 <button
-                  className={`nav-link ${
-                    activeItem === item.id || 
-                    (item.subItems && item.subItems.some(sub => sub.id === activeItem)) 
-                      ? 'nav-link-active' : ''
-                  }`}
+                  className={`nav-link ${activeItem === item.id ||
+                    (item.subItems && item.subItems.some(sub => sub.id === activeItem))
+                    ? 'nav-link-active' : ''
+                    }`}
                   onClick={() => handleMenuItemClick(item.id, item.subItems && item.subItems.length > 0)}
                   onMouseEnter={() => handleSubmenuHover(item.id)}
                   title={!shouldShowExpanded ? item.label : ''}
@@ -328,7 +329,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
                     </>
                   )}
                 </button>
-                
+
                 {item.subItems && item.subItems.length > 0 && shouldShowExpanded && (
                   <ul className={`submenu ${expandedMenus[item.id] ? 'submenu-open' : 'submenu-closed'}`}>
                     {item.subItems.map((subItem) => (
@@ -348,7 +349,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
             ))}
           </ul>
         </nav>
-        
+
         <div className="sidebar-footer">
           <div className="user-role-badge">
             <FaUserShield className="role-icon" />
@@ -365,7 +366,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const getRoleIcon = (role) => {
-    switch(role) {
+    switch (role) {
       case 'Admin': return <FaUserShield />;
       case 'Manager': return <FaUserTie />;
       default: return <FaUser />;
@@ -393,8 +394,8 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <button 
-          className="sidebar-toggle" 
+        <button
+          className="sidebar-toggle"
           onClick={handleSidebarToggle}
           type="button"
           aria-label="Toggle Sidebar"
@@ -406,23 +407,23 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
           <span className="title-short">RestaurantPro</span>
         </h1>
       </div>
-      
+
       <div className="navbar-right">
         <div className="nav-actions">
           <button className="nav-btn notification-btn">
             <FaBell />
             <span className="notification-badge">3</span>
           </button>
-          
+
           <div className="profile-dropdown">
-            <button 
+            <button
               className="profile-btn"
               onClick={() => setShowProfileMenu(!showProfileMenu)}
             >
               {getRoleIcon(userRole)}
               <span className="profile-name">{userRole}</span>
             </button>
-            
+
             {showProfileMenu && (
               <div className="dropdown-menu">
                 <a href="#" className="dropdown-item">
@@ -447,7 +448,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 // Content Router Component
 const ContentRouter = ({ activeItem, userRole }) => {
   const renderContent = () => {
-    switch(activeItem) {
+    switch (activeItem) {
       case 'dashboard':
       case 'dashboard-overview':
         return (
@@ -467,60 +468,20 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-      
+
       case 'employees':
       case 'employees-list':
         return (
-          <div className="content-section">
-            <h2>Employee Management</h2>
-            <div className="card">
-              <div className="card-header">
-                <div className="card-header-content">
-                  <h5 className="card-header-title">Staff Members</h5>
-                  <button className="btn btn-primary">Add Employee</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <div className="table-responsive">
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>John Doe</td>
-                        <td>Chef</td>
-                        <td>Kitchen</td>
-                        <td><span className="badge bg-success">Active</span></td>
-                        <td>
-                          <button className="btn btn-sm btn-outline-primary me-1">Edit</button>
-                          <button className="btn btn-sm btn-outline-danger">Delete</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+          <>
+            <EmployeeList></EmployeeList>
+          </>
         );
 
       case 'employees-add':
         return (
-          <div className="content-section">
-            <h2>Add New Employee</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Employee registration form will be displayed here.</p>
-              </div>
-            </div>
-          </div>
+          <>
+            <AddEmployee></AddEmployee>
+          </>
         );
 
       case 'employees-roles':
@@ -534,7 +495,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-      
+
       case 'orders':
       case 'orders-active':
         return (
@@ -581,7 +542,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-      
+
       case 'inventory':
       case 'inventory-stock':
         return (
@@ -594,14 +555,14 @@ const ContentRouter = ({ activeItem, userRole }) => {
                   <div className="inventory-item">
                     <span>Tomatoes</span>
                     <div className="progress">
-                      <div className="progress-bar bg-success" style={{width: '75%'}}></div>
+                      <div className="progress-bar bg-success" style={{ width: '75%' }}></div>
                     </div>
                     <span>75%</span>
                   </div>
                   <div className="inventory-item">
                     <span>Rice</span>
                     <div className="progress">
-                      <div className="progress-bar bg-warning" style={{width: '25%'}}></div>
+                      <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
                     </div>
                     <span>25%</span>
                   </div>
@@ -634,7 +595,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-      
+
       case 'billing':
         return (
           <div className="content-section">
@@ -668,7 +629,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-      
+
       default:
         return (
           <div className="content-section">
@@ -719,7 +680,7 @@ const RestaurantAdminPanel = () => {
       console.log('New sidebar state:', newState); // Debug માટે
       return newState;
     });
-    
+
     // જો sidebar hover state માં છે તો તેને clear કરો
     if (isHovered) {
       setIsHovered(false);
@@ -727,49 +688,49 @@ const RestaurantAdminPanel = () => {
   };
 
   return (
-  <div className='d_main_admin'>
+    <div className='d_main_admin'>
       <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
-      <Sidebar 
-        activeItem={activeItem}
-        setActiveItem={setActiveItem}
-        userRole={userRole}
-        isOpen={sidebarOpen}
-        toggleSidebar={toggleSidebar}
-        isMobile={isMobile}
-        isHovered={isHovered}
-        setIsHovered={setIsHovered}
-      />
-      
-      <div className="main-layout">
-        <Navbar 
-          userRole={userRole}
-          toggleSidebar={toggleSidebar}
-          isOpen={sidebarOpen}
-          isMobile={isMobile}
-        />
-        
-        <ContentRouter 
+        <Sidebar
           activeItem={activeItem}
+          setActiveItem={setActiveItem}
           userRole={userRole}
+          isOpen={sidebarOpen}
+          toggleSidebar={toggleSidebar}
+          isMobile={isMobile}
+          isHovered={isHovered}
+          setIsHovered={setIsHovered}
         />
-      </div>
-      
-      <div className="role-switcher-container">
-        <select 
-          className="role-switcher"
-          value={userRole}
-          onChange={(e) => setUserRole(e.target.value)}
-        >
-          <option value="Admin">Admin</option>
-          <option value="Manager">Manager</option>
-          <option value="Chef">Chef</option>
-          <option value="Waiter">Waiter</option>
-          <option value="Housekeeping">Housekeeping</option>
-          <option value="Receptionist">Receptionist</option>
-        </select>
+
+        <div className="main-layout">
+          <Navbar
+            userRole={userRole}
+            toggleSidebar={toggleSidebar}
+            isOpen={sidebarOpen}
+            isMobile={isMobile}
+          />
+
+          <ContentRouter
+            activeItem={activeItem}
+            userRole={userRole}
+          />
+        </div>
+
+        <div className="role-switcher-container">
+          <select
+            className="role-switcher"
+            value={userRole}
+            onChange={(e) => setUserRole(e.target.value)}
+          >
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Chef">Chef</option>
+            <option value="Waiter">Waiter</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Receptionist">Receptionist</option>
+          </select>
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 
