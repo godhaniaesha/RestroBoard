@@ -16,6 +16,7 @@ import ApprovedLeave from '../Container/ApprovedLeave';
 import StockManagement from '../Container/StockManagement';
 import Billing from '../Container/Billing';
 import Reports from '../Container/Reports';
+import Calender from '../Container/Calender';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -653,6 +654,10 @@ const ContentRouter = ({ activeItem, userRole }) => {
           </>
         )
 
+        case 'leaves-calendar':
+          return (
+            <Calender />
+          );
       default:
         return (
           // <div className="content-section">
