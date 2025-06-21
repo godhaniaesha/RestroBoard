@@ -84,3 +84,5 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar })
     </div>
   );
 };
+
+export default Sidebar;
