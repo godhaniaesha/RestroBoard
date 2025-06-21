@@ -11,6 +11,7 @@ import './RestaurantAdminPanel.css';
 import DashboardOverview from '../Container/DashboardOverview';
 import AddEmployee from '../Container/AddEmployee';
 import EmployeeList from '../Container/EmployeeList';
+import Calender from '../Container/Calender';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -629,7 +630,10 @@ const ContentRouter = ({ activeItem, userRole }) => {
             </div>
           </div>
         );
-
+        case 'leaves-calendar':
+          return (
+            <Calender />
+          );
       default:
         return (
           <div className="content-section">

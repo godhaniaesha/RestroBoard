@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Sidebar from '../Component/Sidebar';
-import Header from '../Component/Header';
 import '../Style/d_Style.css';
 
 function Home(props) {
@@ -9,8 +8,6 @@ function Home(props) {
 
     return (
         <div>
-            <Header userRole={userRole} onLogout={() => alert('Logout')} />
-            <Sidebar userRole={userRole} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
             <main className="d_mainContent">
                 <button className="btn btn-primary d-lg-none mb-3" onClick={() => setSidebarOpen(true)}>
                     Open Menu
