@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Header from '../Component/Header';
-import Sidebar from '../Component/Sidebar';
 import Home from '../Container/Home';
 import Register from '../Component/Register';
 import '../Style/d_Style.css';
+import CustomCalendar from '../Component/CustomCalendar';
 
 function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 991);
@@ -44,6 +43,8 @@ function AdminRoutes() {
     {/* <Route path="/" element={<Home />} /> */}
     {/* <Route path="/header" element={<Header />} /> */}
     <Route path="/register" element={<Register />} />
+    <Route path="/CustomCalendar" element={<CustomCalendar />} />
+
   </Routes>
   );
 }
