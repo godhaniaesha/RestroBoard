@@ -1214,7 +1214,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 
 .Z_RP_select,
@@ -1353,6 +1353,9 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
+  .Z_RP_controls {
+  flex-wrap: wrap;
+}
 }
 
 /* =================================
