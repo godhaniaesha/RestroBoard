@@ -11,6 +11,11 @@ import './RestaurantAdminPanel.css';
 import DashboardOverview from '../Container/DashboardOverview';
 import AddEmployee from '../Container/AddEmployee';
 import EmployeeList from '../Container/EmployeeList';
+import PendingLeave from '../Container/PendingLeave';
+import ApprovedLeave from '../Container/ApprovedLeave';
+import StockManagement from '../Container/StockManagement';
+import Billing from '../Container/Billing';
+import Reports from '../Container/Reports';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -546,30 +551,33 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'inventory':
       case 'inventory-stock':
         return (
-          <div className="content-section">
-            <h2>Inventory Management</h2>
-            <div className="card">
-              <div className="card-body">
-                <div className="inventory-section">
-                  <h5>Stock Levels</h5>
-                  <div className="inventory-item">
-                    <span>Tomatoes</span>
-                    <div className="progress">
-                      <div className="progress-bar bg-success" style={{ width: '75%' }}></div>
-                    </div>
-                    <span>75%</span>
-                  </div>
-                  <div className="inventory-item">
-                    <span>Rice</span>
-                    <div className="progress">
-                      <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
-                    </div>
-                    <span>25%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          // <div className="content-section">
+          //   <h2>Inventory Management</h2>
+          //   <div className="card">
+          //     <div className="card-body">
+          //       <div className="inventory-section">
+          //         <h5>Stock Levels</h5>
+          //         <div className="inventory-item">
+          //           <span>Tomatoes</span>
+          //           <div className="progress">
+          //             <div className="progress-bar bg-success" style={{ width: '75%' }}></div>
+          //           </div>
+          //           <span>75%</span>
+          //         </div>
+          //         <div className="inventory-item">
+          //           <span>Rice</span>
+          //           <div className="progress">
+          //             <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
+          //           </div>
+          //           <span>25%</span>
+          //         </div>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>
+          <>
+            <StockManagement></StockManagement>
+          </>
         );
 
       case 'inventory-add':
@@ -598,49 +606,67 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
       case 'billing':
         return (
-          <div className="content-section">
-            <h2>Billing & Payments</h2>
-            <div className="card">
-              <div className="card-body">
-                <h5>Recent Transactions</h5>
-                <div className="table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Bill ID</th>
-                        <th>Table</th>
-                        <th>Amount</th>
-                        <th>Payment Method</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>#B001</td>
-                        <td>Table 3</td>
-                        <td>₹1,250</td>
-                        <td>Card</td>
-                        <td><span className="badge bg-success">Paid</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+          // <div className="content-section">
+          //   <h2>Billing & Payments</h2>
+          //   <div className="card">
+          //     <div className="card-body">
+          //       <h5>Recent Transactions</h5>
+          //       <div className="table-responsive">
+          //         <table className="table">
+          //           <thead>
+          //             <tr>
+          //               <th>Bill ID</th>
+          //               <th>Table</th>
+          //               <th>Amount</th>
+          //               <th>Payment Method</th>
+          //               <th>Status</th>
+          //             </tr>
+          //           </thead>
+          //           <tbody>
+          //             <tr>
+          //               <td>#B001</td>
+          //               <td>Table 3</td>
+          //               <td>₹1,250</td>
+          //               <td>Card</td>
+          //               <td><span className="badge bg-success">Paid</span></td>
+          //             </tr>
+          //           </tbody>
+          //         </table>
+          //       </div>
+          //     </div>
+          //   </div>
+          // </div>
+          <>
+            <Billing></Billing>
+          </>
         );
+      case 'reports':
+        return (
+          <>
+            <Reports></Reports>
+          </>
+        )
+      case 'leaves-approved':
+        return (
+          <>
+            <ApprovedLeave></ApprovedLeave>
+          </>
+        )
 
       default:
         return (
-          <div className="content-section">
-            <h2>{activeItem.charAt(0).toUpperCase() + activeItem.slice(1).replace('-', ' ')}</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Content for {activeItem} will be displayed here.</p>
-                <p>This section is accessible to <strong>{userRole}</strong> role.</p>
-              </div>
-            </div>
-          </div>
+          // <div className="content-section">
+          //   <h2>{activeItem.charAt(0).toUpperCase() + activeItem.slice(1).replace('-', ' ')}</h2>
+          //   <div className="card">
+          //     <div className="card-body">
+          //       <p>Content for {activeItem} will be displayed here.</p>
+          //       <p>This section is accessible to <strong>{userRole}</strong> role.</p>
+          //     </div>
+          //   </div>
+          // </div>
+          <>
+            <PendingLeave></PendingLeave>
+          </>
         );
     }
   };
