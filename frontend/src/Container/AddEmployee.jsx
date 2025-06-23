@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import CustomCalendar from "../Component/CustomCalendar";
+import CustomSelect from "../Component/CustomSelect";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 
@@ -123,24 +124,7 @@ function AddEmployee() {
               <label htmlFor="role" className="form-label">
                 Role
               </label>
-              <select
-                className="form-select"
-                id="role"
-                name="role"
-                required
-              >
-                <option value="">Select Role...</option>
-                <option value="California Institute of Technology">
-                  California Institute of Technology
-                </option>
-                <option value="GSAS Open Labs At Harvard">
-                  GSAS Open Labs At Harvard
-                </option>
-                <option value="Massachusetts Institute of Technology">
-                  Massachusetts Institute of Technology
-                </option>
-                <option value="University of Chicago">University of Chicago</option>
-              </select>
+              <CustomSelect />
               <div className="invalid-feedback">Please select one</div>
             </div>
 

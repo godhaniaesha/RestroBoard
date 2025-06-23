@@ -166,3 +166,63 @@ textarea {
         padding: 0;
     }
 }
+
+
+/* select styles */
+
+.x_select-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.x_custom-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background-color: var(--primary-bg-color);
+  color: var(--dark-color);
+  border: 1px solid var(--primary-bg-color);
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%231f2e3d' d='M2 4l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+  min-width: 0;
+  box-shadow: none;
+}
+
+.x_custom-select:focus {
+  outline: none;
+  border-color: var(--button-color);
+  box-shadow: 0 0 0 2px var(--primary-bg-color);
+}
+
+.x_custom-select option {
+  background-color: var(--white-color);
+  color: var(--dark-color);
+  width: 100%;
+  min-width: 0;
+}
+
+/* Remove default select arrow in IE */
+.x_custom-select::-ms-expand {
+  display: none;
+}
+
+/* Make dropdown width same as select */
+.x_select-wrapper select {
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .x_custom-select {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}

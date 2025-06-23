@@ -83,13 +83,15 @@ function EmployeeList() {
         <div className="Z_empList_headerRow">
           <h4 className="Z_empListTitle">Employees List</h4>
           <div className="Z_empList_controls">
-            <input
+           <div>
+             <input
               className="Z_empList_searchInput"
               type="text"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+           </div>
             <div className="Z_empList_dropdownWrapper" ref={dropdownRef}>
               <button
                 className="Z_empList_roleDropdown"
