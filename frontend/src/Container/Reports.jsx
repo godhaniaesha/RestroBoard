@@ -222,7 +222,7 @@ const Reports = () => {
           <div className="Z_RP_chartContainer">
             <h5 className="Z_RP_chartTitle">Sales Trend</h5>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={salesData}>
+              <LineChart data={salesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />

@@ -166,3 +166,96 @@ textarea {
         padding: 0;
     }
 }
+
+/* Custom Select Styles (x_customSelect) */
+.x_customSelect {
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+.x_customSelect__control {
+  width: 100%;
+  background: var(--img-bg-color);
+  border: 1.5px solid #bfc9d9;
+  /* border-radius: 5px; */
+  min-height: 33px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* font-size: 1rem; */
+  color: var(--dark-color);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+.x_customSelect__control:focus, .x_customSelect--open .x_customSelect__control {
+  border-color: var(--button-color);
+  box-shadow: 0 0 0 2px #d8e1e9;
+}
+.x_customSelect__value {
+  flex: 1;
+  text-align: left;
+  color: var(--dark-color);
+  /* font-size: 1rem; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.x_customSelect__placeholder {
+  color: #a0aec0;
+}
+.x_customSelect__arrow {
+  margin-left: 0.5rem;
+  /* font-size: 1.1em; */
+  color: #7b8ca6;
+  transition: transform 0.2s;
+}
+.x_customSelect--open .x_customSelect__arrow {
+  transform: rotate(180deg);
+}
+.x_customSelect__menu {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  background: #f4f6fb;
+  border: 1.5px solid #bfc9d9;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 4px 16px rgba(31,46,61,0.08);
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 2px;
+  padding: 0.25rem 0;
+}
+.x_customSelect__option {
+  /* padding: 0.75rem 1.25rem; */
+  padding: 0.2rem 0.50rem;
+  /* font-size: 1rem; */
+  color: var(--dark-color);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  background: transparent;
+}
+.x_customSelect__option:hover,
+.x_customSelect__option:focus {
+  background: #e2e8f0;
+  color: var(--button-color);
+}
+.x_customSelect__option--selected {
+  background: #3a5a7a;
+  color: #fff;
+}
+@media (max-width: 600px) {
+  .x_customSelect__control {
+    min-height: 36px;
+    /* font-size: 0.95rem; */
+    padding: 0 0.7rem;
+  }
+  .x_customSelect__option {
+    /* font-size: 0.95rem; */
+    padding: 0.6rem 1rem;
+  }
+}
