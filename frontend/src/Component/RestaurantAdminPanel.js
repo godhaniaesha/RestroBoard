@@ -17,6 +17,11 @@ import StockManagement from '../Container/StockManagement';
 import Billing from '../Container/Billing';
 import Reports from '../Container/Reports';
 import Calender from '../Container/Calender';
+import AddItems from '../Container/AddItems';
+import AddSupplier from '../Container/AddSupplier';
+import AddLeave from '../Container/AddLeave';
+import ActiveOrder from '../Container/ActiveOrder';
+import DashAnalytics from '../Container/DashAnalytics';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -55,6 +60,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         subItems: [
           { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
           { id: 'inventory-add', label: 'Add Items', icon: <FaPlus /> },
+          { id: 'supplier-add', label: 'Add supplier', icon: <FaPlus /> },
           { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
         ]
       },
@@ -77,6 +83,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         subItems: [
           { id: 'leaves-pending', label: 'Pending Requests', icon: <FaClock /> },
           { id: 'leaves-approved', label: 'Approved Leaves', icon: <FaCheck /> },
+          { id: 'leave-add', label: 'Add Leaves', icon: <FaCheck /> },
           { id: 'leaves-calendar', label: 'Leave Calendar', icon: <FaCalendarAlt /> }
         ]
       },
@@ -465,14 +472,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
       case 'dashboard-analytics':
         return (
-          <div className="content-section">
-            <h2>Analytics Dashboard</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Analytics and detailed reports will be displayed here.</p>
-              </div>
-            </div>
-          </div>
+         <DashAnalytics></DashAnalytics>
         );
 
       case 'employees':
@@ -505,24 +505,9 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'orders':
       case 'orders-active':
         return (
-          <div className="content-section">
-            <h2>Active Orders</h2>
-            <div className="orders-grid">
-              <div className="order-card">
-                <div className="order-card-header">
-                  <h6 className="order-title">Table 5 - Order #1234</h6>
-                  <span className="badge bg-warning">Pending</span>
-                </div>
-                <div className="order-card-body">
-                  <p className="order-item">2x Chicken Curry</p>
-                  <p className="order-item">1x Naan</p>
-                  <p className="order-item">1x Rice</p>
-                  <hr />
-                  <strong>Total: ₹450</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+          <>
+          <ActiveOrder></ActiveOrder>
+          </>
         );
 
       case 'orders-completed':
@@ -583,16 +568,22 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
       case 'inventory-add':
         return (
-          <div className="content-section">
-            <h2>Add Inventory Items</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Add new inventory items form will be displayed here.</p>
-              </div>
-            </div>
-          </div>
+        <>
+          <AddItems></AddItems>
+        </>
         );
-
+        case 'supplier-add':
+          return(
+            <>
+              <AddSupplier></AddSupplier>
+            </>
+          )
+          case 'leave-add':
+          return(
+            <>
+              <AddLeave></AddLeave>
+            </>
+          )
       case 'inventory-reports':
         return (
           <div className="content-section">

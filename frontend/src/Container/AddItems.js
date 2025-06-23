@@ -1,16 +1,19 @@
 import React, { useRef, useState, useEffect } from "react";
 import CustomCalendar from "../Component/CustomCalendar";
-import CustomSelect from "../Component/CustomSelect";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
 
-function AddEmployee() {
-  const [joiningDate, setJoiningDate] = useState("");
+function AddItems() {
+  const [expiryDate, setExpiryDate] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   const inputRef = useRef(null);
-  const [selectedOption, setSelectedOption] = useState(null);
+
+  // Custom select states
+  const [category, setCategory] = useState(null);
+  const [unit, setUnit] = useState(null);
+  const [supplier, setSupplier] = useState(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -36,7 +39,7 @@ function AddEmployee() {
   const handleDateSelect = (date) => {
     if (date instanceof Date && !isNaN(date)) {
       const formatted = date.toLocaleDateString("en-GB");
-      setJoiningDate(formatted);
+      setExpiryDate(formatted);
       setShowCalendar(false);
     }
   };
@@ -44,7 +47,7 @@ function AddEmployee() {
   return (
     <>
       <section className="x_employee-section">
-        <h4 className="x_employee-heading">Employee Form</h4>
+        <h4 className="x_employee-heading">Add Item Form</h4>
 
         <div className="x_popup">
           <form
@@ -66,94 +69,96 @@ function AddEmployee() {
 
           <form className="row g-3 mt-3">
             <div className="col-md-6">
-              <label htmlFor="firstName" className="form-label">
-                First Name
+              <label htmlFor="itemName" className="form-label">
+                Item Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="firstName"
-                name="firstName"
-                placeholder="Enter first name"
+                id="itemName"
+                name="itemName"
+                placeholder="Enter item name"
               />
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="lastName" className="form-label">
-                Last Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="lastName"
-                name="lastName"
-                placeholder="Enter last name"
-              />
-            </div>
-
-            <div className="col-md-6">
-              <label htmlFor="email" className="form-label">
-                Email Address
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                placeholder="name@example.com"
-              />
-            </div>
-
-            <div className="col-md-6">
-              <label htmlFor="phone" className="form-label">
-                Phone
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="phone"
-                name="phone"
-                placeholder="Enter phone number"
-              />
-            </div>
-
-            <div className="col-md-6">
-              <label htmlFor="role" className="form-label">
-                Role
+              <label htmlFor="category" className="form-label">
+                Category
               </label>
               <XCustomSelect
                 options={[
-                  {
-                    value: "caltech",
-                    label: "California Institute of Technology",
-                  },
-                  { value: "harvard", label: "GSAS Open Labs At Harvard" },
-                  {
-                    value: "mit",
-                    label: "Massachusetts Institute of Technology",
-                  },
-                  { value: "uchicago", label: "University of Chicago" },
+                  { value: "vegetable", label: "Vegetable" },
+                  { value: "fruit", label: "Fruit" },
+                  { value: "dairy", label: "Dairy" },
+                  { value: "meat", label: "Meat" },
+                  { value: "drygoods", label: "Dry Goods" },
                 ]}
-                value={selectedOption}
-                onChange={setSelectedOption}
-                placeholder="Select organizer..."
-                name="organizer"
-                id="organizer"
+                value={category}
+                onChange={setCategory}
+                placeholder="Select Category..."
+                name="category"
+                id="category"
                 required
               />
-              <div className="invalid-feedback">Please select one</div>
+            </div>
+
+            <div className="col-md-6">
+              <label htmlFor="quantity" className="form-label">
+                Quantity
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="quantity"
+                name="quantity"
+                placeholder="Enter quantity"
+              />
+            </div>
+
+            <div className="col-md-6">
+              <label htmlFor="unit" className="form-label">
+                Unit
+              </label>
+              <XCustomSelect
+                options={[
+                  { value: "kg", label: "Kg" },
+                  { value: "g", label: "g" },
+                  { value: "liter", label: "Liter" },
+                  { value: "ml", label: "ml" },
+                  { value: "piece", label: "Piece" },
+                ]}
+                value={unit}
+                onChange={setUnit}
+                placeholder="Select Unit..."
+                name="unit"
+                id="unit"
+                required
+              />
+            </div>
+
+            <div className="col-md-6">
+              <label htmlFor="min_threshold" className="form-label">
+                Minimum Threshold
+              </label>
+              <input
+                type="number"
+                className="form-control"
+                id="min_threshold"
+                name="min_threshold"
+                placeholder="Enter minimum threshold"
+              />
             </div>
 
             <div className="col-md-6" style={{ position: "relative" }}>
-              <label htmlFor="joining_date" className="form-label">
-                Joining Date
+              <label htmlFor="expiry_date" className="form-label">
+                Expiry Date
               </label>
               <input
                 className="form-control datetimepicker "
-                id="joining_date"
+                id="expiry_date"
                 type="text"
                 placeholder="dd/mm/yyyy"
-                value={joiningDate}
+                value={expiryDate}
                 readOnly
                 ref={inputRef}
                 onClick={() => setShowCalendar(true)}
@@ -170,24 +175,31 @@ function AddEmployee() {
                 >
                   <CustomCalendar
                     onDateSelect={handleDateSelect}
-                    initialDate={joiningDate}
+                    initialDate={expiryDate}
                   />
                 </div>
               )}
             </div>
 
-            <div className="col-12">
-              <label htmlFor="address" className="form-label">
-                Address
+            <div className="col-md-6">
+              <label htmlFor="supplier_id" className="form-label">
+                Supplier
               </label>
-              <textarea
-                className="form-control"
-                id="address"
-                name="address"
-                rows="3"
-                placeholder="Enter full address"
-              ></textarea>
+              <XCustomSelect
+                options={[
+                  { value: "supplier1", label: "Supplier A" },
+                  { value: "supplier2", label: "Supplier B" },
+                  { value: "supplier3", label: "Supplier C" },
+                ]}
+                value={supplier}
+                onChange={setSupplier}
+                placeholder="Select Supplier..."
+                name="supplier_id"
+                id="supplier_id"
+                required
+              />
             </div>
+
             <div className="col-12 d-flex justify-content-center x_btn_main">
               <button type="button" className="btn btn-secondary mx-2">
                 Cancel
@@ -203,4 +215,4 @@ function AddEmployee() {
   );
 }
 
-export default AddEmployee;
+export default AddItems;
