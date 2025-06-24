@@ -22,6 +22,7 @@ import AddSupplier from '../Container/AddSupplier';
 import AddLeave from '../Container/AddLeave';
 import ActiveOrder from '../Container/ActiveOrder';
 import DashAnalytics from '../Container/DashAnalytics';
+import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
 const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
@@ -65,16 +66,14 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         ]
       },
       {
-        id: 'orders',
-        label: 'Orders',
-        icon: <FaClipboardList />,
+        id: 'hotel-information',
+        label: 'Hotel Information',
+        icon: <FaDesktop />,
         subItems: [
-          { id: 'orders-active', label: 'Active Orders', icon: <FaClock /> },
-          { id: 'orders-completed', label: 'Completed Orders', icon: <FaCheck /> },
-          { id: 'orders-history', label: 'Order History', icon: <FaFileAlt /> }
+          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
+          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
         ]
       },
-      { id: 'billing', label: 'Billing', icon: <FaReceipt /> },
       { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       {
         id: 'leaves',
@@ -100,27 +99,26 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
           { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
         ]
       },
-      { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
+      {
+        id: 'hotel-information',
+        label: 'Hotel Information',
+        icon: <FaDesktop />,
+        subItems: [
+          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
+          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
+        ]
+      }, { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
     Chef: [
+      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+
       { id: 'ingredients', label: 'Ingredients', icon: <FaUtensils /> },
-      {
-        id: 'orders',
-        label: 'Orders',
-        icon: <FaClipboardList />,
-        subItems: [
-          { id: 'orders-pending', label: 'Pending Orders', icon: <FaClock /> },
-          { id: 'orders-preparing', label: 'Preparing', icon: <FaUtensils /> },
-          { id: 'orders-ready', label: 'Ready to Serve', icon: <FaCheck /> }
-        ]
-      },
       { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
     ],
     Waiter: [
-      { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
-      { id: 'billing', label: 'Billing', icon: <FaReceipt /> },
+      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+
       { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
     ],
     Housekeeping: [
@@ -137,11 +135,20 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
     ],
     Receptionist: [
       { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
-      { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
-      { id: 'billing', label: 'Billing', icon: <FaReceipt /> },
+      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+
       { id: 'leave-apply', label: 'Request Leave', icon: <FaCalendarAlt /> },
     ],
   };
+
+  // Ensure Chef's orders are correctly defined with subItems if they weren't already
+  // This block is for ensuring the structure matches the new subItems pattern
+  if (userRole === 'Chef' && !menuItems.Chef.find(item => item.id === 'orders')?.subItems) {
+    menuItems.Chef = menuItems.Chef.map(item => item.id === 'orders' ? { ...item, subItems: [{ id: 'orders-pending', label: 'Pending Orders', icon: <FaClock /> }, { id: 'orders-preparing', label: 'Preparing', icon: <FaUtensils /> }, { id: 'orders-ready', label: 'Ready to Serve', icon: <FaCheck /> }] } : item);
+  }
+
+  // Add 'Take New Order' to Waiter's orders sub-menu
+
 
   const currentMenuItems = menuItems[userRole] || [];
 
@@ -472,7 +479,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
       case 'dashboard-analytics':
         return (
-         <DashAnalytics></DashAnalytics>
+          <DashAnalytics></DashAnalytics>
         );
 
       case 'employees':
@@ -506,9 +513,36 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'orders-active':
         return (
           <>
-          <ActiveOrder></ActiveOrder>
+            <ActiveOrder></ActiveOrder>
           </>
         );
+
+      case 'orders-take-new':
+        return (
+          <>
+            <TakeNewOrderForm></TakeNewOrderForm>
+          </>
+        );
+
+      case 'hotel-information-contact':
+        return (
+          <div className="content-section">
+            <h2>Hotel Contact Information</h2>
+            <div className="card">
+              <div className="card-body">
+                <p>Contact details for various hotel departments, services, and emergency contacts.</p>
+              </div>
+            </div>
+          </div>
+        );
+      case 'hotel-information':
+        return (
+          <div className="content-section">
+            <h2>Hotel Information</h2>
+            <p>Details about the hotel, contact information, policies, etc., will be displayed here.</p>
+          </div>
+        );
+
 
       case 'orders-completed':
         return (
@@ -568,22 +602,22 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
       case 'inventory-add':
         return (
-        <>
-          <AddItems></AddItems>
-        </>
+          <>
+            <AddItems></AddItems>
+          </>
         );
-        case 'supplier-add':
-          return(
-            <>
-              <AddSupplier></AddSupplier>
-            </>
-          )
-          case 'leave-add':
-          return(
-            <>
-              <AddLeave></AddLeave>
-            </>
-          )
+      case 'supplier-add':
+        return (
+          <>
+            <AddSupplier></AddSupplier>
+          </>
+        )
+      case 'leave-add':
+        return (
+          <>
+            <AddLeave></AddLeave>
+          </>
+        )
       case 'inventory-reports':
         return (
           <div className="content-section">
@@ -645,10 +679,10 @@ const ContentRouter = ({ activeItem, userRole }) => {
           </>
         )
 
-        case 'leaves-calendar':
-          return (
-            <Calender />
-          );
+      case 'leaves-calendar':
+        return (
+          <Calender />
+        );
       default:
         return (
           // <div className="content-section">
@@ -672,7 +706,9 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
 // Main Component
 const RestaurantAdminPanel = () => {
-  const [activeItem, setActiveItem] = useState('dashboard');
+  // const [activeItem, setActiveItem] = useState('dashboard');
+  const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
+
   const [userRole, setUserRole] = useState('Admin');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -693,7 +729,9 @@ const RestaurantAdminPanel = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
-
+  useEffect(() => {
+    localStorage.setItem('activeAdminPanelItem', activeItem);
+  }, [activeItem]);
   // Improved toggleSidebar function
   const toggleSidebar = () => {
     console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
