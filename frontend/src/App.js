@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 function App() {
   return (
     <>
-      <RestaurantAdminPanel></RestaurantAdminPanel>
+      {/* <RestaurantAdminPanel></RestaurantAdminPanel> */}
       <BrowserRouter>
         <AdminRoutes />
       </BrowserRouter>

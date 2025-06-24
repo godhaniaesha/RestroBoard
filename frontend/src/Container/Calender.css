@@ -11,7 +11,7 @@
   
   .d_calender-wrapper {
     background-color: var(--primary-bg-color);
-    min-height: 100vh;
+    /* min-height: 100vh; */
   }
   
   .d_calender-card {

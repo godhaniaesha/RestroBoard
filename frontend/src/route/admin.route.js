@@ -4,6 +4,7 @@ import Home from '../Container/Home';
 import Register from '../Component/Register';
 import '../Style/d_Style.css';
 import CustomCalendar from '../Component/CustomCalendar';
+import RestaurantAdminPanel from '../Component/RestaurantAdminPanel';
 
 function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 991);
@@ -44,7 +45,7 @@ function AdminRoutes() {
     {/* <Route path="/header" element={<Header />} /> */}
     <Route path="/register" element={<Register />} />
     <Route path="/CustomCalendar" element={<CustomCalendar />} />
-
+    <Route path="/" element={<RestaurantAdminPanel />} />
   </Routes>
   );
 }

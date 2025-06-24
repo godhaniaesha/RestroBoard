@@ -22,6 +22,7 @@ function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
       { label: 'Dashboard', path: '/' },
       { label: 'Employees', path: '/employees' },
       { label: 'Inventory', path: '/inventory' },
+      // { label: 'Suppliers', path: '/suppliers' },
       { label: 'Orders', path: '/orders' },
       { label: 'Billing', path: '/billing' },
       { label: 'Reports', path: '/reports' },
@@ -31,6 +32,7 @@ function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
     manager: [
       { label: 'Dashboard', path: '/' },
       { label: 'Inventory', path: '/inventory' },
+      // { label: 'Suppliers', path: '/suppliers' },
       { label: 'Orders', path: '/orders' },
       { label: 'Reports', path: '/reports' },
       { label: 'Leaves', path: '/leaves' },

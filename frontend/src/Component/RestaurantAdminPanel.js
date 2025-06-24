@@ -5,8 +5,12 @@ import {
   FaBroom, FaDesktop, FaBell, FaUser, FaSignOutAlt, FaBars,
   FaTimes, FaUserShield, FaUserTie, FaUserFriends, FaChevronDown,
   FaChevronRight, FaPlus, FaEdit, FaTrash, FaEye, FaFileAlt,
-  FaUserPlus, FaUserMinus, FaClock, FaCheck
+  FaUserPlus, FaUserMinus, FaClock, FaCheck,
+  FaShippingFast
 } from 'react-icons/fa';
+import { BiSolidCategory } from "react-icons/bi";
+import { HiViewGridAdd } from "react-icons/hi";
+import { LuLayoutList } from "react-icons/lu";
 import './RestaurantAdminPanel.css';
 import DashboardOverview from '../Container/DashboardOverview';
 import AddEmployee from '../Container/AddEmployee';
@@ -25,6 +29,9 @@ import DashAnalytics from '../Container/DashAnalytics';
 import HotelOverview from '../Container/HotelOverview';
 import AddHO from '../Container/AddHO';
 import AddDishes from '../Container/AddDishes';
+import SupplierList from '../Container/SupplierList';
+import AddCategory from '../Container/AddCategory';
+import CategoryList from '../Container/CategoryList';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
@@ -58,14 +65,27 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         ]
       },
       {
+        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        subItems: [
+          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
+          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd style={{ width: '16px', height: '16px' }} /> }
+        ]
+      },
+      {
         id: 'inventory',
         label: 'Inventory',
         icon: <FaBoxOpen />,
         subItems: [
           { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
           { id: 'inventory-add', label: 'Add Items', icon: <FaPlus /> },
-          { id: 'supplier-add', label: 'Add supplier', icon: <FaPlus /> },
           { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
+        ]
+      },
+      {
+        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        subItems: [
+          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
+          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
         ]
       },
       {
@@ -96,12 +116,26 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
     Manager: [
       { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
       {
+        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        subItems: [
+          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
+          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd /> }
+        ]
+      },
+      {
         id: 'inventory',
         label: 'Inventory',
         icon: <FaBoxOpen />,
         subItems: [
           { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
           { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
+        ]
+      },
+      {
+        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        subItems: [
+          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
+          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
         ]
       },
       {
@@ -113,7 +147,8 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
           { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
           { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
         ]
-      }, { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
+      },
+      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
     Chef: [
@@ -436,10 +471,10 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 
       <div className="navbar-right">
         <div className="nav-actions">
-          <button className="nav-btn notification-btn">
+          {/* <button className="nav-btn notification-btn">
             <FaBell />
             <span className="notification-badge">3</span>
-          </button>
+          </button> */}
 
           <div className="profile-dropdown" style={{ position: 'relative' }}>
             <button
@@ -462,7 +497,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
               </div>
             )}
 
-             {/* {showProfileMenu && (
+            {/* {showProfileMenu && (
               <div className="profile-menu ">
                 <button className="profile-menu-item">
                   <FaUser />
@@ -516,6 +551,25 @@ const ContentRouter = ({ activeItem, userRole }) => {
             <AddEmployee></AddEmployee>
           </>
         );
+      case 'suppliers':
+      case 'supplier-list':
+        return (
+          <>
+            <SupplierList></SupplierList>
+          </>
+        );
+      case 'category-add':
+        return (
+          <>
+            <AddCategory></AddCategory>
+          </>
+        );
+        case 'category-list':
+        return (  
+          <>
+            <CategoryList></CategoryList>
+          </>
+        );
 
       case 'employees-roles':
         return (
@@ -544,12 +598,12 @@ const ContentRouter = ({ activeItem, userRole }) => {
             <AddHO></AddHO>
           </>
         );
-        case 'add-dish':
-          return (
-            <>
-              <AddDishes></AddDishes>
-            </>
-          );
+      case 'add-dish':
+        return (
+          <>
+            <AddDishes></AddDishes>
+          </>
+        );
       case 'hotel-information':
         return (
           <>

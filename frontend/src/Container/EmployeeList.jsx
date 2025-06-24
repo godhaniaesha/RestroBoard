@@ -9,7 +9,6 @@ const employees = [
     role: "Manager",
     email: "lincoln.ekstrom@email.com",
     phone: "+1 555-123-4567",
-    status: "Active",
     joining_date: "2021-04-10",
   },
   {
@@ -18,7 +17,6 @@ const employees = [
     role: "Stylist",
     email: "emerson.kors@email.com",
     phone: "+1 555-234-5678",
-    status: "Inactive",
     joining_date: "2021-03-15",
   },
   {
@@ -27,7 +25,6 @@ const employees = [
     role: "Receptionist",
     email: "alfonsa.kors@email.com",
     phone: "+1 555-345-6789",
-    status: "Active",
     joining_date: "2021-02-20",
   },
   {
@@ -36,7 +33,6 @@ const employees = [
     role: "Stylist",
     email: "ruben.torff@email.com",
     phone: "+1 555-456-7890",
-    status: "Pending",
     joining_date: "2021-01-05",
   },
 ];
@@ -59,7 +55,6 @@ function EmployeeList() {
       emp.role.toLowerCase().includes(search.toLowerCase()) ||
       emp.email.toLowerCase().includes(search.toLowerCase()) ||
       emp.phone.toLowerCase().includes(search.toLowerCase()) ||
-      emp.status.toLowerCase().includes(search.toLowerCase()) ||
       emp.joining_date.toLowerCase().includes(search.toLowerCase());
     const matchesRole = role === "" || role === "All Roles" || emp.role === role;
     return matchesSearch && matchesRole;
@@ -132,7 +127,6 @@ function EmployeeList() {
                 <th className="Z_empListTh">Role</th>
                 <th className="Z_empListTh">Email</th>
                 <th className="Z_empListTh">Phone</th>
-                <th className="Z_empListTh">Status</th>
                 <th className="Z_empListTh">Joining Date</th>
                 <th className="Z_empListTh">Action</th>
               </tr>

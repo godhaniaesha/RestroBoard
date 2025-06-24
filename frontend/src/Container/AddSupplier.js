@@ -25,7 +25,7 @@ export default function AddSupplier() {
             <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview"></div>
           </form>
           <form className="row g-3 mt-3">
-            <div className="col-md-6">
+            {/* <div className="col-md-6">
               <label htmlFor="supplierId" className="form-label">
                 ID
               </label>
@@ -36,7 +36,7 @@ export default function AddSupplier() {
                 name="supplierId"
                 placeholder="Enter supplier ID"
               />
-            </div>
+            </div> */}
             <div className="col-md-6">
               <label htmlFor="supplierName" className="form-label">
                 Name
@@ -64,19 +64,6 @@ export default function AddSupplier() {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="whatsapp" className="form-label">
-                WhatsApp Number
-              </label>
-              <input
-                type="tel"
-                className="form-control"
-                id="whatsapp"
-                name="whatsapp"
-                placeholder="Enter WhatsApp number"
-              />
-            </div>
-
-            <div className="col-12">
               <label htmlFor="email" className="form-label">
                 Email Address
               </label>
@@ -86,6 +73,19 @@ export default function AddSupplier() {
                 id="email"
                 name="email"
                 placeholder="name@example.com"
+              />
+            </div>
+
+            <div className="col-md-6">
+              <label htmlFor="whatsapp" className="form-label">
+                WhatsApp Number
+              </label>
+              <input
+                type="tel"
+                className="form-control"
+                id="whatsapp"
+                name="whatsapp"
+                placeholder="Enter WhatsApp number"
               />
             </div>
 
@@ -101,7 +101,7 @@ export default function AddSupplier() {
                 placeholder="Enter full address"
               ></textarea>
             </div>
-            
+
             <div className="col-12">
               <label htmlFor="ingredients_supplied" className="form-label">
                 Ingredients Supplied

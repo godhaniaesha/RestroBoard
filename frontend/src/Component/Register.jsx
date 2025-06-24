@@ -255,7 +255,7 @@ function Register(props) {
                           border: "1px solid var(--primary-bg-color)",
                           borderRadius: "5px",
                           background: "transparent",
-                          color: "#fff",
+                          color: "#1f2e3d",
                         }}
                       />
                     ))}
@@ -339,10 +339,8 @@ function Register(props) {
                 {formikReset.touched.confirmPassword && formikReset.errors.confirmPassword && (
                   <div style={{ color: "#e57373", marginBottom: 10 }}>{formikReset.errors.confirmPassword}</div>
                 )}
-                <div className="Z_submit_register z_reset_resp">
-                  <button type="submit">RESET PASSWORD</button>
-                </div>
-                {/* <div className="Z_Sign_In_Link" style={{ textAlign: "right", marginBottom: "25px" }}>
+                
+                <div className="Z_Sign_In_Link" style={{ textAlign: "right", marginBottom: "25px" }}>
                   <a
                     href="#"
                     style={{ color: "var(--primary-bg-color)", textDecoration: "none", fontSize: "0.9rem" }}
@@ -350,7 +348,10 @@ function Register(props) {
                   >
                     Back to Sign In
                   </a>
-                </div> */}
+                </div>
+                <div className="Z_submit_register z_reset_resp">
+                  <button type="submit">RESET PASSWORD</button>
+                </div>
               </form>
             )}
           </div>

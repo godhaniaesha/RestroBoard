@@ -103,6 +103,19 @@ function AddItems() {
             </div>
 
             <div className="col-md-6">
+              <label htmlFor="price" className="form-label">
+                Price
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="price"
+                name="price"
+                placeholder="Enter price"
+              />
+            </div>
+
+            <div className="col-md-6">
               <label htmlFor="quantity" className="form-label">
                 Quantity
               </label>
