@@ -395,13 +395,13 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Only close if click is outside the profile dropdown
       if (showProfileMenu && !event.target.closest('.profile-dropdown')) {
         setShowProfileMenu(false);
       }
     };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showProfileMenu]);
 
   return (
@@ -428,29 +428,43 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
             <span className="notification-badge">3</span>
           </button>
 
-          <div className="profile-dropdown">
+          <div className="profile-dropdown" style={{ position: 'relative' }}>
             <button
               className="profile-btn"
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              onClick={e => {
+                e.stopPropagation();
+                setShowProfileMenu(v => !v);
+              }}
+              type="button"
             >
               {getRoleIcon(userRole)}
               <span className="profile-name">{userRole}</span>
             </button>
-
             {showProfileMenu && (
-              <div className="dropdown-menu">
-                <a href="#" className="dropdown-item">
-                  <FaUser /> Profile
-                </a>
-                <a href="#" className="dropdown-item">
-                  <FaCog /> Settings
-                </a>
+              <div className="" style={{ position: 'absolute', right: 0, top: '100%', minWidth: 180, background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', zIndex: 1000, borderRadius: 6, padding: 8 }}>
+                <a href="#" className="dropdown-item"><FaUser /> Profile</a>
+                <a href="#" className="dropdown-item"><FaCog /> Settings</a>
                 <hr className="dropdown-divider" />
-                <a href="#" className="dropdown-item logout">
-                  <FaSignOutAlt /> Logout
-                </a>
+                <a href="#" className="dropdown-item logout"><FaSignOutAlt /> Logout</a>
               </div>
             )}
+
+             {/* {showProfileMenu && (
+              <div className="profile-menu ">
+                <button className="profile-menu-item">
+                  <FaUser />
+                  <span>Profile</span>
+                </button>
+                <button className="profile-menu-item">
+                  <FaCog />
+                  <span>Settings</span>
+                </button>
+                <button className="profile-menu-item">
+                  <FaSignOutAlt />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )} */}
           </div>
         </div>
       </div>
