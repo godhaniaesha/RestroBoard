@@ -1,170 +1,169 @@
 body {
-   margin: 0%;
+  margin: 0%;
 }
 
 :root {
-   --primary-bg-color: #d8e1e9;
-   --white-color: #eceff3;
-   --img-bg-hov-color: #e2e8f0;
-   --img-bg-color: #f8f9fa;
-   --dark-color: #1f2e3d;
-   --button-color: #1f2e3d;
-   --hover-button-color: #163b60;
+  --primary-bg-color: #d8e1e9;
+  --white-color: #eceff3;
+  --img-bg-hov-color: #e2e8f0;
+  --img-bg-color: #f8f9fa;
+  --dark-color: #1f2e3d;
+  --button-color: #1f2e3d;
+  --hover-button-color: #163b60;
 }
 
 input,
 select,
 textarea {
-   background-color: var(--img-bg-color) !important;
-   display: inline-block;
-   vertical-align: top;
-   width: 100%;
-   padding: 7.5px 7.5px 3.75px;
-   border: 1px solid #ddd;
-   border-radius: 2.5px;
-   font-size: 14px;
-   min-height: 33px !important;
-   overflow: hidden;
-   border-radius: 0% !important;
+  background-color: var(--img-bg-color) !important;
+  display: inline-block;
+  vertical-align: top;
+  width: 100%;
+  padding: 7.5px 7.5px 3.75px;
+  border: 1px solid #ddd;
+  border-radius: 2.5px;
+  font-size: 14px;
+  min-height: 33px !important;
+  overflow: hidden;
+  border-radius: 0% !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-   box-shadow: none !important;
-   border-color: var(--button-color) !important;
+  box-shadow: none !important;
+  border-color: var(--button-color) !important;
 }
 
 .x_popup {
-   background-color: var(--white-color);
-   padding: 2%;
-   border-radius: 8px;
+  background-color: var(--white-color);
+  padding: 2%;
+  border-radius: 8px;
 }
 
 /* employee custom styles */
 
 .x_employee-section {
-   padding: 1.5rem;
+  padding: 1.5rem;
 }
 
 .x_employee-heading {
-   font-size: 1.25rem;
-   margin-bottom: 1rem;
-   font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 
 .x_dropzone {
-   border: 2px dashed #cbd5e0;
-   background-color: var(--img-bg-color);
-   border-radius: 6px;
-   padding: 2.5rem;
-   text-align: center;
-   transition: background-color 0.3s ease;
+  border: 2px dashed #cbd5e0;
+  background-color: var(--img-bg-color);
+  border-radius: 6px;
+  padding: 2.5rem;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
 .x_dropzone:hover {
-   background-color: var(--img-bg-hov-color);
+  background-color: var(--img-bg-hov-color);
 }
 
 .x_dz-message {
-   color: #4a5568;
-   font-size: 1rem;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   gap: 0.5rem;
+  color: #4a5568;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .x_dz-preview {
-   margin-top: 1rem;
-   gap: 0.5rem;
+  margin-top: 1rem;
+  gap: 0.5rem;
 }
 
 .x_btn_main {
-   margin-top: 3rem;
-   margin-bottom: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
 }
 .x_btn_main .btn {
-   border: none;
-   border-radius: 0% !important;
-   width: 150px;
-   padding: 0.5rem 1rem;
-   font-size: 1rem;
-   cursor: pointer;
-   transition: background-color 0.3s ease;
+  border: none;
+  border-radius: 0% !important;
+  width: 150px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 /* Responsive design */
 @media (max-width: 768px) {
-   .x_dropzone {
-      padding: 1rem;
-   }
+  .x_dropzone {
+    padding: 1rem;
+  }
 
-   .x_dz-message {
-      font-size: 0.9rem;
-      flex-direction: column;
-      text-align: center;
-   }
+  .x_dz-message {
+    font-size: 0.9rem;
+    flex-direction: column;
+    text-align: center;
+  }
 }
-
 
 /* Calendar styles */
 .x_calendar {
-   font-family: 'Segoe UI', sans-serif;
-   border: none;
-   border-radius: 3px;
-   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-   padding: 10px;
-   margin-left: 10px;
+  font-family: "Segoe UI", sans-serif;
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin-left: 10px;
 }
 
 .x_calendar .react-datepicker__day {
-   border-radius: 50%;
-   /* padding: 0.5em; */
-   margin: 0em !important;
-   transition: background 0.3s;
-   font-weight: 500;
+  border-radius: 50%;
+  /* padding: 0.5em; */
+  margin: 0em !important;
+  transition: background 0.3s;
+  font-weight: 500;
 }
 
 .x_calendar .react-datepicker__day--selected,
 .x_calendar .react-datepicker__day--keyboard-selected {
-   background-color: #d8e1e9;
-   color: #1f2e3d;
+  background-color: #d8e1e9;
+  color: #1f2e3d;
 }
 
 .x_calendar .react-datepicker__day:hover {
-   background-color: #cce7ff;
+  background-color: #cce7ff;
 }
 
 .x_calendar .react-datepicker__day--today {
-   border: 1px solid #1f2e3d;
-   background-color: transparent;
+  border: 1px solid #1f2e3d;
+  background-color: transparent;
 }
 
 .x_calendar .react-datepicker__header {
-   background-color: transparent;
-   border: none;
-   /* padding-bottom: 10px; */
+  background-color: transparent;
+  border: none;
+  /* padding-bottom: 10px; */
 }
 
 .x_calendar .react-datepicker__current-month {
-   font-weight: bold;
-   font-size: 1.2em;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .x_calendar .react-datepicker__day-names,
 .x_calendar .react-datepicker__week {
-   display: flex;
-   justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (max-width: 768px) {
-   .x_calendar {
-      padding: 0px !important;
-   }
+  .x_calendar {
+    padding: 0px !important;
+  }
 }
 @media (max-width: 576px) {
-    .x_dropzone {
-        padding: 0;
-    }
+  .x_dropzone {
+    padding: 0;
+  }
 }
 
 /* Custom Select Styles (x_customSelect) */
@@ -190,7 +189,8 @@ textarea {
   outline: none;
   box-sizing: border-box;
 }
-.x_customSelect__control:focus, .x_customSelect--open .x_customSelect__control {
+.x_customSelect__control:focus,
+.x_customSelect--open .x_customSelect__control {
   border-color: var(--button-color);
   box-shadow: 0 0 0 2px #d8e1e9;
 }
@@ -223,7 +223,7 @@ textarea {
   background: #f4f6fb;
   border: 1.5px solid #bfc9d9;
   border-radius: 0 0 5px 5px;
-  box-shadow: 0 4px 16px rgba(31,46,61,0.08);
+  box-shadow: 0 4px 16px rgba(31, 46, 61, 0.08);
   z-index: 10;
   max-height: 200px;
   overflow-y: auto;
@@ -232,7 +232,7 @@ textarea {
 }
 .x_customSelect__option {
   /* padding: 0.75rem 1.25rem; */
-  padding: 0.2rem 0.50rem;
+  padding: 0.2rem 0.5rem;
   /* font-size: 1rem; */
   color: var(--dark-color);
   cursor: pointer;
@@ -257,5 +257,144 @@ textarea {
   .x_customSelect__option {
     /* font-size: 0.95rem; */
     padding: 0.6rem 1rem;
+  }
+}
+
+.x_dz-preview.x_image-preview {
+  /* Applied to the dz-preview div when an image is present */
+  position: relative;
+  width: 100%;
+  height: 100%; /* Occupy the full height of the dropzone */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 0; /* Remove padding from this container */
+}
+
+.x_uploaded-image {
+  max-width: 350px;
+  max-height: 100%;
+  object-fit: contain; /* Ensures the entire image is visible within its bounds */
+  padding: 2.5rem; /* Apply the original dropzone padding to the image itself */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+.x_remove-image-btn {
+  position: absolute;
+  top: 44px;
+  right: 41%;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  z-index: 10; /* Ensure it's above the image and other elements */
+}
+
+.x_remove-image-btn:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+/* Adjust dropzone padding when an image is present */
+.x_dropzone.x_has-image {
+  padding: 0; /* Remove padding from the dropzone itself */
+  display: flex; /* To center the image preview */
+  align-items: center;
+  min-height: 200px; /* Ensure a minimum height for the dropzone when image is present */
+}
+@media (max-width: 1920px) {
+  .sidebar-closed .x_remove-image-btn {
+    right: 40% !important;
+  }
+  .x_remove-image-btn {
+    right: 42% !important;
+  }
+}
+@media (max-width: 1600px) {
+  .sidebar-closed .x_remove-image-btn {
+    right: 41% !important;
+  }
+  .x_remove-image-btn {
+    right: 39% !important;
+  }
+}
+@media (max-width: 1440px) {
+  .sidebar-closed .x_remove-image-btn {
+    right: 39% !important;
+  }
+  .x_remove-image-btn {
+    right: 37% !important;
+  }
+}
+@media (max-width: 1200px) {
+  .sidebar-closed .x_remove-image-btn {
+    top: 30px !important;
+    right: 26% !important;
+  }
+  .x_remove-image-btn {
+    right: 3% !important;
+  }
+}
+@media (max-width: 1024px) {
+  .x_remove-image-btn {
+    right: 30% !important;
+  }
+  .sidebar-closed .x_remove-image-btn {
+    top: 41px !important;
+    right: 34% !important;
+  }
+}
+@media (max-width: 991px) {
+  .x_remove-image-btn {
+    right: 27% !important;
+  }
+  .sidebar-closed .x_remove-image-btn {
+    top: 44px !important;
+    right: 30% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .x_uploaded-image {
+    padding: 1rem; /* Adjust padding for smaller screens */
+  }
+
+  .sidebar-closed .x_remove-image-btn,
+  .x_remove-image-btn {
+    top: 21px !important;
+    right: 26% !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .x_uploaded-image {
+    padding: 0.5rem; /* Further adjust padding for very small screens */
+  }
+  .sidebar-closed .x_remove-image-btn,
+  .x_remove-image-btn {
+    top: 16px !important;
+    right: 17% !important;
+  }
+}
+@media (max-width: 470px) {
+  .sidebar-closed .x_remove-image-btn,
+  .x_remove-image-btn {
+    top: 16px !important;
+    right: 12% !important;
+  }
+}
+@media (max-width: 320px) {
+  .sidebar-closed .x_remove-image-btn,
+  .x_remove-image-btn {
+    top: 16px !important;
+    right: 5% !important;
   }
 }
