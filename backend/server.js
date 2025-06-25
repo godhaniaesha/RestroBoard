@@ -1,46 +1,28 @@
-require('dotenv').config()
- 
-const express = require('express');
-// console.log("express");
- 
-const path = require('path')
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import cors from 'cors';
+import { connectDB } from './src/config/db.js';
+import indexRouter from './src/routes/indexRoutes.js';
+
+
 const app = express();
-const cors = require('cors')
-const passport = require('passport');
-const session = require('express-session');
- 
-const router = require('./routes');
-const connectDB = require('./db/db');
- 
-app.use(cookieParser());
-app.use("/KAssets", express.static(path.join(__dirname, "KAssets")));
- 
-// Session middleware configuration
-app.use(session({
-    secret: 'sdh@hehf',
-    resave: true,
-    saveUninitialized: true,
-}));
- 
-app.use(passport.initialize());
-app.use(passport.session());
+
+// Middleware
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-}))
- 
-const port = process.env.PORT || 2221
- 
- 
-connectDB()
- 
-app.use("/hello", router);
- 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-})
- 
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  credentials: true
+}));
+app.use(express.static('public'));
+
+
+// router
+app.use("/api", indexRouter)
+
+
+// Connect to database
+connectDB();  
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
