@@ -1,28 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "../Style/Z_table.css";
-import Beverages from "../Image/Beverages.jpg";
-import MainCourse from "../Image/Main Course.jpg";
-import Desserts from "../Image/Desserts.jpg";
-
-const categories = [
-  {
-    image: {Beverages},
-    name: "Beverages",
-    description: "All types of drinks including soft drinks, juices, and water."
-  },
-  {
-    image: {MainCourse},
-    name: "Main Course",
-    description: "Main dishes such as curries, rice, and breads."
-  },
-  {
-    image: {Desserts},
-    name: "Desserts",
-    description: "Cakes, ice creams, and other sweet dishes."
-  }
-];
+import { fetchCategories } from "../redux/slice/category.slice";
 
 function CategoryList() {
+  const dispatch = useDispatch();
+  const { categories, loading, error } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
   return (
     <section className="Z_empListSection">
       <div className="Z_empListTableContainer">
@@ -30,6 +18,8 @@ function CategoryList() {
           <h4 className="Z_empListTitle">Category List</h4>
         </div>
         <div className="Z_empListTableWrapper">
+          {loading && <p>Loading...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <table className="Z_empListTable">
             <thead>
               <tr>
@@ -39,15 +29,36 @@ function CategoryList() {
               </tr>
             </thead>
             <tbody>
-              {categories.map((cat, idx) => (
-                <tr className="Z_empListTr" key={idx}>
-                  <td className="Z_empListTd">
-                    <img src={cat.image} alt={cat.name} style={{ width: 40, height: 40, borderRadius: 6, objectFit: 'cover' }} />
-                  </td>
-                  <td className="Z_empListTd">{cat.name}</td>
-                  <td className="Z_empListTd">{cat.description}</td>
-                </tr>
-              ))}
+              {categories && categories.length > 0
+                ? categories.map((cat, idx) => (
+                    <tr className="Z_empListTr" key={cat._id || idx}>
+                      <td className="Z_empListTd">
+                        {cat.category_image ? (
+                          <img
+                            src={`http://localhost:3000${cat.category_image}`}
+                            alt={cat.category_name}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 6,
+                              objectFit: "cover",
+                            }}
+                          />
+                        ) : (
+                          <span>No Image</span>
+                        )}
+                      </td>
+                      <td className="Z_empListTd">{cat.category_name}</td>
+                      <td className="Z_empListTd">
+                        {cat.category_description}
+                      </td>
+                    </tr>
+                  ))
+                : !loading && (
+                    <tr>
+                      <td colSpan="3">No categories found.</td>
+                    </tr>
+                  )}
             </tbody>
           </table>
         </div>
