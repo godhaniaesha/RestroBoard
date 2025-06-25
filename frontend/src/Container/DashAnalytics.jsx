@@ -1,5 +1,20 @@
 import React from 'react';
 import { FaChartBar, FaShoppingCart, FaDollarSign, FaUserPlus } from 'react-icons/fa';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+
+// Import salesData from DashboardOverview.js
+const salesData = [
+  { name: 'Mon', sales: 4000 },
+  { name: 'Tue', sales: 3000 },
+  { name: 'Wed', sales: 5000 },
+  { name: 'Thu', sales: 4500 },
+  { name: 'Fri', sales: 6000 },
+  { name: 'Sat', sales: 8000 },
+  { name: 'Sun', sales: 7500 },
+];
+
 
 function DashAnalytics(props) {
     // Placeholder data
@@ -40,17 +55,22 @@ function DashAnalytics(props) {
 
                 <div className="Z_DashAnstic_content">
                     {/* Sales Chart */}
-                    <div className="Z_DashAnstic_chartContainer">
+                   <div className="Z_DashAnstic_chartContainer">
                         <h3 className="Z_DashAnstic_chartTitle">Sales Overview</h3>
-                        <div className="Z_DashAnstic_chartPlaceholder">
-                            {/* In a real app, a chart library like Recharts or Chart.js would be used here */}
-                            <p>Chart would be displayed here.</p>
-                            <FaChartBar style={{ fontSize: '5rem', opacity: 0.1 }} />
-                        </div>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <LineChart data={salesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                                <Line type="monotone" dataKey="sales" stroke="#456268" activeDot={{ r: 8 }} />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
 
                     {/* Top Products Table */}
-                    <div className="Z_DashAnstic_tableContainer">
+                    <div className="Z_DashAnstic_tableContainer w-100 overflow-x-auto">
                         <h3 className="Z_DashAnstic_tableTitle">Top Selling Products</h3>
                         <div className="Z_DashAnstic_tableWrapper">
                             <table className="Z_DashAnstic_table">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Style/x_app.css';
 import uplod from '../Image/cloud-upload.svg';
 
@@ -11,7 +11,30 @@ export default function AddDishes() {
     badge: '',
   });
   const [dishImg, setDishImg] = useState(null);
+const [supplierImg, setSupplierImg] = useState(null);
+  const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
 
+  // Effect to clean up the object URL when the component unmounts or image changes
+  useEffect(() => {
+    return () => {
+      if (supplierImgPreviewUrl) {
+        URL.revokeObjectURL(supplierImgPreviewUrl);
+      }
+    };
+  }, [supplierImgPreviewUrl]);
+
+  const removeSupplierImage = () => {
+    setSupplierImg(null);
+    if (supplierImgPreviewUrl) {
+      URL.revokeObjectURL(supplierImgPreviewUrl);
+      setSupplierImgPreviewUrl(null);
+    }
+    // Optionally reset the file input value to allow re-uploading the same file
+    const fileInput = document.getElementById('supplierImgInput');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
   const categoryOptions = [
     'Starter',
     'Main Course',
@@ -55,32 +78,56 @@ export default function AddDishes() {
         <form className="row g-3 mt-3" onSubmit={handleSubmit}>
         <div className="col-12">
             <label className="form-label">Dish Image</label>
-            <form
-              className="x_dropzone x_dropzone-multiple dz-clickable"
-              id="dropzone-multiple"
-              data-dropzone="data-dropzone"
-              action="#!"
-              onClick={() => document.getElementById('dishImgInput').click()}
-              style={{ cursor: 'pointer' }}
-            >
+        <form
+            className={`x_dropzone x_dropzone-multiple  dz-clickable ${supplierImg ? 'x_has-image' : ''}`}
+            id="dropzone-multiple"
+            data-dropzone="data-dropzone"
+            action="#!"
+            onClick={() => document.getElementById('supplierImgInput').click()}
+            style={{ cursor: 'pointer' }}
+          >
+
+            {!supplierImg && (
               <div
                 className="dz-message x_dz-message"
                 data-dz-message="data-dz-message"
+                onClick={() => document.getElementById('supplierImgInput').click()}
+                style={{ cursor: 'pointer' }}
               >
                 <img className="me-2" src={uplod} width="25" alt="upload" />
                 Drop your files here
               </div>
-              <input
-                id="dishImgInput"
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleImageChange}
-              />
-              <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview">
-                {dishImg && <span>{dishImg.name}</span>}
+
+
+            )}
+
+            <input
+              id="supplierImgInput"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  const file = e.target.files[0];
+                  setSupplierImg(file);
+                  setSupplierImgPreviewUrl(URL.createObjectURL(file));
+                }
+              }}
+            />
+            {supplierImg && supplierImgPreviewUrl && (
+              <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
+                <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
+                <button
+                  type="button"
+                  className="x_remove-image-btn"
+                  onClick={removeSupplierImage}
+                  title="Remove image"
+                >
+                  &times;
+                </button>
               </div>
-            </form>
+            )}
+          </form>
           </div>
           <div className="col-md-6">
             <label htmlFor="name" className="form-label">Dish Name</label>
