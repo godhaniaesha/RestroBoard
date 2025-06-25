@@ -32,6 +32,7 @@ import AddDishes from '../Container/AddDishes';
 import SupplierList from '../Container/SupplierList';
 import AddCategory from '../Container/AddCategory';
 import CategoryList from '../Container/CategoryList';
+import InventoryReport from '../Container/InventoryReport';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
@@ -60,8 +61,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         icon: <FaUsers />,
         subItems: [
           { id: 'employees-list', label: 'All Employees', icon: <FaUsers /> },
-          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> },
-          { id: 'employees-roles', label: 'Manage Roles', icon: <FaUserShield /> }
+          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> }
         ]
       },
       {
@@ -571,17 +571,6 @@ const ContentRouter = ({ activeItem, userRole }) => {
           </>
         );
 
-      case 'employees-roles':
-        return (
-          <div className="content-section">
-            <h2>Manage Employee Roles</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Role management interface will be displayed here.</p>
-              </div>
-            </div>
-          </div>
-        );
 
       case 'orders':
       case 'orders-active':
@@ -688,14 +677,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
         )
       case 'inventory-reports':
         return (
-          <div className="content-section">
-            <h2>Inventory Reports</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Inventory reports and analytics will be displayed here.</p>
-              </div>
-            </div>
-          </div>
+         <InventoryReport></InventoryReport>
         );
 
       case 'billing':
