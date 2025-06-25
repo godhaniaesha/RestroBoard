@@ -141,9 +141,7 @@ function EmployeeList() {
                   <td className="Z_empListTd">{emp.role}</td>
                   <td className="Z_empListTd">{emp.email}</td>
                   <td className="Z_empListTd">{emp.phone}</td>
-                  <td className="Z_empListTd">
-                    <span className={`Z_empListStatus Z_empListStatus--${emp.status.toLowerCase()}`}>{emp.status}</span>
-                  </td>
+              
                   <td className="Z_empListTd">{emp.joining_date}</td>
                   <td className="Z_empListTd">
                     <button className="Z_empListActionBtn" title="Edit">
