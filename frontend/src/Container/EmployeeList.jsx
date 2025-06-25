@@ -78,15 +78,15 @@ function EmployeeList() {
         <div className="Z_empList_headerRow">
           <h4 className="Z_empListTitle">Employees List</h4>
           <div className="Z_empList_controls">
-           <div>
-             <input
-              className="Z_empList_searchInput"
-              type="text"
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-           </div>
+            <div>
+              <input
+                className="Z_empList_searchInput"
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
             <div className="Z_empList_dropdownWrapper" ref={dropdownRef}>
               <button
                 className="Z_empList_roleDropdown"
@@ -94,9 +94,8 @@ function EmployeeList() {
               >
                 <span>{role || "All Roles"}</span>
                 <FaChevronDown
-                  className={`Z_empList_dropdownIcon ${
-                    isDropdownOpen ? "open" : ""
-                  }`}
+                  className={`Z_empList_dropdownIcon ${isDropdownOpen ? "open" : ""
+                    }`}
                 />
               </button>
               {isDropdownOpen && (
@@ -116,7 +115,7 @@ function EmployeeList() {
                 </div>
               )}
             </div>
-          </div>    
+          </div>
         </div>
         <div className="Z_empListTableWrapper">
           <table className="Z_empListTable">

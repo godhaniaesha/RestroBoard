@@ -564,8 +564,8 @@ const ContentRouter = ({ activeItem, userRole }) => {
             <AddCategory></AddCategory>
           </>
         );
-        case 'category-list':
-        return (  
+      case 'category-list':
+        return (
           <>
             <CategoryList></CategoryList>
           </>
