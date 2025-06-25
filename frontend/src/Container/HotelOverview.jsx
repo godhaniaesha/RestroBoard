@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 import { FaStar, FaUtensils, FaMapMarkerAlt, FaPhoneAlt, FaWifi, FaSwimmer, FaConciergeBell, FaCar, FaQuoteLeft, FaEnvelope, FaInstagram, FaFacebook, FaTwitter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import hotelImg from '../Image/Loogin_bg.png';
@@ -95,6 +95,11 @@ const testimonials = [
 ];
 
 export default function HotelOverview() {
+  const prevDishRef = useRef(null);
+  const nextDishRef = useRef(null);
+  const prevTestimonialRef = useRef(null);
+  const nextTestimonialRef = useRef(null);
+
   return (
     <div className={styles['d_ho-bg']}>
       {/* Modern Hero Section */}
@@ -186,8 +191,14 @@ export default function HotelOverview() {
               modules={[Navigation]}
               className={styles['d_ho_swiper_wrapper']}
               navigation={{
-                prevEl: `.${styles['d_ho-slider-arrow--left']}`,
-                nextEl: `.${styles['d_ho-slider-arrow--right']}`,
+                prevEl: prevDishRef.current,
+                nextEl: nextDishRef.current,
+              }}
+              onInit={swiper => {
+                swiper.params.navigation.prevEl = prevDishRef.current;
+                swiper.params.navigation.nextEl = nextDishRef.current;
+                swiper.navigation.init();
+                swiper.navigation.update();
               }}
               breakpoints={{
                 320: { slidesPerView: 1, spaceBetween: 20 },
@@ -219,10 +230,10 @@ export default function HotelOverview() {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <button className={`${styles['d_ho-slider-arrow']} ${styles['d_ho-slider-arrow--left']}`} aria-label="Scroll Left">
+            <button ref={prevDishRef} className={`${styles['d_ho-slider-arrow']} ${styles['d_ho-slider-arrow--left']}`} aria-label="Scroll Left">
               <FaChevronLeft />
             </button>
-            <button className={`${styles['d_ho-slider-arrow']} ${styles['d_ho-slider-arrow--right']}`} aria-label="Scroll Right">
+            <button ref={nextDishRef} className={`${styles['d_ho-slider-arrow']} ${styles['d_ho-slider-arrow--right']}`} aria-label="Scroll Right">
               <FaChevronRight />
             </button>
           </div>
@@ -244,8 +255,14 @@ export default function HotelOverview() {
               modules={[Navigation]}
               className={styles['d_ho_swiper_wrapper']}
               navigation={{
-                prevEl: `.${styles['d_ho-testimonial-arrow--left']}`,
-                nextEl: `.${styles['d_ho-testimonial-arrow--right']}`,
+                prevEl: prevTestimonialRef.current,
+                nextEl: nextTestimonialRef.current,
+              }}
+              onInit={swiper => {
+                swiper.params.navigation.prevEl = prevTestimonialRef.current;
+                swiper.params.navigation.nextEl = nextTestimonialRef.current;
+                swiper.navigation.init();
+                swiper.navigation.update();
               }}
               breakpoints={{
                 320: { slidesPerView: 1, spaceBetween: 20 },
@@ -263,10 +280,10 @@ export default function HotelOverview() {
                 </SwiperSlide>
               ))}
             </Swiper>
-            <button className={`${styles['d_ho-testimonial-arrow']} ${styles['d_ho-testimonial-arrow--left']}`} aria-label="Scroll Left">
+            <button ref={prevTestimonialRef} className={`${styles['d_ho-testimonial-arrow']} ${styles['d_ho-testimonial-arrow--left']}`} aria-label="Scroll Left">
               <FaChevronLeft />
             </button>
-            <button className={`${styles['d_ho-testimonial-arrow']} ${styles['d_ho-testimonial-arrow--right']}`} aria-label="Scroll Right">
+            <button ref={nextTestimonialRef} className={`${styles['d_ho-testimonial-arrow']} ${styles['d_ho-testimonial-arrow--right']}`} aria-label="Scroll Right">
               <FaChevronRight />
             </button>
           </div>

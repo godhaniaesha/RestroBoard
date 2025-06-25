@@ -284,12 +284,12 @@ textarea {
   position: absolute;
   top: 44px;
   right: 41%;
-  background-color: rgba(255, 0, 0, 0.7);
+  background-color: #1f2e3dba;
   color: white;
   border: none;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
