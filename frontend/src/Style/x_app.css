@@ -430,7 +430,7 @@ textarea {
 .x_inv_summaryCard {
   flex: 1 1 180px;
   min-width: 180px;
-  background: #eaf0f6;
+  background: #fff;
   border-radius: 14px;
   padding: 1.2rem;
   box-shadow: 0 2px 8px #0001;
@@ -474,6 +474,21 @@ textarea {
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
+  
+}
+.x_inv_chartCard--linefull {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 24px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 18px 12px 12px 12px;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 .x_inv_chartTitle {
   text-align: center;
@@ -621,5 +636,30 @@ textarea {
   .x_inv_searchInput {
     width: 100%;
     font-size: 14px;
+  }
+}
+
+.x_inv_rechart_wrapper {
+  width: 100%;
+  min-height: 350px;
+  background: #fff;
+  border-radius: 14px;
+  /* box-shadow: 0 2px 8px #0001; */
+  padding: 0 8px 0 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 900px) {
+  .x_inv_rechart_wrapper {
+    min-height: 220px;
+    padding: 0 2px 0 0;
+  }
+}
+@media (max-width: 600px) {
+  .x_inv_rechart_wrapper {
+    min-height: 140px;
+    padding: 0;
   }
 }
