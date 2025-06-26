@@ -11,7 +11,8 @@ const itemSchema = mongoose.Schema({
     unit: { type: String, required: true },
     minimum_threshold: { type: Number, required: true },
     expiry_date: { type: Date },
-    supplier_id: { type: mongoose.Schema.Types.ObjectId, ref: "Supplier", required: true }
+    supplier_id: { type: mongoose.Schema.Types.ObjectId, ref: "Supplier", required: true },
+    created_by: { type: mongoose.Schema.Types.ObjectId, ref: "Register" },
 }, { timestamps: true });
 
 export default mongoose.model("Item", itemSchema);

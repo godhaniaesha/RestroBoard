@@ -9,6 +9,7 @@ import {
     sendForbiddenResponse
 } from '../utils/ResponseUtils.js';
 import { ThrowError } from "../utils/ErrorUtils.js";
+import Register from "../models/registerModel.js";
 
 // Create a new Leave
 export const createLeave = async (req, res) => {
@@ -83,6 +84,13 @@ export const createLeave = async (req, res) => {
         }
         if (formattedLeave.end_date) {
             formattedLeave.end_date = new Date(formattedLeave.end_date).toISOString().split('T')[0];
+        }
+
+        // After creating the leave
+        const user = await Register.findById(req.user._id);
+        if (user && ['saif', 'waiter', 'manager'].includes(user.role)) {
+            user.leave_balance = (user.leave_balance || 50) - 1;
+            await user.save();
         }
 
         return sendCreatedResponse(res, "Leave created successfully", formattedLeave);

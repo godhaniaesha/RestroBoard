@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import fs from 'fs';
 import path from 'path';
 import Item from "../models/itemModel.js";
+import Category  from "../models/categoryModel.js";
 import { ThrowError } from "../utils/ErrorUtils.js";
 import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse } from '../utils/ResponseUtils.js';
 
@@ -57,7 +58,8 @@ export const createItem = async (req, res) => {
             unit,
             minimum_threshold,
             expiry_date,
-            supplier_id
+            supplier_id,
+            created_by: req.user ? req.user._id : undefined
         });
 
         return sendCreatedResponse(res, "Item created successfully", newItem);

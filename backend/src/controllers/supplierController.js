@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Supplier from "../models/supplierModel.js";
 import { ThrowError } from "../utils/ErrorUtils.js";
-import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse } from '../utils/ResponseUtils.js';
+import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse, sendForbiddenResponse } from '../utils/ResponseUtils.js';
 
 // Create a new supplier (admin only)
 export const createSupplier = async (req, res) => {
@@ -56,10 +56,6 @@ export const getAllSuppliers = async (req, res) => {
         // Check if user is authenticated and is admin
         if (!req.user) {
             return sendUnauthorizedResponse(res, "Authentication required");
-        }
-
-        if (!req.user.isAdmin) {
-            return sendForbiddenResponse(res, "Access denied. Only admins can view all waiters.");
         }
 
         // Find all supplyers with role 'supplyer'
