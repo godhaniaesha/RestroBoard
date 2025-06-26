@@ -23,7 +23,7 @@ export const createRegister = async (req, res) => {
             if (req.file) {
                 const filePath = path.resolve(req.file.path);
                 try {
-                    await fs.unlink(filePath);
+                    await fs.promises.unlink(filePath);
                 } catch (err) {
                     console.error("Failed to delete unused image:", err);
                 }
@@ -216,7 +216,9 @@ export const getAllEmployee = async (req, res) => {
         const Employee = await Register.find({
             $or: [
                 { role: "saif" },
-                { role: "waiter" }
+                { role: "waiter" },
+                { role: "manager" },
+                { role: "supplier" },
             ]
         }).select('-password');
 

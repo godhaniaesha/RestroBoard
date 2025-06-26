@@ -15,7 +15,7 @@ export const createHotel = async (req, res) => {
     try {
         const { hotel_name, phone, email, address, description, amenities, instagram, facebook, twitter } = req.body;
 
-        if (!hotel_name || !phone || !email || !address || !description || !amenities || !instagram || !facebook || !twitter) {
+        if (!hotel_name || !phone || !email || !address || !description || !instagram || !facebook || !twitter) {
             return sendBadRequestResponse(res, "All Field are required");
         }
 
@@ -94,7 +94,7 @@ export const getHotelById = async (req, res) => {
 };
 
 // Update a hotel (admin only)
-export const updateCategory = async (req, res) => {
+export const updateHotel = async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -131,9 +131,16 @@ export const updateCategory = async (req, res) => {
         }
 
         // --- UPDATE OTHER FIELDS ---
-        const { hotel_name, hotel_description } = req.body;
+        const { hotel_name, phone, email, address, description, amenities, instagram, facebook, twitter } = req.body;
         if (hotel_name) hotel.hotel_name = hotel_name;
-        if (hotel_description) hotel.hotel_description = hotel_description;
+        if (phone) hotel.phone = phone;
+        if (email) hotel.email = email;
+        if (address) hotel.address = address;
+        if (description) hotel.description = description;
+        if (amenities) hotel.amenities = amenities;
+        if (instagram) hotel.instagram = instagram;
+        if (facebook) hotel.facebook = facebook;
+        if (twitter) hotel.twitter = twitter;
 
         // Save all changes.
         await hotel.save();
@@ -149,22 +156,31 @@ export const updateCategory = async (req, res) => {
     }
 };
 
-// Delete a category (admin only)
-export const deleteCategory = async (req, res) => {
+// Delete a hotel (admin only)
+export const deleteHotel = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // First, find the Category to get the image path before deleting the database record.
-        const sategoryToDelete = await Category.findById(id);
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            // If ID is invalid and a file was uploaded, delete it.
+            if (req.file && fs.existsSync(req.file.path)) {
 
-        if (!sategoryToDelete) {
-            return sendErrorResponse(res, 404, "Category not found");
+                fs.unlinkSync(req.file.path);
+            }
+            return sendBadRequestResponse(res, "Invalid Hotel ID format");
+        }
+
+        // First, find the Hotel to get the image path before deleting the database record.
+        const hotelToDelete = await Hotel.findById(id);
+
+        if (!hotelToDelete) {
+            return sendErrorResponse(res, 404, "Hotel not found");
         }
 
         // Check if there is an image path stored.
-        if (sategoryToDelete.category_image) {
+        if (hotelToDelete.hotel_image) {
             // Construct the full, absolute path to the image file.
-            const absoluteImagePath = path.join(process.cwd(), sategoryToDelete.category_image);
+            const absoluteImagePath = path.join(process.cwd(), hotelToDelete.hotel_image);
 
             // Check if the file exists at that path and delete it.
             if (fs.existsSync(absoluteImagePath)) {
@@ -172,10 +188,10 @@ export const deleteCategory = async (req, res) => {
             }
         }
 
-        // After handling the file, delete the category from the database.
-        await Category.findByIdAndDelete(id);
+        // After handling the file, delete the hotel from the database.
+        await Hotel.findByIdAndDelete(id);
 
-        return sendSuccessResponse(res, "Category deleted successfully");
+        return sendSuccessResponse(res, "Hotel deleted successfully");
     } catch (error) {
         return ThrowError(res, 500, error.message);
     }
