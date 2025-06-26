@@ -34,10 +34,7 @@ function Register() {
 
   const signinSchema = Yup.object({
     email: Yup.string()
-      .matches(
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        ""
-      )
+      .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "")
       .required(""),
     password: Yup.string()
       .matches(/^[A-Za-z0-9!@#$%^&*()_+=\-{}[\]:;"'<>,.?/|\\`~]*$/, "")
@@ -46,14 +43,24 @@ function Register() {
   });
 
   const forgotSchema = Yup.object({
-    phone: Yup.string().matches(/^[0-9]{10}$/, "").required(""),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, "")
+      .required(""),
   });
 
   const otpSchema = Yup.object({
-    otp0: Yup.string().matches(/^[0-9]$/, "").required(""),
-    otp1: Yup.string().matches(/^[0-9]$/, "").required(""),
-    otp2: Yup.string().matches(/^[0-9]$/, "").required(""),
-    otp3: Yup.string().matches(/^[0-9]$/, "").required(""),
+    otp0: Yup.string()
+      .matches(/^[0-9]$/, "")
+      .required(""),
+    otp1: Yup.string()
+      .matches(/^[0-9]$/, "")
+      .required(""),
+    otp2: Yup.string()
+      .matches(/^[0-9]$/, "")
+      .required(""),
+    otp3: Yup.string()
+      .matches(/^[0-9]$/, "")
+      .required(""),
   });
 
   const resetSchema = Yup.object({
@@ -109,6 +116,7 @@ function Register() {
         resetPassword({
           phone: formikForgot.values.phone,
           newPassword: values.newPassword,
+          confirmPassword: values.confirmPassword,
         })
       );
       if (resetPassword.fulfilled.match(result)) {
@@ -185,7 +193,9 @@ function Register() {
               meal.
             </p>
 
-            {loading && <p className="text-center text-secondary">Loading...</p>}
+            {loading && (
+              <p className="text-center text-secondary">Loading...</p>
+            )}
 
             {mode === "signin" && (
               <form onSubmit={formikSignin.handleSubmit}>
@@ -216,7 +226,10 @@ function Register() {
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
-                <div className="Z_Sign_In_Link" style={{ textAlign: "right" }}>
+                <div
+                  className="Z_Sign_In_Link mb-3"
+                  style={{ textAlign: "right" }}
+                >
                   <a href="#" onClick={handleForgotClick}>
                     Forgot password?
                   </a>
@@ -248,7 +261,12 @@ function Register() {
                   Enter the 4-digit OTP sent to your phone.
                 </p>
                 <div
-                  style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+                  className="mb-2"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "10px",
+                  }}
                 >
                   {[0, 1, 2, 3].map((i) => (
                     <input
@@ -259,8 +277,27 @@ function Register() {
                       className="otp-box"
                       value={formikOtp.values[`otp${i}`]}
                       onChange={(e) => handleOtpChange(i, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key === "Backspace" &&
+                          !formikOtp.values[`otp${i}`] &&
+                          i > 0
+                        ) {
+                          const prevInput = document.getElementById(
+                            `otp-input-${i - 1}`
+                          );
+                          if (prevInput) {
+                            formikOtp.setFieldValue(`otp${i - 1}`, "");
+                            prevInput.focus();
+                          }
+                        }
+                      }}
                       onBlur={formikOtp.handleBlur}
-                      style={{ width: "40px", height: "40px", textAlign: "center" }}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        textAlign: "center",
+                      }}
                     />
                   ))}
                 </div>

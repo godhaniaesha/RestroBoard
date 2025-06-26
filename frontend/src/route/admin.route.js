@@ -1,52 +1,43 @@
-import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Home from '../Container/Home';
 import Register from '../Component/Register';
 import '../Style/d_Style.css';
 import CustomCalendar from '../Component/CustomCalendar';
 import RestaurantAdminPanel from '../Component/RestaurantAdminPanel';
-
-function AdminLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 991);
-  const userRole = 'admin'; // Replace with auth state
-
-  // Responsive sidebar toggle
-  const handleSidebarToggle = () => setSidebarOpen(true);
-  const handleSidebarClose = () => setSidebarOpen(false);
-
-  React.useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 991) setSidebarOpen(true);
-      else setSidebarOpen(false);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return (
-    <div>
-      {/* <Header userRole={userRole} onLogout={() => alert('Logout')} onSidebarToggle={handleSidebarToggle} /> */}
-      {/* <Sidebar userRole={userRole} isOpen={sidebarOpen} onClose={handleSidebarClose} /> */}
-      <main className="d_mainContent">{children}</main>
-    </div>
-  );
-}
+import AddCategory from '../Container/AddCategory';
 
 function AdminRoutes() {
+  const navigate = useNavigate();
+  const [token, setToken] = useState(localStorage.getItem('token'));
+
+  // Listen for localStorage token changes in the same tab
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const updatedToken = localStorage.getItem('token');
+      if (updatedToken !== token) {
+        setToken(updatedToken);
+        if (updatedToken) {
+          navigate('/'); // redirect to home/dashboard after login
+        }
+      }
+    }, 300); // Poll every 300ms (smooth enough for login actions)
+
+    return () => clearInterval(interval);
+  }, [token, navigate]);
+
   return (
-    // <AdminLayout>
-    //   <Routes>
-    //     {/* <Route path="/" element={<Home />} /> */}
-    //     {/* <Route path="/header" element={<Header />} /> */}
-    //   </Routes>
-    // </AdminLayout>
     <Routes>
-    {/* <Route path="/" element={<Home />} /> */}
-    {/* <Route path="/header" element={<Header />} /> */}
-    <Route path="/register" element={<Register />} />
-    <Route path="/CustomCalendar" element={<CustomCalendar />} />
-    <Route path="/" element={<RestaurantAdminPanel />} />
-  </Routes>
+      {!token ? (
+        <Route path="*" element={<Register />} />
+      ) : (
+        <>
+          <Route path="/register" element={<Register />} />
+          <Route path="/CustomCalendar" element={<CustomCalendar />} />
+          <Route path="/" element={<RestaurantAdminPanel />} />
+        </>
+      )}
+    </Routes>
   );
 }
 

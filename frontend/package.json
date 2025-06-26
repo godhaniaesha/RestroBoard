@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@keyvaluesystems/react-dot-matrix-chart": "^0.3.2",
     "@reduxjs/toolkit": "^2.8.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
