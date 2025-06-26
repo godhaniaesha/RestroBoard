@@ -28,6 +28,20 @@ export const createItem = async (req, res) => {
             return sendBadRequestResponse(res, "item_name already registered for this category.");
         }
 
+        // Check if category_id exists
+        const categoryExists = await Category.findById(category_id);
+        if (!categoryExists) {
+            if (req.file) {
+                const filePath = path.resolve(req.file.path);
+                try {
+                    await fs.promises.unlink(filePath);
+                } catch (err) {
+                    console.error("Failed to delete unused image:", err);
+                }
+            }
+            return sendBadRequestResponse(res, "category_id not found");
+        }
+
         // Handle image upload
         let imagePath = null;
         if (req.file) {
