@@ -135,53 +135,55 @@ export const forgotPassword = async (req, res) => {
 
 //Verify Email
 export const VerifyPhone = async (req, res) => {
-    try {
-        const { phone, otp } = req.body;
-        console.log('Verifying OTP:', { phone, otp }); // Debug log
+  try {
+    const { phone, otp } = req.body;
+    console.log('Verifying OTP:', { phone, otp });
 
-        if (!phone || !otp) {
-            return sendBadRequestResponse(res, "Please provide phone and OTP.");
-        }
-
-        const user = await Register.findOne({ phone: phone });
-        if (!user) {
-            return sendErrorResponse(res, 404, "User not found.");
-        }
-
-        console.log('User OTP details:', {
-            storedOTP: user.otp,
-            providedOTP: otp,
-            expiry: user.otpExpiry,
-            currentTime: new Date()
-        }); // Debug log
-
-        // Check if OTP exists and is not expired
-        if (!user.otp || !user.otpExpiry) {
-            return sendBadRequestResponse(res, "No OTP found. Please request a new OTP.");
-        }
-
-        if (user.otp !== otp) {
-            return sendBadRequestResponse(res, "Invalid OTP.");
-        }
-
-        if (user.otpExpiry < Date.now()) {
-            return sendBadRequestResponse(res, "OTP has expired. Please request a new OTP.");
-        }
-
-        await user.save();
-
-        return sendSuccessResponse(res, "OTP verified successfully.");
-
-    } catch (error) {
-        console.error('Verify Email Error:', error); // Debug log
-        return ThrowError(res, 500, error.message);
+    if (!phone || !otp) {
+      return sendBadRequestResponse(res, "Please provide phone and OTP.");
     }
+
+    const user = await Register.findOne({ phone: phone });
+    if (!user) {
+      return sendErrorResponse(res, 404, "User not found.");
+    }
+
+    console.log('User OTP details:', {
+      storedOTP: user.otp,
+      providedOTP: otp,
+      expiry: user.otpExpiry,
+      currentTime: new Date()
+    });
+
+    if (!user.otp || !user.otpExpiry) {
+      return sendBadRequestResponse(res, "No OTP found. Please request a new OTP.");
+    }
+
+    // Convert both to string before comparison
+    if (String(user.otp) !== String(otp)) {
+      return sendBadRequestResponse(res, "Invalid OTP.");
+    }
+
+    if (user.otpExpiry < Date.now()) {
+      return sendBadRequestResponse(res, "OTP has expired. Please request a new OTP.");
+    }
+
+    await user.save();
+
+    return sendSuccessResponse(res, "OTP verified successfully.");
+
+  } catch (error) {
+    console.error('Verify Phone Error:', error);
+    return ThrowError(res, 500, error.message);
+  }
 };
 
 // Reset Password using OTP
 export const resetPassword = async (req, res) => {
     try {
         const { phone, newPassword, confirmPassword } = req.body;
+        console.log(req.body,'body');
+        
         if (!newPassword || !confirmPassword) {
             return sendBadRequestResponse(res, "Please provide phone, newpassword and confirmpassword.");
         }

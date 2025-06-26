@@ -146,17 +146,27 @@ export const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // First, find the Category to get the image path before deleting the database record.
-        const sategoryToDelete = await Category.findById(id);
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            // If ID is invalid and a file was uploaded, delete it.
+            if (req.file && fs.existsSync(req.file.path)) {
 
-        if (!sategoryToDelete) {
+                fs.unlinkSync(req.file.path);
+            }
+            return sendBadRequestResponse(res, "Invalid Category ID format");
+        }
+
+
+        // First, find the Category to get the image path before deleting the database record.
+        const categoryToDelete = await Category.findById(id);
+
+        if (!categoryToDelete) {
             return sendErrorResponse(res, 404, "Category not found");
         }
 
         // Check if there is an image path stored.
-        if (sategoryToDelete.category_image) {
+        if (categoryToDelete.category_image) {
             // Construct the full, absolute path to the image file.
-            const absoluteImagePath = path.join(process.cwd(), sategoryToDelete.category_image);
+            const absoluteImagePath = path.join(process.cwd(), categoryToDelete.category_image);
 
             // Check if the file exists at that path and delete it.
             if (fs.existsSync(absoluteImagePath)) {

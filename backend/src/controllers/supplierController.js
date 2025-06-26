@@ -157,6 +157,16 @@ export const deleteSupplier = async (req, res) => {
     try {
         const { id } = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            // If ID is invalid and a file was uploaded, delete it.
+            if (req.file && fs.existsSync(req.file.path)) {
+
+                fs.unlinkSync(req.file.path);
+            }
+            return sendBadRequestResponse(res, "Invalid Supplier ID format");
+        }
+
+
         // First, find the supplier to get the image path before deleting the database record.
         const supplierToDelete = await Supplier.findById(id);
 

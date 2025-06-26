@@ -10,8 +10,7 @@ import upload from "../middlewares/imageupload.js";
 export const createRegister = async (req, res) => {
     try {
         const { firstName, lastName, email, phone, password, role, address } = req.body;
-
-        // Check if user already exists by email or phone
+        // Check if user already exists y email or phone
         const existingUser = await Register.findOne({
             $or: [
                 { email: email.toLowerCase() },
@@ -23,7 +22,7 @@ export const createRegister = async (req, res) => {
             if (req.file) {
                 const filePath = path.resolve(req.file.path);
                 try {
-                    await fs.unlink(filePath);
+                    await fs.promises.unlink(filePath);
                 } catch (err) {
                     console.error("Failed to delete unused image:", err);
                 }
@@ -216,7 +215,9 @@ export const getAllEmployee = async (req, res) => {
         const Employee = await Register.find({
             $or: [
                 { role: "saif" },
-                { role: "waiter" }
+                { role: "waiter" },
+                { role: "manager" },
+                { role: "supplier" },
             ]
         }).select('-password');
 

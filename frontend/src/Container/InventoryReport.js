@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, Legend as RLegend } from 'recharts';
 import "../Style/Z_table.css";
 import "../Style/x_app.css";
 import { Container } from "react-bootstrap";
@@ -52,6 +53,7 @@ const stockData = [
     last_updated: "2024-07-18",
     status: "Out of Stock",
   },
+  
 ];
 
 function InventoryReport() {
@@ -73,11 +75,25 @@ function InventoryReport() {
           lowStock,
           outOfStock,
         ],
-        backgroundColor: ["#4caf50", "#ff9800", "#f44336"],
+        backgroundColor: [
+            "#516e8b",
+          "#748DA6", // pastel blue
+        //   "#8299b1", // pastel pink
+          "#9CB4CC"  // pastel yellow
+        ],
+        // backgroundColor: ["#4caf50", "#ff9800", "#f44336"],
         borderWidth: 1,
       },
     ],
   };
+
+  // Prepare category-wise stock data for recharts
+  const categoryStock = {};
+  stockData.forEach(item => {
+    if (!categoryStock[item.category]) categoryStock[item.category] = 0;
+    categoryStock[item.category] += item.quantity;
+  });
+  const salesData = Object.keys(categoryStock).map(cat => ({ name: cat, sales: categoryStock[cat] }));
 
   const filteredStock = stockData.filter(
     (item) =>
@@ -114,6 +130,23 @@ function InventoryReport() {
             <h5 className="x_inv_chartTitle">Stock Status</h5>
             <Pie data={pieData} options={{ plugins: { legend: { position: "bottom" } } }} />
           </div>
+          {/* category wise stock  */}
+          <div className="x_inv_chartCard x_inv_chartCard--linefull">
+          <h5 className="x_inv_chartTitle">Category-wise Stock</h5>
+          <div className="x_inv_rechart_wrapper">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={salesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <RTooltip />
+                <RLegend />
+                <Line type="monotone" dataKey="sales" stroke="#456268" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        </div>
           <div className="x_inv_tableCard">
             <div className="x_inv_controls">
               <input
@@ -168,7 +201,6 @@ function InventoryReport() {
               </table>
             </div>
           </div>
-        </div>
       </div>
     </Container>
   );

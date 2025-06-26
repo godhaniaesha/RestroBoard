@@ -20,7 +20,7 @@ const hotelSchema = mongoose.Schema({
         type: String
     },
     amenities: {
-        type: String,
+        type: Array,
         default: ["Free Wi-Fi", "Swimming Pool", "24/7 Service", "Free Parking"]
     },
     instagram: {

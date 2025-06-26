@@ -69,13 +69,21 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
-  async (token, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem('token'); // ⬅️ fetch token here
       const response = await axios.post(`${API_URL}/logoutUser`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
+      // Clear storage
+      localStorage.removeItem('user');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('token');
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Logout failed');
