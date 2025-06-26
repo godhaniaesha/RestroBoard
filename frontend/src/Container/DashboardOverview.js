@@ -25,7 +25,7 @@ const topProducts = [
   { name: 'Chocolate Cake', sold: 50, revenue: 350 },
 ];
 
-const COLORS = ['#456268',  '#547792', '#79A3B1','#7886C7', '#A7B49E'];
+const COLORS = ['#4E6688',  '#748DA6', '#9BB8CD','#7F8CAA', '#A6AEBF'];
 
 const recentOrders = [
   { id: '#1234', customer: 'John Doe', time: '10:30 AM', items: 3, total: 45.00, status: 'Completed' },

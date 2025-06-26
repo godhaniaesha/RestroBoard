@@ -87,7 +87,7 @@ body {
   background: transparent;
   border: 1px solid var(--primary-bg-color);
   padding: 15px;
-  color: #fff;
+  color:var(--dark-color);
   font-size: clamp(1rem, 2vw, 1.15rem);
   margin-bottom: 20px;
 }
