@@ -1,62 +1,37 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllEmployee } from "../redux/slice/user.slice";
 import "../Style/Z_table.css";
 import { FaRegEdit, FaRegTrashAlt, FaChevronDown } from "react-icons/fa";
 
-const employees = [
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/32.jpg",
-    name: "Lincoln Ekstrom",
-    role: "Manager",
-    email: "lincoln.ekstrom@email.com",
-    phone: "+1 555-123-4567",
-    joining_date: "2021-04-10",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/33.jpg",
-    name: "Emerson Kors",
-    role: "Stylist",
-    email: "emerson.kors@email.com",
-    phone: "+1 555-234-5678",
-    joining_date: "2021-03-15",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/women/44.jpg",
-    name: "Alfonsa Kors",
-    role: "Receptionist",
-    email: "alfonsa.kors@email.com",
-    phone: "+1 555-345-6789",
-    joining_date: "2021-02-20",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/45.jpg",
-    name: "Ruben Torff",
-    role: "Stylist",
-    email: "ruben.torff@email.com",
-    phone: "+1 555-456-7890",
-    joining_date: "2021-01-05",
-  },
-];
+function EmployeeList({ setActiveItem }) {
+  const dispatch = useDispatch();
+  const { employees, loading } = useSelector((state) => state.user);
 
-function EmployeeList() {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Get unique roles for dropdown
-  const roles = [
-    ...new Set(["All Roles", ...employees.map((e) => e.role)])
-  ];
+  useEffect(() => {
+    dispatch(getAllEmployee());
+  }, [dispatch]);
 
-  // Filter employees by search and role
-  const filtered = employees.filter((emp) => {
+  const safeEmployees = Array.isArray(employees) ? employees : [];
+
+  const roles = ["All Roles", ...new Set(safeEmployees.map((e) => e.role))];
+
+  const filtered = safeEmployees.filter((emp) => {
     const matchesSearch =
-      emp.name.toLowerCase().includes(search.toLowerCase()) ||
-      emp.role.toLowerCase().includes(search.toLowerCase()) ||
-      emp.email.toLowerCase().includes(search.toLowerCase()) ||
-      emp.phone.toLowerCase().includes(search.toLowerCase()) ||
-      emp.joining_date.toLowerCase().includes(search.toLowerCase());
-    const matchesRole = role === "" || role === "All Roles" || emp.role === role;
+      emp.name?.toLowerCase().includes(search.toLowerCase()) ||
+      emp.role?.toLowerCase().includes(search.toLowerCase()) ||
+      emp.email?.toLowerCase().includes(search.toLowerCase()) ||
+      emp.phone?.toLowerCase().includes(search.toLowerCase()) ||
+      emp.joining_date?.toLowerCase().includes(search.toLowerCase());
+
+    const matchesRole =
+      role === "" || role === "All Roles" || emp.role === role;
+
     return matchesSearch && matchesRole;
   });
 
@@ -71,6 +46,10 @@ function EmployeeList() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const handleEdit = (id) => {
+    localStorage.setItem("editEmployeeId", id);
+    setActiveItem("employees-edit");
+  };
 
   return (
     <section className="Z_empListSection">
@@ -94,8 +73,9 @@ function EmployeeList() {
               >
                 <span>{role || "All Roles"}</span>
                 <FaChevronDown
-                  className={`Z_empList_dropdownIcon ${isDropdownOpen ? "open" : ""
-                    }`}
+                  className={`Z_empList_dropdownIcon ${
+                    isDropdownOpen ? "open" : ""
+                  }`}
                 />
               </button>
               {isDropdownOpen && (
@@ -117,42 +97,76 @@ function EmployeeList() {
             </div>
           </div>
         </div>
+
         <div className="Z_empListTableWrapper">
-          <table className="Z_empListTable">
-            <thead>
-              <tr>
-                <th className="Z_empListTh">Photo</th>
-                <th className="Z_empListTh">Name</th>
-                <th className="Z_empListTh">Role</th>
-                <th className="Z_empListTh">Email</th>
-                <th className="Z_empListTh">Phone</th>
-                <th className="Z_empListTh">Joining Date</th>
-                <th className="Z_empListTh">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((emp, idx) => (
-                <tr className="Z_empListTr" key={idx}>
-                  <td className="Z_empListTd">
-                    <img src={emp.photo_url} alt={emp.name} className="Z_empListPhoto" />
-                  </td>
-                  <td className="Z_empListTd">{emp.name}</td>
-                  <td className="Z_empListTd">{emp.role}</td>
-                  <td className="Z_empListTd">{emp.email}</td>
-                  <td className="Z_empListTd">{emp.phone}</td>
-                  <td className="Z_empListTd">{emp.joining_date}</td>
-                  <td className="Z_empListTd">
-                    <button className="Z_empListActionBtn" title="Edit">
-                      <FaRegEdit />
-                    </button>
-                    <button className="Z_empListActionBtn" title="Delete">
-                      <FaRegTrashAlt />
-                    </button>
-                  </td>
+          {loading ? (
+            <p className="text-center">Loading employees...</p>
+          ) : (
+            <table className="Z_empListTable">
+              <thead>
+                <tr>
+                  <th className="Z_empListTh">Photo</th>
+                  <th className="Z_empListTh">Name</th>
+                  <th className="Z_empListTh">Role</th>
+                  <th className="Z_empListTh">Email</th>
+                  <th className="Z_empListTh">Phone</th>
+                  <th className="Z_empListTh">Joining Date</th>
+                  <th className="Z_empListTh">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.length > 0 ? (
+                  filtered.map(
+                    (emp, idx) => (
+                      console.log(emp, "dfghjk"),
+                      (
+                        <tr className="Z_empListTr" key={idx}>
+                          <td className="Z_empListTd">
+                            <img
+                              src={
+                                emp.photo_url ||
+                                "https://via.placeholder.com/40"
+                              }
+                              alt={emp.name}
+                              className="Z_empListPhoto"
+                            />
+                          </td>
+                          <td className="Z_empListTd">
+                            {emp.firstName} {emp.lastName}
+                          </td>
+                          <td className="Z_empListTd">{emp.role}</td>
+                          <td className="Z_empListTd">{emp.email}</td>
+                          <td className="Z_empListTd">{emp.phone}</td>
+                          <td className="Z_empListTd">{emp.joining_date}</td>
+                          <td className="Z_empListTd">
+                          <button
+  className="Z_empListActionBtn"
+  title="Edit"
+  onClick={() => handleEdit(emp._id)}
+>
+  <FaRegEdit />
+</button>
+                            <button
+                              className="Z_empListActionBtn"
+                              title="Delete"
+                            >
+                              <FaRegTrashAlt />
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    )
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center">
+                      No employees found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </section>

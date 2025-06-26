@@ -10,8 +10,7 @@ import upload from "../middlewares/imageupload.js";
 export const createRegister = async (req, res) => {
     try {
         const { firstName, lastName, email, phone, password, role, address } = req.body;
-
-        // Check if user already exists by email or phone
+        // Check if user already exists y email or phone
         const existingUser = await Register.findOne({
             $or: [
                 { email: email.toLowerCase() },

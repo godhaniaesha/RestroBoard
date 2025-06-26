@@ -6,7 +6,8 @@ import {
   FaTimes, FaUserShield, FaUserTie, FaUserFriends, FaChevronDown,
   FaChevronRight, FaPlus, FaEdit, FaTrash, FaEye, FaFileAlt,
   FaUserPlus, FaUserMinus, FaClock, FaCheck,
-  FaShippingFast
+  FaShippingFast,
+  FaUserEdit
 } from 'react-icons/fa';
 import { BiSolidCategory } from "react-icons/bi";
 import { HiViewGridAdd } from "react-icons/hi";
@@ -33,6 +34,10 @@ import SupplierList from '../Container/SupplierList';
 import AddCategory from '../Container/AddCategory';
 import CategoryList from '../Container/CategoryList';
 import InventoryReport from '../Container/InventoryReport';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logoutUser } from '../redux/slice/auth.slice';
+import EditEmployee from '../Container/EditEmployee';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
@@ -61,7 +66,9 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         icon: <FaUsers />,
         subItems: [
           { id: 'employees-list', label: 'All Employees', icon: <FaUsers /> },
-          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> }
+          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> },
+          { id: 'employees-edit', label: 'Edit Employee', icon: <FaUserEdit />, hidden: true }
+
         ]
       },
       {
@@ -393,17 +400,19 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
 
                 {item.subItems && item.subItems.length > 0 && shouldShowExpanded && (
                   <ul className={`submenu ${expandedMenus[item.id] ? 'submenu-open' : 'submenu-closed'}`}>
-                    {item.subItems.map((subItem) => (
-                      <li key={subItem.id} className="submenu-item">
-                        <button
-                          className={`submenu-link ${activeItem === subItem.id ? 'submenu-link-active' : ''}`}
-                          onClick={() => handleSubItemClick(subItem.id)}
-                        >
-                          <span className="submenu-icon">{subItem.icon}</span>
-                          <span className="submenu-text">{subItem.label}</span>
-                        </button>
-                      </li>
-                    ))}
+                    {item.subItems
+                      .filter((subItem) => !subItem.hidden)
+                      .map((subItem) => (
+                        <li key={subItem.id} className="submenu-item">
+                          <button
+                            className={`submenu-link ${activeItem === subItem.id ? 'submenu-link-active' : ''}`}
+                            onClick={() => handleSubItemClick(subItem.id)}
+                          >
+                            <span className="submenu-icon">{subItem.icon}</span>
+                            <span className="submenu-text">{subItem.label}</span>
+                          </button>
+                        </li>
+                      ))}
                   </ul>
                 )}
               </li>
@@ -425,6 +434,8 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
 // Navbar Component
 const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getRoleIcon = (role) => {
     switch (role) {
@@ -452,6 +463,9 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showProfileMenu]);
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  }
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -493,7 +507,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
                 <a href="#" className="dropdown-item"><FaUser /> Profile</a>
                 <a href="#" className="dropdown-item"><FaCog /> Settings</a>
                 <hr className="dropdown-divider" />
-                <a href="#" className="dropdown-item logout"><FaSignOutAlt /> Logout</a>
+                <a href="#" className="dropdown-item logout" onClick={handleLogout}><FaSignOutAlt /> Logout</a>
               </div>
             )}
 
@@ -521,7 +535,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 };
 
 // Content Router Component
-const ContentRouter = ({ activeItem, userRole }) => {
+const ContentRouter = ({ activeItem, setActiveItem,userRole }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
@@ -541,7 +555,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'employees-list':
         return (
           <>
-            <EmployeeList></EmployeeList>
+           <EmployeeList setActiveItem={setActiveItem} />
           </>
         );
 
@@ -549,6 +563,12 @@ const ContentRouter = ({ activeItem, userRole }) => {
         return (
           <>
             <AddEmployee></AddEmployee>
+          </>
+        );
+      case 'employees-edit':
+        return (
+          <>
+            <EditEmployee></EditEmployee>
           </>
         );
       case 'suppliers':
@@ -677,7 +697,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
         )
       case 'inventory-reports':
         return (
-         <InventoryReport></InventoryReport>
+          <InventoryReport></InventoryReport>
         );
 
       case 'billing':
@@ -821,6 +841,7 @@ const RestaurantAdminPanel = () => {
 
           <ContentRouter
             activeItem={activeItem}
+            setActiveItem={setActiveItem}
             userRole={userRole}
           />
         </div>
