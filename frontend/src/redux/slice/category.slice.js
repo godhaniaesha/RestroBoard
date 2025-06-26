@@ -3,12 +3,61 @@ import axios from 'axios';
 
 export const fetchCategories = createAsyncThunk(
     'category/fetchCategories',
-    async () => {
-        const response = await axios.get('http://localhost:3000/api/getAllCategories');
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return rejectWithValue('Token not found in local storage.');
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+            const response = await axios.get('http://localhost:3000/api/getAllCategories', config);
+            return response.data.result;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
 
+export const getCategoryById = createAsyncThunk(
+    'category/getCategoryById',
+    async (id, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return rejectWithValue('Token not found in local storage.');
+            }
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const response = await axios.get(`http://localhost:3000/api/getCategoryById/${id}`, config);
+            return response.data.result;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
 
-        console.log(response.data.data)
-        return response.data.data; // Adjust if your API response structure is different
+export const updateCategory = createAsyncThunk(
+    'category/updateCategory',
+    async ({ id, formData }, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return rejectWithValue('Token not found in local storage.');
+            }
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                }
+            };
+            const response = await axios.put(`http://localhost:3000/api/updateCategory/${id}`, formData, config);
+            return response.data.result;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
     }
 );
 
@@ -16,25 +65,62 @@ export const createCategory = createAsyncThunk(
     'category/createCategory',
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/createCategory', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            return response.data.data;
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return rejectWithValue('Token not found in local storage.');
+            }
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                }
+            };
+            const response = await axios.post('http://localhost:3000/api/createCategory', formData, config);
+            return response.data.result;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
         }
     }
 );
 
+export const deleteCategory = createAsyncThunk(
+    'category/deleteCategory',
+    async (id, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return rejectWithValue('Token not found in local storage.');
+            }
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.delete(`http://localhost:3000/api/deleteCategory/${id}`, config);
+            return id;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
 
 const categorySlice = createSlice({
     name: 'category',
     initialState: {
         categories: [],
+        selectedCategory: null,
         loading: false,
         error: null,
+        createSuccess: false,
+        updateSuccess: false,
     },
-    reducers: {},
+    reducers: {
+        resetCreateSuccess(state) {
+            state.createSuccess = false;
+        },
+        resetUpdateSuccess(state) {
+            state.updateSuccess = false;
+        },
+        clearSelectedCategory(state) {
+            state.selectedCategory = null;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchCategories.pending, (state) => {
@@ -47,7 +133,19 @@ const categorySlice = createSlice({
             })
             .addCase(fetchCategories.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload;
+            })
+            .addCase(getCategoryById.pending, (state) => {
+                state.loading = true;
+                state.selectedCategory = null;
+            })
+            .addCase(getCategoryById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedCategory = action.payload;
+            })
+            .addCase(getCategoryById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             })
             .addCase(createCategory.pending, (state) => {
                 state.loading = true;
@@ -57,16 +155,45 @@ const categorySlice = createSlice({
             .addCase(createCategory.fulfilled, (state, action) => {
                 state.loading = false;
                 state.createSuccess = true;
-                // Optionally, add the new category to the list:
                 state.categories.push(action.payload);
             })
             .addCase(createCategory.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.createSuccess = false;
+            })
+            .addCase(updateCategory.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.updateSuccess = false;
+            })
+            .addCase(updateCategory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.updateSuccess = true;
+                const index = state.categories.findIndex(cat => cat._id === action.payload._id);
+                console.log(index,"index")
+                if (index !== -1) {
+                    state.categories[index] = action.payload;
+                }
+            })
+            .addCase(updateCategory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.updateSuccess = false;
+            })
+            .addCase(deleteCategory.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteCategory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.categories = state.categories.filter(cat => cat._id !== action.payload);
+            })
+            .addCase(deleteCategory.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     },
 });
 
-export const { resetCreateSuccess } = categorySlice.actions;
+export const { resetCreateSuccess, resetUpdateSuccess, clearSelectedCategory } = categorySlice.actions;
 export default categorySlice.reducer;

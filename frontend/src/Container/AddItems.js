@@ -1,10 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createItem, resetCreateSuccess } from "../redux/slice/stockmanage.slice";
 import CustomCalendar from "../Component/CustomCalendar";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
 
-function AddItems() {
+function AddItems({ onSuccess }) {
+  const dispatch = useDispatch();
+  const { loading, error, createSuccess } = useSelector((state) => state.stock);
+
   const [expiryDate, setExpiryDate] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
@@ -14,7 +19,7 @@ function AddItems() {
   const [category, setCategory] = useState(null);
   const [unit, setUnit] = useState(null);
   const [supplier, setSupplier] = useState(null);
-const [supplierImg, setSupplierImg] = useState(null);
+  const [supplierImg, setSupplierImg] = useState(null);
   const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
 
   // Effect to clean up the object URL when the component unmounts or image changes
@@ -25,6 +30,17 @@ const [supplierImg, setSupplierImg] = useState(null);
       }
     };
   }, [supplierImgPreviewUrl]);
+
+  useEffect(() => {
+    if (createSuccess) {
+      dispatch(resetCreateSuccess());
+      if (onSuccess) onSuccess();
+      // Optionally reset form fields here
+      setSupplierImg(null);
+      setSupplierImgPreviewUrl(null);
+      // ...reset other fields as needed
+    }
+  }, [createSuccess, dispatch, onSuccess]);
 
   const removeSupplierImage = () => {
     setSupplierImg(null);
@@ -65,6 +81,24 @@ const [supplierImg, setSupplierImg] = useState(null);
       setExpiryDate(formatted);
       setShowCalendar(false);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    // Collect all form fields
+    formData.append("item_name", document.getElementById("itemName").value);
+    formData.append("category_id", category?.value || "");
+    formData.append("price", document.getElementById("price").value);
+    formData.append("quantity", document.getElementById("quantity").value);
+    formData.append("unit", unit?.value || "");
+    formData.append("minimum_threshold", document.getElementById("min_threshold").value);
+    formData.append("expiry_date", expiryDate);
+    formData.append("supplier_id", supplier?.value || "");
+    if (supplierImg) {
+      formData.append("item_image", supplierImg);
+    }
+    dispatch(createItem(formData));
   };
 
   return (
@@ -124,7 +158,7 @@ const [supplierImg, setSupplierImg] = useState(null);
             )}
           </form>
 
-          <form className="row g-3 mt-3">
+          <form className="row g-3 mt-3" onSubmit={handleSubmit}>
             <div className="col-md-6">
               <label htmlFor="itemName" className="form-label">
                 Item Name
@@ -270,12 +304,14 @@ const [supplierImg, setSupplierImg] = useState(null);
               />
             </div>
 
+            {error && <div className="col-12 text-danger">{error}</div>}
+
             <div className="col-12 d-flex justify-content-center x_btn_main">
               <button type="button" className="btn btn-secondary mx-2">
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary mx-2">
-                Create
+              <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
+                {loading ? "Saving..." : "Create"}
               </button>
             </div>
           </form>

@@ -1,57 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchItems, deleteItem } from "../redux/slice/stockmanage.slice";
 import "../Style/Z_table.css";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
-
-const stockData = [
-  {
-    item_photo_url: "https://images.pexels.com/photos/461428/pexels-photo-461428.jpeg?auto=compress&cs=tinysrgb&w=400",
-    item_name: "All-Purpose Flour",
-    category: "Dry Goods",
-    quantity: 50,
-    unit: "kg",
-    price: 1.5,
-    last_updated: "2024-07-20",
-    status: "In Stock",
-  },
-  {
-    item_photo_url: "https://images.pexels.com/photos/1327838/pexels-photo-1327838.jpeg?auto=compress&cs=tinysrgb&w=400",
-    item_name: "Fresh Tomatoes",
-    category: "Vegetables",
-    quantity: 25,
-    unit: "kg",
-    price: 2.0,
-    last_updated: "2024-07-21",
-    status: "In Stock",
-  },
-  {
-    item_photo_url: "https://images.pexels.com/photos/33783/olive-oil-salad-dressing-cooking-olive.jpg?auto=compress&cs=tinysrgb&w=400",
-    item_name: "Olive Oil",
-    category: "Oils",
-    quantity: 10,
-    unit: "liters",
-    price: 8.0,
-    last_updated: "2024-07-19",
-    status: "Low Stock",
-  },
-  {
-    item_photo_url: "https://images.pexels.com/photos/6107776/pexels-photo-6107776.jpeg?auto=compress&cs=tinysrgb&w=400",
-    item_name: "Chicken Breast",
-    category: "Meat",
-    quantity: 0,
-    unit: "kg",
-    price: 5.5,
-    last_updated: "2024-07-18",
-    status: "Out of Stock",
-  },
-];
+import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 
 function StockManagement() {
+  const dispatch = useDispatch();
+  const { items, loading, error } = useSelector((state) => state.stock);
   const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
-  const filteredStock = stockData.filter(
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, [dispatch]);
+
+  const openDeleteModal = (item) => {
+    setItemToDelete(item);
+    setIsModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setItemToDelete(null);
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteItem(itemToDelete._id));
+      closeDeleteModal();
+    }
+  };
+
+  const filteredStock = items.filter(
     (item) =>
       item.item_name.toLowerCase().includes(search.toLowerCase()) ||
-      item.category.toLowerCase().includes(search.toLowerCase())
+      (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -70,6 +55,8 @@ function StockManagement() {
           </div>
         </div>
         <div className="Z_SM_tableWrapper">
+          {loading && <p>Loading...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <table className="Z_SM_table">
             <thead>
               <tr>
@@ -84,28 +71,40 @@ function StockManagement() {
             </thead>
             <tbody>
               {filteredStock.map((item, idx) => (
-                <tr className="Z_SM_Tr" key={idx}>
+                <tr className="Z_SM_Tr" key={item._id || idx}>
                   <td className="Z_SM_Td">
                     <div className="Z_SM_itemCell">
                       <img
-                        src={item.item_photo_url}
+                        src={
+                          item.item_image
+                            ? `http://localhost:3000${item.item_image}`
+                            : "https://via.placeholder.com/40"
+                        }
                         alt={item.item_name}
                         className="Z_SM_photo"
                       />
                       <span>{item.item_name}</span>
                     </div>
                   </td>
-                  <td className="Z_SM_Td">{item.category}</td>
+                  <td className="Z_SM_Td">{item.category_id?.category_name || ""}</td>
                   <td className="Z_SM_Td">{`${item.quantity} ${item.unit}`}</td>
-                  <td className="Z_SM_Td">{`$${item.price.toFixed(2)}`}</td>
-                  <td className="Z_SM_Td">{item.last_updated}</td>
+                  <td className="Z_SM_Td">{`$${item.price?.toFixed(2)}`}</td>
+                  <td className="Z_SM_Td">{item.updatedAt ? item.updatedAt.slice(0, 10) : ""}</td>
                   <td className="Z_SM_Td">
                     <span
-                      className={`Z_SM_status Z_SM_status--${item.status
-                        .toLowerCase()
-                        .replace(" ", "-")}`}
+                      className={`Z_SM_status Z_SM_status--${
+                        item.quantity === 0
+                          ? "out-of-stock"
+                          : item.quantity <= item.minimum_threshold
+                          ? "low-stock"
+                          : "in-stock"
+                      }`}
                     >
-                      {item.status}
+                      {item.quantity === 0
+                        ? "Out of Stock"
+                        : item.quantity <= item.minimum_threshold
+                        ? "Low Stock"
+                        : "In Stock"}
                     </span>
                   </td>
                   <td className="Z_SM_Td">
@@ -118,6 +117,7 @@ function StockManagement() {
                     <button
                       className="Z_SM_actionBtn Z_SM_actionBtn--delete"
                       title="Delete"
+                      onClick={() => openDeleteModal(item)}
                     >
                       <FaRegTrashAlt />
                     </button>
@@ -128,6 +128,12 @@ function StockManagement() {
           </table>
         </div>
       </div>
+      <DeleteConfirmationModal
+        isOpen={isModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDelete}
+        itemName={itemToDelete ? itemToDelete.item_name : ""}
+      />
     </section>
   );
 }

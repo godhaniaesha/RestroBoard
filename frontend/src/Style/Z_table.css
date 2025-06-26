@@ -836,7 +836,7 @@ body {
   display: inline-block;
   padding: 0.3em 1em;
   border-radius: 12px;
-  font-size: 0.95em;
+  font-size: 14PX;
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -1961,5 +1961,114 @@ body {
   }
   .Z_DashAnstic_chartPlaceholder {
     height: 250px;
+  }
+}
+
+/* =================================
+   Delete Confirmation Modal (Z_deleteConf)
+   ================================= */
+.Z_deleteConf_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.Z_deleteConf_modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  animation: Z_deleteConf_fadeIn 0.3s ease-out;
+}
+
+@keyframes Z_deleteConf_fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.Z_deleteConf_title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0 0 1rem 0;
+}
+
+.Z_deleteConf_message {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #5a6e83;
+  margin: 0 0 1.5rem 0;
+}
+
+.Z_deleteConf_message strong {
+  color: var(--dark-color);
+  font-weight: 600;
+}
+
+.Z_deleteConf_actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.Z_deleteConf_btn {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.Z_deleteConf_btn--cancel {
+  background: #f4f6fb;
+  color: #5a6e83;
+  border: 1px solid #e5e9f2;
+}
+
+.Z_deleteConf_btn--cancel:hover {
+  background: #e9edf2;
+}
+
+.Z_deleteConf_btn--delete {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.Z_deleteConf_btn--delete:hover {
+  background: #b71c1c;
+}
+
+@media (max-width: 480px) {
+  .Z_deleteConf_modal {
+    padding: 1.5rem;
+  }
+  .Z_deleteConf_title {
+    font-size: 1.25rem;
+  }
+  .Z_deleteConf_actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .Z_deleteConf_btn {
+    width: 100%;
   }
 }

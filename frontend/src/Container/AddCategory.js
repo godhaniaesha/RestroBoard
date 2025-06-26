@@ -1,97 +1,138 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  createCategory,
+  getCategoryById,
+  updateCategory,
+  resetUpdateSuccess,
+  clearSelectedCategory,
+  resetCreateSuccess
+} from '../redux/slice/category.slice';
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 
-export default function AddCategory() {
-  const [supplierImg, setSupplierImg] = useState(null);
-  const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
+export default function AddCategory({ categoryId, onNavigate }) {
+  const id = categoryId;
+  const dispatch = useDispatch();
 
+  const isEditMode = Boolean(id);
+  const { loading, error, createSuccess, updateSuccess, selectedCategory } = useSelector((state) => state.category);
+
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryDescription, setCategoryDescription] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    return () => {
-      if (supplierImgPreviewUrl) {
-        URL.revokeObjectURL(supplierImgPreviewUrl);
-      }
-    };
-  }, [supplierImgPreviewUrl]);
-  const removeSupplierImage = () => {
-    setSupplierImg(null);
-    if (supplierImgPreviewUrl) {
-      URL.revokeObjectURL(supplierImgPreviewUrl);
-      setSupplierImgPreviewUrl(null);
+    if (isEditMode && id) {
+      dispatch(getCategoryById(id));
     }
-    // Optionally reset the file input value to allow re-uploading the same file
-    const fileInput = document.getElementById('supplierImgInput');
+    return () => {
+      dispatch(clearSelectedCategory());
+    };
+  }, [dispatch, id, isEditMode]);
+
+  useEffect(() => {
+    if (isEditMode && selectedCategory && selectedCategory._id === id) {
+      console.log('Edit form loaded with data:', selectedCategory);
+      setCategoryName(selectedCategory.category_name || '');
+      setCategoryDescription(selectedCategory.category_description || '');
+      if (selectedCategory.category_image) {
+        setImagePreview(`http://localhost:3000${selectedCategory.category_image}`);
+      } else {
+        setImagePreview(null);
+      }
+    }
+  }, [selectedCategory, isEditMode, id]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      dispatch(resetUpdateSuccess());
+      onNavigate('category-list');
+    }
+    if (createSuccess) {
+      dispatch(resetCreateSuccess());
+      onNavigate('category-list');
+    }
+  }, [createSuccess, updateSuccess, onNavigate, dispatch]);
+
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    const fileInput = document.getElementById('categoryImageInput');
     if (fileInput) {
       fileInput.value = '';
     }
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('category_name', categoryName);
+    formData.append('category_description', categoryDescription);
+    if (imageFile) {
+      formData.append('category_image', imageFile);
+    }
+
+    if (isEditMode) {
+      dispatch(updateCategory({ id, formData }));
+    } else {
+      dispatch(createCategory(formData));
+    }
+  };
+
+
   return (
     <>
       <section className="x_employee-section">
-        <h4 className="x_employee-heading">Add Category</h4>
+        <h4 className="x_employee-heading">{isEditMode ? 'Edit Category' : 'Add Category'}</h4>
         <div className="x_popup">
-          <form
-            className={`x_dropzone x_dropzone-multiple  dz-clickable ${supplierImg ? 'x_has-image' : ''}`}
-            id="dropzone-multiple"
-            data-dropzone="data-dropzone"
-            action="#!"
-            onClick={() => document.getElementById('supplierImgInput').click()}
+          <div
+            className={`x_dropzone x_dropzone-multiple  dz-clickable ${imagePreview ? 'x_has-image' : ''}`}
+            onClick={() => !imagePreview && document.getElementById('categoryImageInput').click()}
             style={{ cursor: 'pointer' }}
           >
-
-            {!supplierImg && (
-              <div
-                className="dz-message x_dz-message"
-                data-dz-message="data-dz-message"
-                onClick={() => document.getElementById('supplierImgInput').click()}
-                style={{ cursor: 'pointer' }}
-              >
+            {!imagePreview && (
+              <div className="dz-message x_dz-message">
                 <img className="me-2" src={uplod} width="25" alt="upload" />
                 Drop your files here
               </div>
-
-
             )}
-
             <input
-              id="supplierImgInput"
+              id="categoryImageInput"
               type="file"
               accept="image/*"
               style={{ display: 'none' }}
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  const file = e.target.files[0];
-                  setSupplierImg(file);
-                  setSupplierImgPreviewUrl(URL.createObjectURL(file));
-                }
-              }}
+              onChange={handleImageChange}
             />
-            {supplierImg && supplierImgPreviewUrl && (
+            {imagePreview && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
-                <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
+                <img src={imagePreview} alt="Category" className="x_uploaded-image" />
                 <button
                   type="button"
                   className="x_remove-image-btn"
-                  onClick={removeSupplierImage}
+                  onClick={removeImage}
                   title="Remove image"
                 >
                   &times;
                 </button>
               </div>
             )}
-          </form>
-          <form className="row g-3 mt-3">
-            {/* <div className="col-md-6">
-              <label htmlFor="categoryImage" className="form-label">Image</label>
-              <input
-                type="file"
-                className="form-control"
-                id="categoryImage"
-                name="categoryImage"
-                accept="image/*"
-              />
-            </div> */}
+          </div>
+          <form className="row g-3 mt-3" onSubmit={handleSubmit}>
             <div className="col-12">
               <label htmlFor="categoryName" className="form-label">Name</label>
               <input
@@ -100,6 +141,9 @@ export default function AddCategory() {
                 id="categoryName"
                 name="categoryName"
                 placeholder="Enter category name"
+                value={categoryName}
+                onChange={(e) => setCategoryName(e.target.value)}
+                required
               />
             </div>
             <div className="col-12">
@@ -110,11 +154,17 @@ export default function AddCategory() {
                 name="categoryDescription"
                 rows="3"
                 placeholder="Enter category description"
+                value={categoryDescription}
+                onChange={(e) => setCategoryDescription(e.target.value)}
+                required
               ></textarea>
             </div>
+            {error && <div className="col-12 text-danger">{error}</div>}
             <div className="col-12 d-flex justify-content-center x_btn_main">
-              <button type="button" className="btn btn-secondary mx-2">Cancel</button>
-              <button type="submit" className="btn btn-primary mx-2">Create</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={() => onNavigate('category-list')}>Cancel</button>
+              <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
+                {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
+              </button>
             </div>
           </form>
         </div>

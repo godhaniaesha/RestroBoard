@@ -36,7 +36,7 @@ import InventoryReport from '../Container/InventoryReport';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
-const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, isMobile, isHovered, setIsHovered }) => {
+const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const [hoverTimeout, setHoverTimeout] = useState(null);
 
@@ -217,17 +217,17 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
     if (hasSubItems) {
       toggleSubmenu(itemId);
     } else {
-      setActiveItem(itemId);
+      onItemClick(itemId);
       if (isMobile) {
-        toggleSidebar();
+        onToggleSidebar();
       }
     }
   };
 
   const handleSubItemClick = (itemId) => {
-    setActiveItem(itemId);
+    onItemClick(itemId);
     if (isMobile) {
-      toggleSidebar();
+      onToggleSidebar();
     }
   };
 
@@ -293,7 +293,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         clearTimeout(hoverTimeout);
         setHoverTimeout(null);
       }
-      setIsHovered(true);
+      onSetHovered(true);
     }
   };
 
@@ -302,7 +302,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
 
 
       const timeout = setTimeout(() => {
-        setIsHovered(false);
+        onSetHovered(false);
 
         setExpandedMenus({});
 
@@ -339,7 +339,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
   return (
     <>
       {isMobile && isOpen && (
-        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+        <div className="sidebar-overlay" onClick={onToggleSidebar}></div>
       )}
 
       <div
@@ -349,7 +349,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
         onMouseMove={() => {
           // Keep hover state active when moving within sidebar
           if (!isMobile && !isOpen && !isHovered) {
-            setIsHovered(true);
+            onSetHovered(true);
           }
         }}
       >
@@ -359,7 +359,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar, i
             {shouldShowExpanded && <span className="logo-text">RestaurantPro</span>}
           </div>
           {isMobile && (
-            <button className="sidebar-close-btn" onClick={toggleSidebar}>
+            <button className="sidebar-close-btn" onClick={onToggleSidebar}>
               <FaTimes />
             </button>
           )}
@@ -521,14 +521,14 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 };
 
 // Content Router Component
-const ContentRouter = ({ activeItem, userRole }) => {
+const ContentRouter = ({ activeItem, userRole, onNavigate, editingCategoryId }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
       case 'dashboard-overview':
         return (
           <>
-            <DashboardOverview />
+            <DashboardOverview onNavigate={onNavigate} />
           </>
         );
 
@@ -541,33 +541,33 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'employees-list':
         return (
           <>
-            <EmployeeList></EmployeeList>
+            <EmployeeList onNavigate={onNavigate}></EmployeeList>
           </>
         );
 
       case 'employees-add':
         return (
           <>
-            <AddEmployee></AddEmployee>
+            <AddEmployee onNavigate={onNavigate}></AddEmployee>
           </>
         );
       case 'suppliers':
       case 'supplier-list':
         return (
           <>
-            <SupplierList></SupplierList>
+            <SupplierList onNavigate={onNavigate}></SupplierList>
           </>
         );
       case 'category-add':
         return (
           <>
-            <AddCategory></AddCategory>
+            <AddCategory categoryId={editingCategoryId} onNavigate={onNavigate} />
           </>
         );
       case 'category-list':
         return (
           <>
-            <CategoryList></CategoryList>
+            <CategoryList onNavigate={onNavigate} />
           </>
         );
 
@@ -576,7 +576,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'orders-active':
         return (
           <>
-            <ActiveOrder></ActiveOrder>
+            <ActiveOrder onNavigate={onNavigate}></ActiveOrder>
           </>
         );
 
@@ -584,19 +584,19 @@ const ContentRouter = ({ activeItem, userRole }) => {
       case 'hotel-information-contact':
         return (
           <>
-            <AddHO></AddHO>
+            <AddHO onNavigate={onNavigate}></AddHO>
           </>
         );
       case 'add-dish':
         return (
           <>
-            <AddDishes></AddDishes>
+            <AddDishes onNavigate={onNavigate}></AddDishes>
           </>
         );
       case 'hotel-information':
         return (
           <>
-            <HotelOverview></HotelOverview>
+            <HotelOverview onNavigate={onNavigate}></HotelOverview>
           </>
         );
 
@@ -653,31 +653,31 @@ const ContentRouter = ({ activeItem, userRole }) => {
           //   </div>
           // </div>
           <>
-            <StockManagement></StockManagement>
+            <StockManagement onNavigate={onNavigate}></StockManagement>
           </>
         );
 
       case 'inventory-add':
         return (
           <>
-            <AddItems></AddItems>
+            <AddItems onNavigate={onNavigate}></AddItems>
           </>
         );
       case 'supplier-add':
         return (
           <>
-            <AddSupplier></AddSupplier>
+            <AddSupplier onNavigate={onNavigate}></AddSupplier>
           </>
         )
       case 'leave-add':
         return (
           <>
-            <AddLeave></AddLeave>
+            <AddLeave onNavigate={onNavigate}></AddLeave>
           </>
         )
       case 'inventory-reports':
         return (
-         <InventoryReport></InventoryReport>
+         <InventoryReport onNavigate={onNavigate}></InventoryReport>
         );
 
       case 'billing':
@@ -713,25 +713,25 @@ const ContentRouter = ({ activeItem, userRole }) => {
           //   </div>
           // </div>
           <>
-            <Billing></Billing>
+            <Billing onNavigate={onNavigate}></Billing>
           </>
         );
       case 'reports':
         return (
           <>
-            <Reports></Reports>
+            <Reports onNavigate={onNavigate}></Reports>
           </>
         )
       case 'leaves-approved':
         return (
           <>
-            <ApprovedLeave></ApprovedLeave>
+            <ApprovedLeave onNavigate={onNavigate}></ApprovedLeave>
           </>
         )
 
       case 'leaves-calendar':
         return (
-          <Calender />
+          <Calender onNavigate={onNavigate} />
         );
       default:
         return (
@@ -745,7 +745,7 @@ const ContentRouter = ({ activeItem, userRole }) => {
           //   </div>
           // </div>
           <>
-            <PendingLeave></PendingLeave>
+            <PendingLeave onNavigate={onNavigate}></PendingLeave>
           </>
         );
     }
@@ -756,13 +756,17 @@ const ContentRouter = ({ activeItem, userRole }) => {
 
 // Main Component
 const RestaurantAdminPanel = () => {
-  // const [activeItem, setActiveItem] = useState('dashboard');
   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
-
   const [userRole, setUserRole] = useState('Admin');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
+
+  const handleNavigate = (view, id = null) => {
+    setActiveItem(view);
+    setEditingCategoryId(id);
+  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -791,10 +795,20 @@ const RestaurantAdminPanel = () => {
       return newState;
     });
 
-    // જો sidebar hover state માં છે તો તેને clear કરો
+    // જો sidebar hover state માં છે તેને clear કરો
     if (isHovered) {
       setIsHovered(false);
     }
+  };
+
+  const handleMenuClick = (component) => {
+    setEditingCategoryId(null); // Reset editing state when changing views
+    setActiveItem(component);
+  };
+
+  const handleEditCategory = (id) => {
+    setEditingCategoryId(id);
+    setActiveItem('category-add'); // Switch to the form view
   };
 
   return (
@@ -802,13 +816,12 @@ const RestaurantAdminPanel = () => {
       <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
         <Sidebar
           activeItem={activeItem}
-          setActiveItem={setActiveItem}
+          onItemClick={handleNavigate}
           userRole={userRole}
           isOpen={sidebarOpen}
-          toggleSidebar={toggleSidebar}
           isMobile={isMobile}
-          isHovered={isHovered}
-          setIsHovered={setIsHovered}
+          onToggleSidebar={toggleSidebar}
+          onSetHovered={setIsHovered}
         />
 
         <div className="main-layout">
@@ -822,6 +835,8 @@ const RestaurantAdminPanel = () => {
           <ContentRouter
             activeItem={activeItem}
             userRole={userRole}
+            onNavigate={handleNavigate}
+            editingCategoryId={editingCategoryId}
           />
         </div>
 
