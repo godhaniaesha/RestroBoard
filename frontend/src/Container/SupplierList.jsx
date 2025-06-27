@@ -1,34 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllSuppliers, deleteSupplier } from "../redux/slice/supplier.slice";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../Style/Z_table.css";
+import Spinner from "../Spinner";
 
-const suppliers = [
-  {
-    name: "Fresh Farms Ltd.",
-    phone: "+1 555-111-2222",
-    email: "contact@freshfarms.com",
-    whatsapp: "+1 555-111-3333",
-    address: "123 Main St, Springfield, USA",
-    ingredients: "Tomatoes, Lettuce, Onions",
-  },
-  {
-    name: "Organic Goods",
-    phone: "+1 555-222-4444",
-    email: "info@organicgoods.com",
-    whatsapp: "+1 555-222-5555",
-    address: "456 Oak Ave, Metropolis, USA",
-    ingredients: "Flour, Olive Oil, Cheese",
-  },
-  {
-    name: "Spice Traders",
-    phone: "+1 555-333-6666",
-    email: "sales@spicetraders.com",
-    whatsapp: "+1 555-333-7777",
-    address: "789 Pine Rd, Gotham, USA",
-    ingredients: "Spices, Herbs, Salt",
-  },
-];
+const ITEMS_PER_PAGE = 5;
 
-function SupplierList() {
+function SupplierList({ onNavigate }) {
+  const dispatch = useDispatch();
+  const { suppliers, loading } = useSelector((state) => state.supplier);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(getAllSuppliers());
+  }, [dispatch]);
+
+  const handleEdit = (id) => {
+    localStorage.setItem('supplierId-local',id)
+    onNavigate('supplier-edit',id)
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this supplier?")) {
+      dispatch(deleteSupplier(id));
+    }
+  };
+
+  const safeSuppliers = Array.isArray(suppliers) ? suppliers : [];
+
+  const totalPages = Math.ceil(safeSuppliers.length / ITEMS_PER_PAGE);
+  const paginatedSuppliers = safeSuppliers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <section className="Z_empListSection">
       <div className="Z_empListTableContainer">
@@ -36,31 +46,92 @@ function SupplierList() {
           <h4 className="Z_empListTitle">Suppliers List</h4>
         </div>
         <div className="Z_empListTableWrapper">
-          <table className="Z_empListTable">
-            <thead>
-              <tr>
-                <th className="Z_empListTh">Name</th>
-                <th className="Z_empListTh">Phone</th>
-                <th className="Z_empListTh">Email</th>
-                <th className="Z_empListTh">WhatsApp</th>
-                <th className="Z_empListTh">Address</th>
-                <th className="Z_empListTh">Ingredients</th>
-              </tr>
-            </thead>
-            <tbody>
-              {suppliers.map((sup, idx) => (
-                <tr className="Z_empListTr" key={idx}>
-                  <td className="Z_empListTd">{sup.name}</td>
-                  <td className="Z_empListTd">{sup.phone}</td>
-                  <td className="Z_empListTd">{sup.email}</td>
-                  <td className="Z_empListTd">{sup.whatsapp}</td>
-                  <td className="Z_empListTd">{sup.address}</td>
-                  <td className="Z_empListTd">{sup.ingredients}</td>
+          {loading ? (
+             <Spinner></Spinner>
+          ) : (
+            <table className="Z_empListTable">
+              <thead>
+                <tr>
+                  <th className="Z_empListTh">Image</th>
+                  <th className="Z_empListTh">Name</th>
+                  <th className="Z_empListTh">Phone</th>
+                  <th className="Z_empListTh">Email</th>
+                  <th className="Z_empListTh">WhatsApp</th>
+                  <th className="Z_empListTh">Address</th>
+                  <th className="Z_empListTh">Ingredients</th>
+                  <th className="Z_empListTh">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paginatedSuppliers.length > 0 ? (
+                  paginatedSuppliers.map((sup, idx) => (
+                    <tr className="Z_empListTr" key={idx}>
+                      <td className="Z_empListTd">
+                        <img
+                            src={`http://localhost:3000${sup.supplyer_image}`}
+                          alt={sup.name}
+                          className="Z_empListPhoto"
+                        />
+                      </td>
+                      <td className="Z_empListTd">{sup.name}</td>
+                      <td className="Z_empListTd">{sup.phone}</td>
+                      <td className="Z_empListTd">{sup.email}</td>
+                      <td className="Z_empListTd">{sup.whatsapp_number}</td>
+                      <td className="Z_empListTd">{sup.address}</td>
+                      <td className="Z_empListTd">{sup.ingredients_supplied}</td>
+                      <td className="Z_empListTd">
+                        <button
+                          className="Z_empListActionBtn"
+                          title="Edit"
+                          onClick={() => handleEdit(sup._id)}
+                        >
+                          <FaRegEdit />
+                        </button>
+                        <button
+                          className="Z_empListActionBtn"
+                          title="Delete"
+                          onClick={() => handleDelete(sup._id)}
+                        >
+                          <FaRegTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                  <td colSpan="8" className="Z_empListNoDataContainer">
+                    <div className="Z_empListNoData">
+                      <img
+                        src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                        alt="No data"
+                        className="Z_noDataImage"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="Z_empListPagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handlePageChange(i + 1)}
+                className={`Z_empListPageBtn ${
+                  currentPage === i + 1 ? "active" : ""
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

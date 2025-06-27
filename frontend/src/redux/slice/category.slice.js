@@ -15,6 +15,8 @@ export const fetchCategories = createAsyncThunk(
                 },
             };
             const response = await axios.get('http://localhost:3000/api/getAllCategories', config);
+            console.log(response.data.result,'category');
+            
             return response.data.result;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
@@ -171,7 +173,7 @@ const categorySlice = createSlice({
                 state.loading = false;
                 state.updateSuccess = true;
                 const index = state.categories.findIndex(cat => cat._id === action.payload._id);
-                console.log(index,"index")
+                console.log(index, "index")
                 if (index !== -1) {
                     state.categories[index] = action.payload;
                 }

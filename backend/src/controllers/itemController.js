@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import fs from 'fs';
 import path from 'path';
 import Item from "../models/itemModel.js";
+import Category from "../models/categoryModel.js";
 import { ThrowError } from "../utils/ErrorUtils.js";
 import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse } from '../utils/ResponseUtils.js';
 

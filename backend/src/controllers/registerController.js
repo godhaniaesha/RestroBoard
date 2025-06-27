@@ -112,7 +112,7 @@ export const updateProfileUser = async (req, res) => {
         // Handle image upload
         if (req.file) {
             // Convert the file path to a URL path
-            const newImagePath = `/public/images/${path.basefirstName(req.file.path)}`;
+            const newImagePath = `/public/images/${path.basename(req.file.path)}`;
 
             // Delete old image if exists
             if (existingUser.image) {
