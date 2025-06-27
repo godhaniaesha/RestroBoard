@@ -109,6 +109,12 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    clearSuccess: (state) => {
+      state.success = null;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
     clearUserState: (state) => {
       state.userData = null;
       state.employees = [];
@@ -195,5 +201,5 @@ const userSlice = createSlice({
 });
 
 // Export actions and reducer
-export const { clearUserState } = userSlice.actions;
+export const { clearUserState, clearSuccess, clearError } = userSlice.actions;
 export default userSlice.reducer;

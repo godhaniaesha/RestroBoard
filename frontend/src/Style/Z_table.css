@@ -836,7 +836,7 @@ body {
   display: inline-block;
   padding: 0.3em 1em;
   border-radius: 12px;
-  font-size: 14PX;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -1359,9 +1359,9 @@ body {
     align-items: flex-start;
   }
   .Z_RP_controls {
-  flex-wrap: wrap;
-}
-  .Z_RP_chartContainer{
+    flex-wrap: wrap;
+  }
+  .Z_RP_chartContainer {
     padding: 0.5rem;
   }
 }
@@ -2070,5 +2070,104 @@ body {
   }
   .Z_deleteConf_btn {
     width: 100%;
+  }
+}
+
+/* Pagination Styles for Stock Table */
+.Z_pagination_container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.Z_pagination_btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 15%; 
+  border: none;
+  background: #f4f6fb;
+  color: #1f2e3d;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px rgba(31, 46, 61, 0.06);
+}
+.Z_pagination_btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.Z_pagination_page {
+  width: 36px;
+  height: 36px;
+  border-radius: 15%;
+  border: none;
+  background: #fff;
+  color: #1f2e3d;
+  font-size: 1.1rem;
+  margin: 0 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 4px rgba(31, 46, 61, 0.06);
+}
+.Z_pagination_page:hover:not(.Z_pagination_active) {
+  background: #f4f6fb;
+}
+.Z_pagination_active {
+  background: #1f2e3d;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(31, 46, 61, 0.12);
+}
+.Z_pagination_ellipsis {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1f2e3d;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+/* Responsive Pagination Styles */
+@media (max-width: 700px) {
+  .Z_pagination_container {
+    justify-content: end;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .Z_pagination_btn,
+  .Z_pagination_page,
+  .Z_pagination_ellipsis {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+@media (max-width: 480px) {
+  .Z_pagination_container {
+    gap: 0.15rem;
+    margin-top: 0.7rem;
+  }
+  .Z_pagination_btn,
+  .Z_pagination_page,
+  .Z_pagination_ellipsis {
+    width: 28px;
+    height: 28px;
+    font-size: 0.95rem;
+    min-width: 28px;
+    min-height: 28px;
   }
 }

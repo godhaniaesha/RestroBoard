@@ -171,7 +171,7 @@ const categorySlice = createSlice({
                 state.loading = false;
                 state.updateSuccess = true;
                 const index = state.categories.findIndex(cat => cat._id === action.payload._id);
-                console.log(index,"index")
+                console.log(index, "index")
                 if (index !== -1) {
                     state.categories[index] = action.payload;
                 }

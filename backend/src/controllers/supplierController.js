@@ -53,25 +53,21 @@ export const createSupplier = async (req, res) => {
 // Get all getAllSuppliers (admin only)
 export const getAllSuppliers = async (req, res) => {
     try {
-        // Check if user is authenticated and is admin
+        // Check if user is authenticated
         if (!req.user) {
             return sendUnauthorizedResponse(res, "Authentication required");
         }
 
-        if (!req.user.isAdmin) {
-            return sendForbiddenResponse(res, "Access denied. Only admins can view all waiters.");
+        // Find all suppliers with role 'supplyer'
+        const suppliers = await Supplier.find({ role: 'supplyer' }).select('-password');
+
+        // Check if any suppliers were found
+        if (!suppliers || suppliers.length === 0) {
+            return sendSuccessResponse(res, "No suppliers found", []);
         }
 
-        // Find all supplyers with role 'supplyer'
-        const supplyers = await Supplier.find({ role: 'supplyer' }).select('-password');
-
-        // Check if any supplyers were found
-        if (!supplyers || supplyers.length === 0) {
-            return sendSuccessResponse(res, "No supplyer found", []);
-        }
-
-        // Send a success response with the fetched supplyer
-        return sendSuccessResponse(res, "supplyer fetched successfully", supplyers)
+        // Send a success response with the fetched suppliers
+        return sendSuccessResponse(res, "Suppliers fetched successfully", suppliers)
     } catch (error) {
         return ThrowError(res, 500, error.message)
     }

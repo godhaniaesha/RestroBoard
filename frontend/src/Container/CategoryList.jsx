@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom"; // No longer needed for this
 import "../Style/Z_table.css";
 import { fetchCategories, deleteCategory } from "../redux/slice/category.slice";
-import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
+import { FaRegEdit, FaRegTrashAlt, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 
 function CategoryList({ onNavigate }) {
@@ -13,6 +13,8 @@ function CategoryList({ onNavigate }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -46,6 +48,15 @@ function CategoryList({ onNavigate }) {
       cat.category_description.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedCategories = filteredCategories.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <section className="Z_empListSection">
@@ -75,8 +86,8 @@ function CategoryList({ onNavigate }) {
                 </tr>
               </thead>
               <tbody>
-                {filteredCategories && filteredCategories.length > 0
-                  ? filteredCategories.map((cat) => (
+                {paginatedCategories && paginatedCategories.length > 0
+                  ? paginatedCategories.map((cat) => (
                       <tr className="Z_empListTr" key={cat._id}>
                         <td className="Z_empListTd">
                           {cat.category_image ? (
@@ -124,6 +135,63 @@ function CategoryList({ onNavigate }) {
                     )}
               </tbody>
             </table>
+            <div className="Z_pagination_container">
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaCaretLeft />
+              </button>
+              {totalPages <= 4 ? (
+                [...Array(totalPages)].map((_, idx) => (
+                  <button
+                    key={idx + 1}
+                    className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(idx + 1)}
+                  >
+                    {idx + 1}
+                  </button>
+                ))
+              ) : (
+                <>
+                  <button
+                    className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(1)}
+                  >1</button>
+                  {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
+                  {currentPage > 2 && currentPage < totalPages - 1 && (
+                    <button
+                      className="Z_pagination_page Z_pagination_active"
+                      onClick={() => handlePageChange(currentPage)}
+                    >
+                      {currentPage}
+                    </button>
+                  )}
+                  {currentPage < totalPages - 1 && (
+                    <button
+                      className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
+                      onClick={() => handlePageChange(totalPages - 1)}
+                    >
+                      {totalPages - 1}
+                    </button>
+                  )}
+                  <button
+                    className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(totalPages)}
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <FaCaretRight />
+              </button>
+            </div>
           </div>
         </div>
       </section>
