@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createItem, fetchItemById, resetCreateSuccess, updateItem } from "../redux/slice/stockmanage.slice";
-import { fetchSuppliers, selectSuppliers } from "../redux/slice/supplier.slice";
+import { getAllSuppliers, selectSuppliers } from "../redux/slice/supplier.slice";
 import { fetchCategories } from "../redux/slice/category.slice";
 import CustomCalendar from "../Component/CustomCalendar";
 import "../Style/x_app.css";
@@ -11,7 +11,8 @@ import XCustomSelect from "../Component/XCustomSelect";
 function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
   const { selectedItem, loading, error, createSuccess, updateSuccess } = useSelector((state) => state.stock);
-  const suppliers = useSelector(selectSuppliers);
+  // const suppliers = useSelector(selectSuppliers);
+  const suppliers = 'sdfg'
   const categories = useSelector((state) => state.category.categories);
 
   const [expiryDate, setExpiryDate] = useState(null);
@@ -59,7 +60,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
   }, [createSuccess, updateSuccess, dispatch, onSuccess]);
 
   useEffect(() => {
-    dispatch(fetchSuppliers());
+    dispatch(getAllSuppliers());
     dispatch(fetchCategories());
   }, [dispatch]);
 

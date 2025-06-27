@@ -6,7 +6,6 @@ import hotelReducer from '../slice/hotel.slice'
 import supplierReducer from '../slice/supplier.slice';
 import userReducer from '../slice/user.slice';
 import dishReducer from '../slice/dish.slice';
-import supplierReducer from '../slice/supplier.slice';
 import leaveReducer from '../slice/leave.slice';
 
 export const rootReducer = combineReducers({
