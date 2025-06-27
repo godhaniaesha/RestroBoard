@@ -20,7 +20,6 @@ import PendingLeave from '../Container/PendingLeave';
 import ApprovedLeave from '../Container/ApprovedLeave';
 import StockManagement from '../Container/StockManagement';
 import Billing from '../Container/Billing';
-import Reports from '../Container/Reports';
 import Calender from '../Container/Calender';
 import AddItems from '../Container/AddItems';
 import AddSupplier from '../Container/AddSupplier';
@@ -106,7 +105,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
 
         ]
       },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       {
         id: 'leaves',
         label: 'Leave Management',
@@ -155,7 +153,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
         ]
       },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
     Chef: [
@@ -166,7 +163,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
     ],
     Waiter: [
       { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
-
       { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
     ],
     Housekeeping: [
@@ -736,12 +732,6 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
             <Billing onNavigate={onNavigate}></Billing>
           </>
         );
-      case 'reports':
-        return (
-          <>
-            <Reports onNavigate={onNavigate}></Reports>
-          </>
-        )
       case 'leaves-approved':
         return (
           <>
@@ -777,16 +767,33 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
 // Main Component
 const RestaurantAdminPanel = () => {
   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
-  const [userRole, setUserRole] = useState('Admin');
+  // Always get user role from localStorage
+  const getInitialRole = () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userObj = JSON.parse(userStr);
+        return userObj.userRole || userObj.role || 'Admin';
+      } catch {
+        return 'Admin';
+      }
+    }
+    return 'Admin';
+  };
+  const [userRole, setUserRole] = useState(getInitialRole());
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
 
-  const handleNavigate = (view, id = null) => {
-    setActiveItem(view);
-    setEditingCategoryId(id);
-  };
+  // Update userRole if localStorage changes (e.g., after login)
+  useEffect(() => {
+    const handleStorage = () => {
+      setUserRole(getInitialRole());
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -803,32 +810,22 @@ const RestaurantAdminPanel = () => {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
   useEffect(() => {
     localStorage.setItem('activeAdminPanelItem', activeItem);
   }, [activeItem]);
+
   // Improved toggleSidebar function
   const toggleSidebar = () => {
-    console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
-    setSidebarOpen(prevState => {
-      const newState = !prevState;
-      console.log('New sidebar state:', newState); // Debug માટે
-      return newState;
-    });
-
-    // જો sidebar hover state માં છે તેને clear કરો
+    setSidebarOpen(prevState => !prevState);
     if (isHovered) {
       setIsHovered(false);
     }
   };
 
-  const handleMenuClick = (component) => {
-    setEditingCategoryId(null); // Reset editing state when changing views
-    setActiveItem(component);
-  };
-
-  const handleEditCategory = (id) => {
+  const handleNavigate = (view, id = null) => {
+    setActiveItem(view);
     setEditingCategoryId(id);
-    setActiveItem('category-add'); // Switch to the form view
   };
 
   return (
@@ -839,9 +836,10 @@ const RestaurantAdminPanel = () => {
           onItemClick={handleNavigate}
           userRole={userRole}
           isOpen={sidebarOpen}
+          toggleSidebar={toggleSidebar}
           isMobile={isMobile}
-          onToggleSidebar={toggleSidebar}
-          onSetHovered={setIsHovered}
+          isHovered={isHovered}
+          setIsHovered={setIsHovered}
         />
 
         <div className="main-layout">
@@ -854,13 +852,14 @@ const RestaurantAdminPanel = () => {
 
           <ContentRouter
             activeItem={activeItem}
-            setActiveItem={setActiveItem}
             userRole={userRole}
             onNavigate={handleNavigate}
             editingCategoryId={editingCategoryId}
           />
         </div>
 
+        {/* Remove the manual role switcher for production. Uncomment below for testing only. */}
+        {/*
         <div className="role-switcher-container">
           <select
             className="role-switcher"
@@ -875,6 +874,7 @@ const RestaurantAdminPanel = () => {
             <option value="Receptionist">Receptionist</option>
           </select>
         </div>
+        */}
       </div>
     </div>
   );
