@@ -90,10 +90,17 @@ export default function DashboardOverview() {
     dispatch(fetchItems());
   };
 
+  // Filter for only Out of Stock and Low Stock items
   const filteredStock = items.filter(
-    (item) =>
-      item.item_name.toLowerCase().includes(search.toLowerCase()) ||
-      (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
+    (item) => {
+      const quantity = Number(item.quantity);
+      return (
+        quantity === 0 || quantity <= item.minimum_threshold
+      ) && (
+        item.item_name.toLowerCase().includes(search.toLowerCase()) ||
+        (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
+      );
+    }
   );
 
   // Calculate paginated data
@@ -279,16 +286,16 @@ export default function DashboardOverview() {
                         <td className="Z_SM_Td">{item.updatedAt ? item.updatedAt.slice(0, 10) : ""}</td>
                         <td className="Z_SM_Td">
                           <span
-                            className={`Z_SM_status Z_SM_status--${item.quantity === 0
+                            className={`Z_SM_status Z_SM_status--${Number(item.quantity) === 0
                               ? "out-of-stock"
-                              : item.quantity <= item.minimum_threshold
+                              : Number(item.quantity) <= item.minimum_threshold
                                 ? "low-stock"
                                 : "in-stock"
                               }`}
                           >
-                            {item.quantity === 0
+                            {Number(item.quantity) === 0
                               ? "Out of Stock"
-                              : item.quantity <= item.minimum_threshold
+                              : Number(item.quantity) <= item.minimum_threshold
                                 ? "Low Stock"
                                 : "In Stock"}
                           </span>
