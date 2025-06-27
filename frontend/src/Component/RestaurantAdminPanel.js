@@ -7,7 +7,11 @@ import {
   FaChevronRight, FaPlus, FaEdit, FaTrash, FaEye, FaFileAlt,
   FaUserPlus, FaUserMinus, FaClock, FaCheck,
   FaShippingFast,
-  FaUserEdit
+  FaUserEdit,
+  FaRegCalendarAlt,
+  FaCalendarCheck,
+  FaCalendarPlus,
+  FaCalendarWeek
 } from 'react-icons/fa';
 import { BiSolidCategory } from "react-icons/bi";
 import { HiViewGridAdd } from "react-icons/hi";
@@ -38,6 +42,11 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/slice/auth.slice';
 import EditEmployee from '../Container/EditEmployee';
+import { FaCalendarXmark, FaRegCalendarXmark } from 'react-icons/fa6';
+import AddHoliday from '../Container/AddHoliday';
+import Holidaylist from '../Container/Holidaylist';
+import EditHolidays from '../Container/EditHolidays';
+import EditSupplier from '../Container/EditSupplier';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
@@ -52,140 +61,265 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
   const menuItems = {
     Admin: [
       {
-        id: 'dashboard',
-        label: 'Dashboard',
+        id: "dashboard",
+        label: "Dashboard",
         icon: <FaHome />,
         subItems: [
-          { id: 'dashboard-overview', label: 'Overview', icon: <FaEye /> },
-          { id: 'dashboard-analytics', label: 'Analytics', icon: <FaChartBar /> }
-        ]
+          { id: "dashboard-overview", label: "Overview", icon: <FaEye /> },
+          {
+            id: "dashboard-analytics",
+            label: "Analytics",
+            icon: <FaChartBar />,
+          },
+        ],
       },
+      
       {
-        id: 'employees',
-        label: 'Employee Management',
+        id: "employees",
+        label: "Employee Management",
         icon: <FaUsers />,
         subItems: [
-          { id: 'employees-list', label: 'All Employees', icon: <FaUsers /> },
-          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> },
-          { id: 'employees-edit', label: 'Edit Employee', icon: <FaUserEdit />, hidden: true }
-
-        ]
+          { id: "employees-list", label: "All Employees", icon: <FaUsers /> },
+          { id: "employees-add", label: "Add Employee", icon: <FaUserPlus /> },
+          {
+            id: "employees-edit",
+            label: "Edit Employee",
+            icon: <FaUserEdit />,
+            hidden: true,
+          },
+        ],
       },
       {
-        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        id: "category",
+        label: "Category",
+        icon: <BiSolidCategory />,
         subItems: [
-          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
-          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd style={{ width: '16px', height: '16px' }} /> }
-        ]
+          {
+            id: "category-list",
+            label: "Category List",
+            icon: <LuLayoutList />,
+          },
+          {
+            id: "category-add",
+            label: "Add Category",
+            icon: <HiViewGridAdd style={{ width: "16px", height: "16px" }} />,
+          },
+        ],
       },
       {
-        id: 'inventory',
-        label: 'Inventory',
+        id: "inventory",
+        label: "Inventory",
         icon: <FaBoxOpen />,
         subItems: [
-          { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
-          { id: 'inventory-add', label: 'Add Items', icon: <FaPlus /> },
-          { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
-        ]
+          {
+            id: "inventory-stock",
+            label: "Stock Management",
+            icon: <FaBoxOpen />,
+          },
+          { id: "inventory-add", label: "Add Items", icon: <FaPlus /> },
+          {
+            id: "inventory-reports",
+            label: "Inventory Reports",
+            icon: <FaFileAlt />,
+          },
+        ],
       },
       {
-        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        id: "suppliers",
+        label: "Suppliers",
+        icon: <FaShippingFast />,
         subItems: [
-          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
-          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
-        ]
+          { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
+          { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  },
+        ],
       },
       {
-        id: 'hotel-information',
-        label: 'Hotel Information',
+        id: "hotel-information",
+        label: "Hotel Information",
         icon: <FaDesktop />,
         subItems: [
-          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
-          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
-          { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
-
-        ]
+          { id: "hotel-information", label: "Overview", icon: <FaEye /> },
+          {
+            id: "hotel-information-contact",
+            label: "Contact Info",
+            icon: <FaUserFriends />,
+          },
+          { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
+        ],
       },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       {
-        id: 'leaves',
-        label: 'Leave Management',
+        id: "holidays",
+        label: "Holidays",
+        icon: <FaRegCalendarAlt />,
+        subItems: [
+          { id: "add-holiday", label: "Add Holiday", icon: <FaCalendarPlus /> },
+          {
+            id: "holidays-list",
+            label: "Holiday List",
+            icon: <FaRegCalendarXmark />,
+          },
+          {
+            id: "holiday-edit",
+            label: "Edit holiday",
+            icon: <FaCalendarCheck />,
+            hidden: true,
+          },
+        ],
+      },
+      {
+        id: "leaves",
+        label: "Leave Management",
         icon: <FaCalendarAlt />,
         subItems: [
-          { id: 'leaves-pending', label: 'Pending Requests', icon: <FaClock /> },
-          { id: 'leaves-approved', label: 'Approved Leaves', icon: <FaCheck /> },
-          { id: 'leave-add', label: 'Add Leaves', icon: <FaCheck /> },
-          { id: 'leaves-calendar', label: 'Leave Calendar', icon: <FaCalendarAlt /> }
-        ]
+          {
+            id: "leaves-pending",
+            label: "Pending Requests",
+            icon: <FaClock />,
+          },
+          {
+            id: "leaves-approved",
+            label: "Approved Leaves",
+            icon: <FaCheck />,
+          },
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+        ],
       },
-      { id: 'settings', label: 'Settings', icon: <FaCog /> },
+      { id: "reports", label: "Reports", icon: <FaChartBar /> },
+     
     ],
     Manager: [
-      { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
+      { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
       {
-        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        id: "category",
+        label: "Category",
+        icon: <BiSolidCategory />,
         subItems: [
-          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
-          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd /> }
-        ]
+          {
+            id: "category-list",
+            label: "Category List",
+            icon: <LuLayoutList />,
+          },
+          {
+            id: "category-add",
+            label: "Add Category",
+            icon: <HiViewGridAdd />,
+          },
+        ],
       },
       {
-        id: 'inventory',
-        label: 'Inventory',
+        id: "inventory",
+        label: "Inventory",
         icon: <FaBoxOpen />,
         subItems: [
-          { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
-          { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
-        ]
+          {
+            id: "inventory-stock",
+            label: "Stock Management",
+            icon: <FaBoxOpen />,
+          },
+          {
+            id: "inventory-reports",
+            label: "Inventory Reports",
+            icon: <FaFileAlt />,
+          },
+        ],
       },
       {
-        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        id: "suppliers",
+        label: "Suppliers",
+        icon: <FaShippingFast />,
         subItems: [
-          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
-          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
-        ]
+          { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
+          { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  }
+
+        ],
       },
       {
-        id: 'hotel-information',
-        label: 'Hotel Information',
+        id: "hotel-information",
+        label: "Hotel Information",
         icon: <FaDesktop />,
         subItems: [
-          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
-          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
-          { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
-        ]
+          { id: "hotel-information", label: "Overview", icon: <FaEye /> },
+          {
+            id: "hotel-information-contact",
+            label: "Contact Info",
+            icon: <FaUserFriends />,
+          },
+          { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
+        ],
       },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
-      { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
+      {
+        id: "holidays",
+        label: "Holidays",
+        icon: <FaRegCalendarAlt />,
+        subItems: [
+          { id: "add-holiday", label: "Add Holiday", icon: <FaCalendarPlus /> },
+          {
+            id: "holidays-list",
+            label: "Holiday List",
+            icon: <FaRegCalendarXmark />,
+          },
+          {
+            id: "holiday-edit",
+            label: "Edit holiday",
+            icon: <FaCalendarCheck />,
+            hidden: true,
+          },
+        ],
+      },
+      { id: "leaves", label: "Leave Approvals", icon: <FaCalendarAlt /> },
+      { id: "reports", label: "Reports", icon: <FaChartBar /> },
     ],
     Chef: [
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
 
-      { id: 'ingredients', label: 'Ingredients', icon: <FaUtensils /> },
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
+      { id: "ingredients", label: "Ingredients", icon: <FaUtensils /> },
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
     Waiter: [
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
 
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
     Housekeeping: [
       {
-        id: 'cleaning-tasks',
-        label: 'Cleaning Tasks',
+        id: "cleaning-tasks",
+        label: "Cleaning Tasks",
         icon: <FaBroom />,
         subItems: [
-          { id: 'tasks-pending', label: 'Pending Tasks', icon: <FaClock /> },
-          { id: 'tasks-completed', label: 'Completed Tasks', icon: <FaCheck /> }
-        ]
+          { id: "tasks-pending", label: "Pending Tasks", icon: <FaClock /> },
+          {
+            id: "tasks-completed",
+            label: "Completed Tasks",
+            icon: <FaCheck />,
+          },
+        ],
       },
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
     Receptionist: [
-      { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+      { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
 
-      { id: 'leave-apply', label: 'Request Leave', icon: <FaCalendarAlt /> },
+      { id: "leave-apply", label: "Request Leave", icon: <FaCalendarAlt /> },
     ],
   };
 
@@ -535,7 +669,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 };
 
 // Content Router Component
-const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editingCategoryId }) => {
+const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editingCategoryId }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
@@ -555,7 +689,7 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
       case 'employees-list':
         return (
           <>
-           <EmployeeList setActiveItem={setActiveItem} />
+            <EmployeeList setActiveItem={setActiveItem} />
           </>
         );
 
@@ -689,6 +823,12 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
             <AddSupplier onNavigate={onNavigate}></AddSupplier>
           </>
         )
+        case 'supplier-edit':
+        return (
+          <>
+            <EditSupplier onNavigate={onNavigate}></EditSupplier>
+          </>
+        )
       case 'leave-add':
         return (
           <>
@@ -753,6 +893,25 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
         return (
           <Calender onNavigate={onNavigate} />
         );
+      case 'holidays':
+      case 'holidays-list':
+        return (
+          <>
+            <Holidaylist onNavigate={onNavigate}></Holidaylist>
+          </>
+        )
+      case 'add-holiday':
+        return (
+          <>
+            <AddHoliday onNavigate={onNavigate}></AddHoliday>
+          </>
+        )
+      case 'holiday-edit' :
+        return (
+          <>
+            <EditHolidays onNavigate={onNavigate}></EditHolidays>
+          </>
+        )
       default:
         return (
           // <div className="content-section">

@@ -15,6 +15,8 @@ export const fetchCategories = createAsyncThunk(
                 },
             };
             const response = await axios.get('http://localhost:3000/api/getAllCategories', config);
+            console.log(response.data.result,'category');
+            
             return response.data.result;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || error.message);
