@@ -11,7 +11,7 @@ function AddEmployee() {
   const calendarRef = useRef(null);
   const inputRef = useRef(null);
   const [selectedOption, setSelectedOption] = useState(null);
-const [supplierImg, setSupplierImg] = useState(null);
+  const [supplierImg, setSupplierImg] = useState(null);
   const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
 
   // Effect to clean up the object URL when the component unmounts or image changes
@@ -30,9 +30,9 @@ const [supplierImg, setSupplierImg] = useState(null);
       setSupplierImgPreviewUrl(null);
     }
     // Optionally reset the file input value to allow re-uploading the same file
-    const fileInput = document.getElementById('supplierImgInput');
+    const fileInput = document.getElementById("supplierImgInput");
     if (fileInput) {
-      fileInput.value = '';
+      fileInput.value = "";
     }
   };
   useEffect(() => {
@@ -71,33 +71,34 @@ const [supplierImg, setSupplierImg] = useState(null);
 
         <div className="x_popup">
           <form
-            className={`x_dropzone x_dropzone-multiple  dz-clickable ${supplierImg ? 'x_has-image' : ''}`}
+            className={`x_dropzone x_dropzone-multiple  dz-clickable ${
+              supplierImg ? "x_has-image" : ""
+            }`}
             id="dropzone-multiple"
             data-dropzone="data-dropzone"
             action="#!"
-            onClick={() => document.getElementById('supplierImgInput').click()}
-            style={{ cursor: 'pointer' }}
+            onClick={() => document.getElementById("supplierImgInput").click()}
+            style={{ cursor: "pointer" }}
           >
-
             {!supplierImg && (
               <div
                 className="dz-message x_dz-message"
                 data-dz-message="data-dz-message"
-                onClick={() => document.getElementById('supplierImgInput').click()}
-                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  document.getElementById("supplierImgInput").click()
+                }
+                style={{ cursor: "pointer" }}
               >
                 <img className="me-2" src={uplod} width="25" alt="upload" />
                 Drop your files here
               </div>
-
-
             )}
 
             <input
               id="supplierImgInput"
               type="file"
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
                   const file = e.target.files[0];
@@ -108,7 +109,11 @@ const [supplierImg, setSupplierImg] = useState(null);
             />
             {supplierImg && supplierImgPreviewUrl && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
-                <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
+                <img
+                  src={supplierImgPreviewUrl}
+                  alt="Supplier"
+                  className="x_uploaded-image"
+                />
                 <button
                   type="button"
                   className="x_remove-image-btn"
@@ -180,25 +185,20 @@ const [supplierImg, setSupplierImg] = useState(null);
               </label>
               <XCustomSelect
                 options={[
-                  {
-                    value: "caltech",
-                    label: "California Institute of Technology",
-                  },
-                  { value: "harvard", label: "GSAS Open Labs At Harvard" },
-                  {
-                    value: "mit",
-                    label: "Massachusetts Institute of Technology",
-                  },
-                  { value: "uchicago", label: "University of Chicago" },
+                  { value: "admin", label: "Admin" },
+                  { value: "manager", label: "Manager" },
+                  { value: "supplyer", label: "Supplyer" },
+                  { value: "saif", label: "Saif" },
+                  { value: "waiter", label: "Waiter" },
                 ]}
                 value={selectedOption}
                 onChange={setSelectedOption}
-                placeholder="Select organizer..."
-                name="organizer"
-                id="organizer"
+                placeholder="Select role..."
+                name="role"
+                id="role"
                 required
               />
-              <div className="invalid-feedback">Please select one</div>
+              <div className="invalid-feedback">Please select a role</div>
             </div>
 
             <div className="col-md-6" style={{ position: "relative" }}>

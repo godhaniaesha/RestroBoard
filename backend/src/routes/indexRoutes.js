@@ -15,6 +15,7 @@ const indexRoutes = express.Router()
 
 // Add isAdminOrManager middleware
 const isAdminOrManager = (req, res, next) => {
+    console.log('req.user', req.user)
     if (req.user && (req.user.isAdmin || req.user.role === 'manager')) {
         return next();
     }

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllEmployee } from "../redux/slice/user.slice";
 import "../Style/Z_table.css";
 import { FaRegEdit, FaRegTrashAlt, FaChevronDown } from "react-icons/fa";
+import Spinner from "../Spinner";
 
 function EmployeeList({ setActiveItem }) {
   const dispatch = useDispatch();
@@ -100,7 +101,7 @@ function EmployeeList({ setActiveItem }) {
 
         <div className="Z_empListTableWrapper">
           {loading ? (
-            <p className="text-center">Loading employees...</p>
+            <Spinner></Spinner>
           ) : (
             <table className="Z_empListTable">
               <thead>
@@ -139,13 +140,13 @@ function EmployeeList({ setActiveItem }) {
                           <td className="Z_empListTd">{emp.phone}</td>
                           <td className="Z_empListTd">{emp.joining_date}</td>
                           <td className="Z_empListTd">
-                          <button
-  className="Z_empListActionBtn"
-  title="Edit"
-  onClick={() => handleEdit(emp._id)}
->
-  <FaRegEdit />
-</button>
+                            <button
+                              className="Z_empListActionBtn"
+                              title="Edit"
+                              onClick={() => handleEdit(emp._id)}
+                            >
+                              <FaRegEdit />
+                            </button>
                             <button
                               className="Z_empListActionBtn"
                               title="Delete"
@@ -158,11 +159,17 @@ function EmployeeList({ setActiveItem }) {
                     )
                   )
                 ) : (
-                  <tr>
-                    <td colSpan="7" className="text-center">
-                      No employees found.
-                    </td>
-                  </tr>
+                 <tr>
+                  <td colSpan="7" className="Z_empListNoDataContainer">
+                    <div className="Z_empListNoData">
+                      <img
+                        src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                        alt="No data"
+                        className="Z_noDataImage"
+                      />
+                    </div>
+                  </td>
+                </tr>
                 )}
               </tbody>
             </table>

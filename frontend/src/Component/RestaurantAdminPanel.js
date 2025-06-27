@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import {
   FaHome, FaUsers, FaClipboardList, FaBoxOpen, FaReceipt,
   FaChartBar, FaCog, FaCalendarAlt, FaUtensils, FaConciergeBell,
@@ -7,7 +8,11 @@ import {
   FaChevronRight, FaPlus, FaEdit, FaTrash, FaEye, FaFileAlt,
   FaUserPlus, FaUserMinus, FaClock, FaCheck,
   FaShippingFast,
-  FaUserEdit
+  FaUserEdit,
+  FaRegCalendarAlt,
+  FaCalendarCheck,
+  FaCalendarPlus,
+  FaCalendarWeek
 } from 'react-icons/fa';
 import { BiSolidCategory } from "react-icons/bi";
 import { HiViewGridAdd } from "react-icons/hi";
@@ -37,9 +42,16 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/slice/auth.slice';
 import EditEmployee from '../Container/EditEmployee';
+import { FaCalendarXmark, FaRegCalendarXmark } from 'react-icons/fa6';
+import AddHoliday from '../Container/AddHoliday';
+import Holidaylist from '../Container/Holidaylist';
+import EditHolidays from '../Container/EditHolidays';
+import EditSupplier from '../Container/EditSupplier';
+import Spinner from '../Spinner';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
+const VALID_ROLES = ["admin", "manager", "supplyer", "saif", "waiter"];
 const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const [hoverTimeout, setHoverTimeout] = useState(null);
@@ -49,109 +61,200 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
   const prevIsMobileRef = useRef(isMobile);
 
   const menuItems = {
-    Admin: [
+    admin: [
       {
-        id: 'dashboard',
-        label: 'Dashboard',
+        id: "dashboard",
+        label: "Dashboard",
         icon: <FaHome />,
         subItems: [
-          { id: 'dashboard-overview', label: 'Overview', icon: <FaEye /> },
-          { id: 'dashboard-analytics', label: 'Analytics', icon: <FaChartBar /> }
-        ]
+          { id: "dashboard-overview", label: "Overview", icon: <FaEye /> },
+          {
+            id: "dashboard-analytics",
+            label: "Analytics",
+            icon: <FaChartBar />,
+          },
+        ],
       },
+      
       {
-        id: 'employees',
-        label: 'Employee Management',
+        id: "employees",
+        label: "Employee Management",
         icon: <FaUsers />,
         subItems: [
-          { id: 'employees-list', label: 'All Employees', icon: <FaUsers /> },
-          { id: 'employees-add', label: 'Add Employee', icon: <FaUserPlus /> },
-          { id: 'employees-edit', label: 'Edit Employee', icon: <FaUserEdit />, hidden: true }
-
-        ]
+          { id: "employees-list", label: "All Employees", icon: <FaUsers /> },
+          { id: "employees-add", label: "Add Employee", icon: <FaUserPlus /> },
+          {
+            id: "employees-edit",
+            label: "Edit Employee",
+            icon: <FaUserEdit />,
+            hidden: true,
+          },
+        ],
       },
       {
-        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        id: "category",
+        label: "Category",
+        icon: <BiSolidCategory />,
         subItems: [
-          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
-          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd style={{ width: '16px', height: '16px' }} /> }
-        ]
+          {
+            id: "category-list",
+            label: "Category List",
+            icon: <LuLayoutList />,
+          },
+          {
+            id: "category-add",
+            label: "Add Category",
+            icon: <HiViewGridAdd style={{ width: "16px", height: "16px" }} />,
+          },
+        ],
       },
       {
-        id: 'inventory',
-        label: 'Inventory',
+        id: "inventory",
+        label: "Inventory",
         icon: <FaBoxOpen />,
         subItems: [
-          { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
-          { id: 'inventory-add', label: 'Add Items', icon: <FaPlus /> },
-          { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
-        ]
+          {
+            id: "inventory-stock",
+            label: "Stock Management",
+            icon: <FaBoxOpen />,
+          },
+          { id: "inventory-add", label: "Add Items", icon: <FaPlus /> },
+          {
+            id: "inventory-reports",
+            label: "Inventory Reports",
+            icon: <FaFileAlt />,
+          },
+        ],
       },
       {
-        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        id: "suppliers",
+        label: "Suppliers",
+        icon: <FaShippingFast />,
         subItems: [
-          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
-          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
-        ]
+          { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
+          { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  },
+        ],
       },
       {
-        id: 'hotel-information',
-        label: 'Hotel Information',
+        id: "hotel-information",
+        label: "Hotel Information",
         icon: <FaDesktop />,
         subItems: [
-          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
-          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
-          { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
-
-        ]
+          { id: "hotel-information", label: "Overview", icon: <FaEye /> },
+          {
+            id: "hotel-information-contact",
+            label: "Contact Info",
+            icon: <FaUserFriends />,
+          },
+          { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
+        ],
       },
       {
-        id: 'leaves',
-        label: 'Leave Management',
+        id: "holidays",
+        label: "Holidays",
+        icon: <FaRegCalendarAlt />,
+        subItems: [
+          { id: "add-holiday", label: "Add Holiday", icon: <FaCalendarPlus /> },
+          {
+            id: "holidays-list",
+            label: "Holiday List",
+            icon: <FaRegCalendarXmark />,
+          },
+          {
+            id: "holiday-edit",
+            label: "Edit holiday",
+            icon: <FaCalendarCheck />,
+            hidden: true,
+          },
+        ],
+      },
+      {
+        id: "leaves",
+        label: "Leave Management",
         icon: <FaCalendarAlt />,
         subItems: [
-          { id: 'leaves-pending', label: 'Pending Requests', icon: <FaClock /> },
-          { id: 'leaves-approved', label: 'Approved Leaves', icon: <FaCheck /> },
-          { id: 'leave-add', label: 'Add Leaves', icon: <FaCheck /> },
-          { id: 'leaves-calendar', label: 'Leave Calendar', icon: <FaCalendarAlt /> }
-        ]
+          {
+            id: "leaves-pending",
+            label: "Pending Requests",
+            icon: <FaClock />,
+          },
+          {
+            id: "leaves-approved",
+            label: "Approved Leaves",
+            icon: <FaCheck />,
+          },
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+        ],
       },
-      { id: 'settings', label: 'Settings', icon: <FaCog /> },
+      { id: "reports", label: "Reports", icon: <FaChartBar /> },
+     
     ],
-    Manager: [
-      { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
+    manager: [
+      { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
       {
-        id: 'category', label: 'Category', icon: <BiSolidCategory />,
+        id: "category",
+        label: "Category",
+        icon: <BiSolidCategory />,
         subItems: [
-          { id: 'category-list', label: 'Category List', icon: <LuLayoutList /> },
-          { id: 'category-add', label: 'Add Category', icon: <HiViewGridAdd /> }
-        ]
+          {
+            id: "category-list",
+            label: "Category List",
+            icon: <LuLayoutList />,
+          },
+          {
+            id: "category-add",
+            label: "Add Category",
+            icon: <HiViewGridAdd />,
+          },
+        ],
       },
       {
-        id: 'inventory',
-        label: 'Inventory',
+        id: "inventory",
+        label: "Inventory",
         icon: <FaBoxOpen />,
         subItems: [
-          { id: 'inventory-stock', label: 'Stock Management', icon: <FaBoxOpen /> },
-          { id: 'inventory-reports', label: 'Inventory Reports', icon: <FaFileAlt /> }
-        ]
+          {
+            id: "inventory-stock",
+            label: "Stock Management",
+            icon: <FaBoxOpen />,
+          },
+          {
+            id: "inventory-reports",
+            label: "Inventory Reports",
+            icon: <FaFileAlt />,
+          },
+        ],
       },
       {
-        id: 'suppliers', label: 'Suppliers', icon: <FaShippingFast />,
+        id: "suppliers",
+        label: "Suppliers",
+        icon: <FaShippingFast />,
         subItems: [
-          { id: 'supplier-list', label: 'Supplier List', icon: <FaUsers /> },
-          { id: 'supplier-add', label: 'Add Supplier', icon: <FaUserPlus /> }
-        ]
+          { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
+          { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  }
+
+        ],
       },
       {
-        id: 'hotel-information',
-        label: 'Hotel Information',
+        id: "hotel-information",
+        label: "Hotel Information",
         icon: <FaDesktop />,
         subItems: [
-          { id: 'hotel-information', label: 'Overview', icon: <FaEye /> },
-          { id: 'hotel-information-contact', label: 'Contact Info', icon: <FaUserFriends /> },
-          { id: 'add-dish', label: 'Add Dish', icon: <FaUserFriends /> },
-        ]
+          { id: "hotel-information", label: "Overview", icon: <FaEye /> },
+          {
+            id: "hotel-information-contact",
+            label: "Contact Info",
+            icon: <FaUserFriends />,
+          },
+          { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
+        ],
       },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
@@ -167,21 +270,71 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
     ],
     Housekeeping: [
       {
-        id: 'cleaning-tasks',
-        label: 'Cleaning Tasks',
+        id: "holidays",
+        label: "Holidays",
+        icon: <FaRegCalendarAlt />,
+        subItems: [
+          { id: "add-holiday", label: "Add Holiday", icon: <FaCalendarPlus /> },
+          {
+            id: "holidays-list",
+            label: "Holiday List",
+            icon: <FaRegCalendarXmark />,
+          },
+          {
+            id: "holiday-edit",
+            label: "Edit holiday",
+            icon: <FaCalendarCheck />,
+            hidden: true,
+          },
+        ],
+      },
+      { id: "leaves", label: "Leave Approvals", icon: <FaCalendarAlt /> },
+      { id: "reports", label: "Reports", icon: <FaChartBar /> },
+    ],
+    saif: [
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
+
+      { id: "ingredients", label: "Ingredients", icon: <FaUtensils /> },
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+    ],
+    waiter: [
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
+
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+    ],
+    supplyer: [
+      {
+        id: "cleaning-tasks",
+        label: "Cleaning Tasks",
         icon: <FaBroom />,
         subItems: [
-          { id: 'tasks-pending', label: 'Pending Tasks', icon: <FaClock /> },
-          { id: 'tasks-completed', label: 'Completed Tasks', icon: <FaCheck /> }
-        ]
+          { id: "tasks-pending", label: "Pending Tasks", icon: <FaClock /> },
+          {
+            id: "tasks-completed",
+            label: "Completed Tasks",
+            icon: <FaCheck />,
+          },
+        ],
       },
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
+      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
     Receptionist: [
-      { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
+      { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
+      {
+        id: "hotel-information",
+        label: "Hotel Information",
+        icon: <FaDesktop />,
+      },
 
-      { id: 'leave-apply', label: 'Request Leave', icon: <FaCalendarAlt /> },
+      { id: "leave-apply", label: "Request Leave", icon: <FaCalendarAlt /> },
     ],
   };
 
@@ -531,7 +684,7 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 };
 
 // Content Router Component
-const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editingCategoryId }) => {
+const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editingCategoryId }) => {
   const renderContent = () => {
     switch (activeItem) {
       case 'dashboard':
@@ -551,7 +704,7 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
       case 'employees-list':
         return (
           <>
-           <EmployeeList setActiveItem={setActiveItem} />
+            <EmployeeList setActiveItem={setActiveItem} />
           </>
         );
 
@@ -685,6 +838,12 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
             <AddSupplier onNavigate={onNavigate}></AddSupplier>
           </>
         )
+        case 'supplier-edit':
+        return (
+          <>
+            <EditSupplier supplierId={editingCategoryId} onNavigate={onNavigate} />
+          </>
+        )
       case 'leave-add':
         return (
           <>
@@ -743,6 +902,25 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
         return (
           <Calender onNavigate={onNavigate} />
         );
+      case 'holidays':
+      case 'holidays-list':
+        return (
+          <>
+            <Holidaylist onNavigate={onNavigate}></Holidaylist>
+          </>
+        )
+      case 'add-holiday':
+        return (
+          <>
+            <AddHoliday onNavigate={onNavigate}></AddHoliday>
+          </>
+        )
+      case 'holiday-edit' :
+        return (
+          <>
+            <EditHolidays onNavigate={onNavigate}></EditHolidays>
+          </>
+        )
       default:
         return (
           // <div className="content-section">
@@ -765,6 +943,112 @@ const ContentRouter = ({ activeItem, setActiveItem,userRole, onNavigate, editing
 };
 
 // Main Component
+// const RestaurantAdminPanel = () => {
+//   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
+//   const [userRole, setUserRole] = useState('Admin');
+//   const [sidebarOpen, setSidebarOpen] = useState(true);
+//   const [isMobile, setIsMobile] = useState(false);
+//   const [isHovered, setIsHovered] = useState(false);
+//   const [editingCategoryId, setEditingCategoryId] = useState(null);
+
+//   const handleNavigate = (view, id = null) => {
+//     setActiveItem(view);
+//     setEditingCategoryId(id);
+//   };
+
+//   useEffect(() => {
+//     const checkScreenSize = () => {
+//       const mobile = window.innerWidth <= 768;
+//       setIsMobile(mobile);
+//       if (mobile) {
+//         setSidebarOpen(false);
+//       } else {
+//         setSidebarOpen(true);
+//       }
+//     };
+
+//     checkScreenSize();
+//     window.addEventListener('resize', checkScreenSize);
+//     return () => window.removeEventListener('resize', checkScreenSize);
+//   }, []);
+//   useEffect(() => {
+//     localStorage.setItem('activeAdminPanelItem', activeItem);
+//   }, [activeItem]);
+//   // Improved toggleSidebar function
+//   const toggleSidebar = () => {
+//     console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
+//     setSidebarOpen(prevState => {
+//       const newState = !prevState;
+//       console.log('New sidebar state:', newState); // Debug માટે
+//       return newState;
+//     });
+
+//     // જો sidebar hover state માં છે તેને clear કરો
+//     if (isHovered) {
+//       setIsHovered(false);
+//     }
+//   };
+
+//   const handleMenuClick = (component) => {
+//     setEditingCategoryId(null); // Reset editing state when changing views
+//     setActiveItem(component);
+//   };
+
+//   const handleEditCategory = (id) => {
+//     setEditingCategoryId(id);
+//     setActiveItem('category-add'); // Switch to the form view
+//   };
+
+//   return (
+//     <div className='d_main_admin'>
+//       <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
+//         <Sidebar
+//           activeItem={activeItem}
+//           onItemClick={handleNavigate}
+//           userRole={userRole}
+//           isOpen={sidebarOpen}
+//           isMobile={isMobile}
+//           onToggleSidebar={toggleSidebar}
+//           onSetHovered={setIsHovered}
+//         />
+
+//         <div className="main-layout">
+//           <Navbar
+//             userRole={userRole}
+//             toggleSidebar={toggleSidebar}
+//             isOpen={sidebarOpen}
+//             isMobile={isMobile}
+//           />
+
+//           <ContentRouter
+//             activeItem={activeItem}
+//             setActiveItem={setActiveItem}
+//             userRole={userRole}
+//             onNavigate={handleNavigate}
+//             editingCategoryId={editingCategoryId}
+//           />
+//         </div>
+
+//         <div className="role-switcher-container">
+//           <select
+//             className="role-switcher"
+//             value={userRole}
+//             onChange={(e) => setUserRole(e.target.value)}
+//           >
+//             <option value="Admin">Admin</option>
+//             <option value="Manager">Manager</option>
+//             <option value="Chef">Chef</option>
+//             <option value="Waiter">Waiter</option>
+//             <option value="Housekeeping">Housekeeping</option>
+//             <option value="Receptionist">Receptionist</option>
+//           </select>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default RestaurantAdminPanel;
 const RestaurantAdminPanel = () => {
   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
   // Always get user role from localStorage
@@ -781,6 +1065,7 @@ const RestaurantAdminPanel = () => {
     return 'Admin';
   };
   const [userRole, setUserRole] = useState(getInitialRole());
+  // const [userRole, setUserRole] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -796,14 +1081,32 @@ const RestaurantAdminPanel = () => {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        
+        if (VALID_ROLES.includes(decoded.role?.toLowerCase())) {
+          setUserRole(decoded.role);
+        } else {
+          console.error("Invalid role in token");
+          setUserRole(null);
+        }
+      } catch (err) {
+        console.error("Invalid token", err);
+        setUserRole(null);
+      }
+    } else {
+      setUserRole(null);
+    }
+  }, []);
+
+  useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (mobile) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
-      }
+      setSidebarOpen(!mobile);
     };
 
     checkScreenSize();
@@ -816,17 +1119,40 @@ const RestaurantAdminPanel = () => {
   }, [activeItem]);
 
   // Improved toggleSidebar function
-  const toggleSidebar = () => {
-    setSidebarOpen(prevState => !prevState);
-    if (isHovered) {
-      setIsHovered(false);
-    }
-  };
+  // const toggleSidebar = () => {
+  //   setSidebarOpen(prevState => !prevState);
+  //   if (isHovered) {
+  //     setIsHovered(false);
+  //   }
+  // };
 
   const handleNavigate = (view, id = null) => {
     setActiveItem(view);
     setEditingCategoryId(id);
+  }
+
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => !prev);
+    if (isHovered) setIsHovered(false);
   };
+
+  const handleMenuClick = (component) => {
+    setEditingCategoryId(null);
+    setActiveItem(component);
+  };
+
+  const handleEditCategory = (id) => {
+    setEditingCategoryId(id);
+    setActiveItem('category-add');
+  };
+
+  if (!userRole) {
+    return (
+      <div className="loading-screen">
+         <Spinner></Spinner>
+      </div>
+    );
+  }
 
   return (
     <div className='d_main_admin'>
@@ -857,24 +1183,6 @@ const RestaurantAdminPanel = () => {
             editingCategoryId={editingCategoryId}
           />
         </div>
-
-        {/* Remove the manual role switcher for production. Uncomment below for testing only. */}
-        {/*
-        <div className="role-switcher-container">
-          <select
-            className="role-switcher"
-            value={userRole}
-            onChange={(e) => setUserRole(e.target.value)}
-          >
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Chef">Chef</option>
-            <option value="Waiter">Waiter</option>
-            <option value="Housekeeping">Housekeeping</option>
-            <option value="Receptionist">Receptionist</option>
-          </select>
-        </div>
-        */}
       </div>
     </div>
   );

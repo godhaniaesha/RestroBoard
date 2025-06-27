@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 // File filter function
 const fileFilter = (req, file, cb) => {
     // Accept files with common image field names
-    const allowedFieldNames = ['image', 'supplyer_image', 'category_image', 'item_image', 'dish_image'];
+    const allowedFieldNames = ['image', 'supplyer_image', 'category_image', 'item_image', 'dish_image','hotel_image'];
 
     if (allowedFieldNames.includes(file.fieldname)) {
         cb(null, true);

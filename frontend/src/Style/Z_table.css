@@ -2072,3 +2072,19 @@ body {
     width: 100%;
   }
 }
+.Z_empListNoDataContainer {
+  text-align: center;
+  padding: 20px;
+}
+
+.Z_empListNoData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.Z_noDataImage {
+  width: 330px;
+  opacity: 0.6;
+}

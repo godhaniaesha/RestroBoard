@@ -5,6 +5,7 @@ import "../Style/Z_table.css";
 import { fetchCategories, deleteCategory } from "../redux/slice/category.slice";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
+import Spinner from "../Spinner";
 
 function CategoryList({ onNavigate }) {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ function CategoryList({ onNavigate }) {
             </div>
           </div>
           <div className="Z_empListTableWrapper">
-            {loading && <p>Loading...</p>}
+            {loading &&  <Spinner></Spinner>}
             {error && <p style={{ color: "red" }}>{error}</p>}
             <table className="Z_empListTable">
               <thead>
@@ -118,9 +119,17 @@ function CategoryList({ onNavigate }) {
                       </tr>
                     ))
                   : !loading && (
-                      <tr>
-                        <td colSpan="4">No categories found.</td>
-                      </tr>
+                    <tr>
+                    <td colSpan="4" className="Z_empListNoDataContainer">
+                      <div className="Z_empListNoData">
+                        <img
+                          src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                          alt="No data"
+                          className="Z_noDataImage"
+                        />
+                      </div>
+                    </td>
+                  </tr>
                     )}
               </tbody>
             </table>

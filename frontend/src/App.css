@@ -39,3 +39,14 @@
 a:hover{
   color: inherit !important;
 }
+.btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show>.btn-primary.dropdown-toggle:focus {
+  box-shadow: none!important;
+}
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+  color: #ffff !important;
+  background-color: var(--hover-button-color) !important;
+  border-color: inherit !important;
+}
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
