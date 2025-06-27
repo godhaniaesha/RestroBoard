@@ -9,7 +9,7 @@ import { createItem, getAllItems, getItemById, updateItem, deleteItem } from "..
 import { createHotel, deleteHotel, getAllHotel, getHotelById, updateHotel } from "../controllers/hotelController.js";
 import { createDish, deleteDish, getAllDish, getDishById, updateDish } from "../controllers/dishController.js";
 import { createLeave, getAllLeaves, getLeavesByUserId, updateLeaveDetails, updateLeaveStatus, deleteLeave, getPendingLeaves, getApprovedLeaves, getRejectedLeaves } from "../controllers/leaveController.js";
-import { getEmployeeCounts, getSupplierCount, getWeeklyItemAdditions } from "../controllers/dashBoardController.js";
+import { getTotalExpense, getEmployeeCounts, getSupplierCount, getWeeklyItemAdditions, getTopSellingProducts, getRecentOrders, getTotalItems, getTotalValues, getCategoryWiseStock, getLowStockItems, getOutOfStockItems } from "../controllers/dashBoardController.js";
 
 const indexRoutes = express.Router()
 
@@ -84,9 +84,16 @@ indexRoutes.get("/getApprovedLeaves", UserAuth, canViewUserLeaves, getApprovedLe
 indexRoutes.get("/getRejectedLeaves", UserAuth, canViewUserLeaves, getRejectedLeaves);
 
 //dashBoard Routes
+indexRoutes.get("/getTotalExpense", UserAuth, isAdminOrManager, getTotalExpense);
 indexRoutes.get("/getEmployeeCounts", UserAuth, isAdminOrManager, getEmployeeCounts);
 indexRoutes.get("/getSupplierCount", UserAuth, isAdminOrManager, getSupplierCount);
 indexRoutes.get("/getWeeklyItemAdditions", UserAuth, isAdminOrManager, getWeeklyItemAdditions);
-
+indexRoutes.get("/getTopSellingProducts", UserAuth, isAdminOrManager, getTopSellingProducts);
+indexRoutes.get("/getRecentOrders", UserAuth, isAdminOrManager, getRecentOrders);
+indexRoutes.get("/getTotalItems", UserAuth, isAdminOrManager, getTotalItems);
+indexRoutes.get("/getTotalValues", UserAuth, isAdminOrManager, getTotalValues);
+indexRoutes.get("/getCategoryWiseStock", UserAuth, isAdminOrManager, getCategoryWiseStock);
+indexRoutes.get("/getLowStockItems", UserAuth, isAdminOrManager, getLowStockItems);
+indexRoutes.get("/getOutOfStockItems", UserAuth, isAdminOrManager, getOutOfStockItems);
 
 export default indexRoutes

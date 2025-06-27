@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Supplier from "../models/supplierModel.js";
 import { ThrowError } from "../utils/ErrorUtils.js";
-import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse } from '../utils/ResponseUtils.js';
+import { sendSuccessResponse, sendErrorResponse, sendBadRequestResponse, sendCreatedResponse, sendForbiddenResponse } from '../utils/ResponseUtils.js';
 
 // Create a new supplier (admin only)
 export const createSupplier = async (req, res) => {
@@ -71,6 +71,17 @@ export const getAllSuppliers = async (req, res) => {
 
         // Send a success response with the fetched suppliers
         return sendSuccessResponse(res, "Suppliers fetched successfully", suppliers)
+        // Find all supplyers with role 'supplyer'
+        // darshan code
+        // const supplyers = await Supplier.find({ role: 'supplyer' }).select('-password');
+
+        
+        // if (!supplyers || supplyers.length === 0) {
+            // return sendSuccessResponse(res, "No supplyer found", []);
+        // }
+
+        // Send a success response with the fetched supplyer
+        // return sendSuccessResponse(res, "supplyer fetched successfully", supplyers)
     } catch (error) {
         return ThrowError(res, 500, error.message)
     }

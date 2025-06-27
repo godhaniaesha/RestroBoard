@@ -30,7 +30,10 @@ const registerSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    
+    leave_balance: {
+        type: Number,
+        default: 50
+    },
 }, { timestamps: true });
 
 // Pre-save middleware to ensure isAdmin is in sync with role
