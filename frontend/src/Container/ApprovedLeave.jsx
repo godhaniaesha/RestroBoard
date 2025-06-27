@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Style/Z_table.css";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 
 const approvedLeavesData = [
   {
@@ -37,6 +37,8 @@ const approvedLeavesData = [
 
 function ApprovedLeave() {
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const filteredLeaves = approvedLeavesData.filter(
     (leave) =>
@@ -44,6 +46,15 @@ function ApprovedLeave() {
       leave.leave_type.toLowerCase().includes(search.toLowerCase()) ||
       leave.approved_by.toLowerCase().includes(search.toLowerCase())
   );
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedLeaves = filteredLeaves.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredLeaves.length / itemsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <section className="Z_AL_section">
@@ -74,7 +85,7 @@ function ApprovedLeave() {
               </tr>
             </thead>
             <tbody>
-              {filteredLeaves.map((leave, idx) => (
+              {paginatedLeaves.map((leave, idx) => (
                 <tr className="Z_AL_Tr" key={idx}>
                   <td className="Z_AL_Td">
                     <div className="Z_AL_empCell">
@@ -109,6 +120,63 @@ function ApprovedLeave() {
               ))}
             </tbody>
           </table>
+          <div className="Z_pagination_container">
+            <button
+              className="Z_pagination_btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <FaCaretLeft />
+            </button>
+            {totalPages <= 4 ? (
+              [...Array(totalPages)].map((_, idx) => (
+                <button
+                  key={idx + 1}
+                  className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                  onClick={() => handlePageChange(idx + 1)}
+                >
+                  {idx + 1}
+                </button>
+              ))
+            ) : (
+              <>
+                <button
+                  className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
+                  onClick={() => handlePageChange(1)}
+                >1</button>
+                {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
+                {currentPage > 2 && currentPage < totalPages - 1 && (
+                  <button
+                    className="Z_pagination_page Z_pagination_active"
+                    onClick={() => handlePageChange(currentPage)}
+                  >
+                    {currentPage}
+                  </button>
+                )}
+                {currentPage < totalPages - 1 && (
+                  <button
+                    className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(totalPages - 1)}
+                  >
+                    {totalPages - 1}
+                  </button>
+                )}
+                <button
+                  className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
+                  onClick={() => handlePageChange(totalPages)}
+                >
+                  {totalPages}
+                </button>
+              </>
+            )}
+            <button
+              className="Z_pagination_btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <FaCaretRight />
+            </button>
+          </div>
         </div>
       </div>
     </section>

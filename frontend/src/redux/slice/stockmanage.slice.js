@@ -54,6 +54,41 @@ export const createItem = createAsyncThunk(
     }
 );
 
+export const updateItem = createAsyncThunk(
+    'stock/updateItem',
+    async ({ id, formData }, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            };
+            const response = await axios.put(`http://localhost:3000/api/updateItem/${id}`, formData, config);
+            return response.data.result;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
+export const fetchItemById = createAsyncThunk(
+    'stock/fetchItemById',
+    async (id, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = token
+                ? { headers: { Authorization: `Bearer ${token}` } }
+                : {};
+            const response = await axios.get(`http://localhost:3000/api/getItemById/${id}`, config);
+            return response.data.result;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
 const stockSlice = createSlice({
     name: 'stock',
     initialState: {
@@ -61,6 +96,7 @@ const stockSlice = createSlice({
         loading: false,
         error: null,
         createSuccess: false,
+        selectedItem: null,
     },
     reducers: {
         resetCreateSuccess(state) {
@@ -106,6 +142,37 @@ const stockSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 state.createSuccess = false;
+            })
+            .addCase(updateItem.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.createSuccess = false;
+            })
+            .addCase(updateItem.fulfilled, (state, action) => {
+                state.loading = false;
+                state.createSuccess = true;
+                const idx = state.items.findIndex(item => item._id === action.payload._id);
+                if (idx !== -1) {
+                    state.items[idx] = action.payload;
+                }
+            })
+            .addCase(updateItem.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.createSuccess = false;
+            })
+            .addCase(fetchItemById.pending, (state) => {
+                state.loading = true;
+                state.selectedItem = null;
+            })
+            .addCase(fetchItemById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.selectedItem = action.payload;
+            })
+            .addCase(fetchItemById.rejected, (state, action) => {
+                state.loading = false;
+                state.selectedItem = null;
+                state.error = action.payload;
             });
     },
 });

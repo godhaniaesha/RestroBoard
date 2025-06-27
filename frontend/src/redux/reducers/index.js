@@ -3,6 +3,7 @@ import authReducer from '../slice/auth.slice';
 import categoryReducer from '../slice/category.slice'
 import stockReducer from '../slice/stockmanage.slice'
 import hotelReducer from '../slice/hotel.slice'
+import supplierReducer from '../slice/supplier.slice';
 import userReducer from '../slice/user.slice';
 import dishReducer from '../slice/dish.slice';
 import supplierReducer from '../slice/supplier.slice';

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
-import { FaDollarSign, FaShoppingCart, FaUsers, FaClock } from 'react-icons/fa';
+import { FaDollarSign, FaShoppingCart, FaUsers, FaClock, FaRegEdit, FaRegTrashAlt, FaCaretRight, FaCaretLeft } from 'react-icons/fa';
 import './DashboardOverview.css';
 import "../Style/Z_table.css";
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteItem, fetchItemById, fetchItems } from '../redux/slice/stockmanage.slice';
+import AddItems from './AddItems';
+import DeleteConfirmationModal from '../Component/DeleteConfirmationModal';
 
 const salesData = [
   { name: 'Mon', sales: 4000 },
@@ -25,7 +29,7 @@ const topProducts = [
   { name: 'Chocolate Cake', sold: 50, revenue: 350 },
 ];
 
-const COLORS = ['#4E6688',  '#748DA6', '#9BB8CD','#7F8CAA', '#A6AEBF'];
+const COLORS = ['#4E6688', '#748DA6', '#9BB8CD', '#7F8CAA', '#A6AEBF'];
 
 const recentOrders = [
   { id: '#1234', customer: 'John Doe', time: '10:30 AM', items: 3, total: 45.00, status: 'Completed' },
@@ -35,7 +39,85 @@ const recentOrders = [
   { id: '#1238', customer: 'Chris Brown', time: '10:50 AM', items: 4, total: 55.75, status: 'Cancelled' },
 ];
 
+
+
+
 export default function DashboardOverview() {
+
+  const dispatch = useDispatch();
+  const { items, loading, error, selectedItem } = useSelector((state) => state.stock);
+  const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [editItemId, setEditItemId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, [dispatch]);
+
+  // Fetch item details when editItemId changes
+  useEffect(() => {
+    if (editItemId) {
+      dispatch(fetchItemById(editItemId));
+    }
+  }, [editItemId, dispatch]);
+
+  const openDeleteModal = (item) => {
+    setItemToDelete(item);
+    setIsModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setItemToDelete(null);
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteItem(itemToDelete._id));
+      closeDeleteModal();
+    }
+  };
+
+  const handleEdit = (id) => {
+    setEditItemId(id);
+  };
+
+  const handleFormSuccess = () => {
+    setEditItemId(null);
+    dispatch(fetchItems());
+  };
+
+  const filteredStock = items.filter(
+    (item) =>
+      item.item_name.toLowerCase().includes(search.toLowerCase()) ||
+      (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Calculate paginated data
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedStock = filteredStock.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredStock.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  if (editItemId) {
+    // Show AddItems in edit mode
+    return (
+      <AddItems
+        itemId={editItemId}
+        editItem={selectedItem}
+        onSuccess={handleFormSuccess}
+        onCancel={() => setEditItemId(null)}
+      />
+    );
+  }
   return (
     <Container fluid className="d_dashboard_overview">
       <h2 className="d_dashboard_title">Dashboard Overview</h2>
@@ -145,41 +227,158 @@ export default function DashboardOverview() {
 
       <Row>
         <Col>
-          <div className="Z_ov_dash_container">
-            <div className="Z_ov_dash_headerRow">
-              <h4 className="Z_ov_dash_title">Recent Orders</h4>
-            </div>
-            <div className="Z_ov_dash_tableWrapper">
-              <table className="Z_ov_dash_table">
-                <thead>
-                  <tr>
-                    <th className="Z_ov_dash_Th">Order ID</th>
-                    <th className="Z_ov_dash_Th">Customer</th>
-                    <th className="Z_ov_dash_Th">Time</th>
-                    <th className="Z_ov_dash_Th">Items</th>
-                    <th className="Z_ov_dash_Th">Total</th>
-                    <th className="Z_ov_dash_Th">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map(order => (
-                    <tr className="Z_ov_dash_Tr" key={order.id}>
-                      <td className="Z_ov_dash_Td">{order.id}</td>
-                      <td className="Z_ov_dash_Td">{order.customer}</td>
-                      <td className="Z_ov_dash_Td">{order.time}</td>
-                      <td className="Z_ov_dash_Td">{order.items}</td>
-                      <td className="Z_ov_dash_Td">${order.total.toFixed(2)}</td>
-                      <td className="Z_ov_dash_Td">
-                        <span className={`Z_ov_dash_status Z_ov_dash_status--${order.status.toLowerCase()}`}>
-                          {order.status}
-                        </span>
-                      </td>
+          <section>
+            <div className="Z_SM_container">
+              <div className="Z_SM_headerRow">
+                <h4 className="Z_SM_title mb-0">Stock Management</h4>
+                <div className="Z_SM_controls">
+                  <input
+                    className="Z_SM_searchInput"
+                    type="text"
+                    placeholder="Search Stock..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="Z_SM_tableWrapper">
+                {loading && <p>Loading...</p>}
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                <table className="Z_SM_table">
+                  <thead>
+                    <tr>
+                      <th className="Z_SM_Th">Item</th>
+                      <th className="Z_SM_Th">Category</th>
+                      <th className="Z_SM_Th">Quantity</th>
+                      <th className="Z_SM_Th">Price</th>
+                      <th className="Z_SM_Th">Last Updated</th>
+                      <th className="Z_SM_Th">Status</th>
+                      <th className="Z_SM_Th">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {paginatedStock.map((item, idx) => (
+                      <tr className="Z_SM_Tr" key={item._id || idx}>
+                        <td className="Z_SM_Td">
+                          <div className="Z_SM_itemCell">
+                            <img
+                              src={
+                                item.item_image
+                                  ? `http://localhost:3000${item.item_image}`
+                                  : "https://via.placeholder.com/40"
+                              }
+                              alt={item.item_name}
+                              className="Z_SM_photo"
+                            />
+                            <span>{item.item_name}</span>
+                          </div>
+                        </td>
+                        <td className="Z_SM_Td">{item.category_id?.category_name || ""}</td>
+                        <td className="Z_SM_Td">{`${item.quantity} ${item.unit}`}</td>
+                        <td className="Z_SM_Td">{`$${item.price?.toFixed(2)}`}</td>
+                        <td className="Z_SM_Td">{item.updatedAt ? item.updatedAt.slice(0, 10) : ""}</td>
+                        <td className="Z_SM_Td">
+                          <span
+                            className={`Z_SM_status Z_SM_status--${item.quantity === 0
+                              ? "out-of-stock"
+                              : item.quantity <= item.minimum_threshold
+                                ? "low-stock"
+                                : "in-stock"
+                              }`}
+                          >
+                            {item.quantity === 0
+                              ? "Out of Stock"
+                              : item.quantity <= item.minimum_threshold
+                                ? "Low Stock"
+                                : "In Stock"}
+                          </span>
+                        </td>
+                        <td className="Z_SM_Td">
+                          <button
+                            className="Z_SM_actionBtn Z_SM_actionBtn--edit"
+                            title="Edit"
+                            onClick={() => handleEdit(item._id)}
+                          >
+                            <FaRegEdit />
+                          </button>
+                          <button
+                            className="Z_SM_actionBtn Z_SM_actionBtn--delete"
+                            title="Delete"
+                            onClick={() => openDeleteModal(item)}
+                          >
+                            <FaRegTrashAlt />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="Z_pagination_container">
+                  <button
+                    className="Z_pagination_btn"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <FaCaretLeft />
+                  </button>
+                  {totalPages <= 4 ? (
+                    [...Array(totalPages)].map((_, idx) => (
+                      <button
+                        key={idx + 1}
+                        className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                        onClick={() => handlePageChange(idx + 1)}
+                      >
+                        {idx + 1}
+                      </button>
+                    ))
+                  ) : (
+                    <>
+                      <button
+                        className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
+                        onClick={() => handlePageChange(1)}
+                      >1</button>
+                      {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
+                      {currentPage > 2 && currentPage < totalPages - 1 && (
+                        <button
+                          className="Z_pagination_page Z_pagination_active"
+                          onClick={() => handlePageChange(currentPage)}
+                        >
+                          {currentPage}
+                        </button>
+                      )}
+                      {currentPage < totalPages - 1 && (
+                        <button
+                          className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
+                          onClick={() => handlePageChange(totalPages - 1)}
+                        >
+                          {totalPages - 1}
+                        </button>
+                      )}
+                      <button
+                        className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
+                        onClick={() => handlePageChange(totalPages)}
+                      >
+                        {totalPages}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="Z_pagination_btn"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    <FaCaretRight />
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+            <DeleteConfirmationModal
+              isOpen={isModalOpen}
+              onClose={closeDeleteModal}
+              onConfirm={confirmDelete}
+              itemName={itemToDelete ? itemToDelete.item_name : ""}
+            />
+          </section>
         </Col>
       </Row>
     </Container>

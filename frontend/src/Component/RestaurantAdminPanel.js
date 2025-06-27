@@ -835,7 +835,7 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
       case 'supplier-add':
         return (
           <>
-            <AddSupplier onNavigate={onNavigate}></AddSupplier>
+            <AddSupplier supplierId={editingCategoryId} onNavigate={onNavigate}></AddSupplier>
           </>
         )
         case 'supplier-edit':

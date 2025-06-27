@@ -1,16 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createItem, resetCreateSuccess } from "../redux/slice/stockmanage.slice";
+import { createItem, fetchItemById, resetCreateSuccess, updateItem } from "../redux/slice/stockmanage.slice";
+import { fetchSuppliers, selectSuppliers } from "../redux/slice/supplier.slice";
+import { fetchCategories } from "../redux/slice/category.slice";
 import CustomCalendar from "../Component/CustomCalendar";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
 
-function AddItems({ onSuccess }) {
+function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
-  const { loading, error, createSuccess } = useSelector((state) => state.stock);
+  const { selectedItem, loading, error, createSuccess, updateSuccess } = useSelector((state) => state.stock);
+  const suppliers = useSelector(selectSuppliers);
+  const categories = useSelector((state) => state.category.categories);
 
-  const [expiryDate, setExpiryDate] = useState("");
+  const [expiryDate, setExpiryDate] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   const inputRef = useRef(null);
@@ -22,6 +26,12 @@ function AddItems({ onSuccess }) {
   const [supplierImg, setSupplierImg] = useState(null);
   const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
 
+  // New states for form fields
+  const [itemName, setItemName] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [minThreshold, setMinThreshold] = useState("");
+
   // Effect to clean up the object URL when the component unmounts or image changes
   useEffect(() => {
     return () => {
@@ -32,15 +42,67 @@ function AddItems({ onSuccess }) {
   }, [supplierImgPreviewUrl]);
 
   useEffect(() => {
-    if (createSuccess) {
+    if (createSuccess || updateSuccess) {
       dispatch(resetCreateSuccess());
       if (onSuccess) onSuccess();
-      // Optionally reset form fields here
       setSupplierImg(null);
       setSupplierImgPreviewUrl(null);
-      // ...reset other fields as needed
+      setItemName("");
+      setPrice("");
+      setQuantity("");
+      setMinThreshold("");
+      setCategory(null);
+      setUnit(null);
+      setSupplier(null);
+      setExpiryDate(null);
     }
-  }, [createSuccess, dispatch, onSuccess]);
+  }, [createSuccess, updateSuccess, dispatch, onSuccess]);
+
+  useEffect(() => {
+    dispatch(fetchSuppliers());
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (itemId) {
+      dispatch(fetchItemById(itemId));
+    }
+    // Optionally clear form on unmount
+    return () => {
+      // dispatch(clearSelectedItem()); // If you add this action
+    };
+  }, [dispatch, itemId]);
+
+  // When selectedItem changes, fill the form
+  useEffect(() => {
+    if (itemId && selectedItem && selectedItem._id === itemId) {
+      setItemName(selectedItem.item_name || "");
+      setPrice(selectedItem.price || "");
+      setQuantity(selectedItem.quantity || "");
+      setMinThreshold(selectedItem.minimum_threshold || "");
+      setCategory(selectedItem.category_id
+        ? { value: selectedItem.category_id._id, label: selectedItem.category_id.category_name }
+        : null
+      );
+      setUnit(selectedItem.unit
+        ? { value: selectedItem.unit, label: selectedItem.unit }
+        : null
+      );
+      setSupplier(selectedItem.supplier_id
+        ? { value: selectedItem.supplier_id._id, label: selectedItem.supplier_id.name }
+        : null
+      );
+      setExpiryDate(selectedItem.expiry_date ? new Date(selectedItem.expiry_date) : null);
+
+      // Image preview logic (like AddCategory.js)
+      if (selectedItem.item_image) {
+        setSupplierImgPreviewUrl(`http://localhost:3000${selectedItem.item_image}`);
+      } else {
+        setSupplierImgPreviewUrl(null);
+      }
+      setSupplierImg(null);
+    }
+  }, [itemId, selectedItem]);
 
   const removeSupplierImage = () => {
     setSupplierImg(null);
@@ -77,8 +139,7 @@ function AddItems({ onSuccess }) {
 
   const handleDateSelect = (date) => {
     if (date instanceof Date && !isNaN(date)) {
-      const formatted = date.toLocaleDateString("en-GB");
-      setExpiryDate(formatted);
+      setExpiryDate(date);
       setShowCalendar(false);
     }
   };
@@ -87,24 +148,32 @@ function AddItems({ onSuccess }) {
     e.preventDefault();
     const formData = new FormData();
     // Collect all form fields
-    formData.append("item_name", document.getElementById("itemName").value);
+    formData.append("item_name", itemName);
     formData.append("category_id", category?.value || "");
-    formData.append("price", document.getElementById("price").value);
-    formData.append("quantity", document.getElementById("quantity").value);
+    formData.append("price", price);
+    formData.append("quantity", quantity);
     formData.append("unit", unit?.value || "");
-    formData.append("minimum_threshold", document.getElementById("min_threshold").value);
-    formData.append("expiry_date", expiryDate);
+    formData.append("minimum_threshold", minThreshold);
+    formData.append(
+      "expiry_date",
+      expiryDate ? expiryDate.toISOString().split("T")[0] : ""
+    );
     formData.append("supplier_id", supplier?.value || "");
     if (supplierImg) {
       formData.append("item_image", supplierImg);
     }
-    dispatch(createItem(formData));
+
+    if (itemId) {
+      dispatch(updateItem({ id: itemId, formData }));
+    } else {
+      dispatch(createItem(formData));
+    }
   };
 
   return (
     <>
       <section className="x_employee-section">
-        <h4 className="x_employee-heading">Add Item Form</h4>
+        <h4 className="x_employee-heading">{itemId ? "Edit Item" : "Add Item"}</h4>
 
         <div className="x_popup">
           <form
@@ -143,7 +212,7 @@ function AddItems({ onSuccess }) {
                 }
               }}
             />
-            {supplierImg && supplierImgPreviewUrl && (
+            {supplierImgPreviewUrl && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
                 <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
                 <button
@@ -169,6 +238,8 @@ function AddItems({ onSuccess }) {
                 id="itemName"
                 name="itemName"
                 placeholder="Enter item name"
+                value={itemName}
+                onChange={e => setItemName(e.target.value)}
               />
             </div>
 
@@ -177,13 +248,7 @@ function AddItems({ onSuccess }) {
                 Category
               </label>
               <XCustomSelect
-                options={[
-                  { value: "vegetable", label: "Vegetable" },
-                  { value: "fruit", label: "Fruit" },
-                  { value: "dairy", label: "Dairy" },
-                  { value: "meat", label: "Meat" },
-                  { value: "drygoods", label: "Dry Goods" },
-                ]}
+                options={categories.map((cat) => ({ value: cat._id, label: cat.category_name }))}
                 value={category}
                 onChange={setCategory}
                 placeholder="Select Category..."
@@ -203,6 +268,8 @@ function AddItems({ onSuccess }) {
                 id="price"
                 name="price"
                 placeholder="Enter price"
+                value={price}
+                onChange={e => setPrice(e.target.value)}
               />
             </div>
 
@@ -216,6 +283,8 @@ function AddItems({ onSuccess }) {
                 id="quantity"
                 name="quantity"
                 placeholder="Enter quantity"
+                value={quantity}
+                onChange={e => setQuantity(e.target.value)}
               />
             </div>
 
@@ -250,6 +319,8 @@ function AddItems({ onSuccess }) {
                 id="min_threshold"
                 name="min_threshold"
                 placeholder="Enter minimum threshold"
+                value={minThreshold}
+                onChange={e => setMinThreshold(e.target.value)}
               />
             </div>
 
@@ -262,7 +333,7 @@ function AddItems({ onSuccess }) {
                 id="expiry_date"
                 type="text"
                 placeholder="dd/mm/yyyy"
-                value={expiryDate}
+                value={expiryDate ? expiryDate.toLocaleDateString("en-GB") : ""}
                 readOnly
                 ref={inputRef}
                 onClick={() => setShowCalendar(true)}
@@ -290,11 +361,7 @@ function AddItems({ onSuccess }) {
                 Supplier
               </label>
               <XCustomSelect
-                options={[
-                  { value: "supplier1", label: "Supplier A" },
-                  { value: "supplier2", label: "Supplier B" },
-                  { value: "supplier3", label: "Supplier C" },
-                ]}
+                options={suppliers.map((sup) => ({ value: sup._id, label: sup.name }))}
                 value={supplier}
                 onChange={setSupplier}
                 placeholder="Select Supplier..."
@@ -307,11 +374,11 @@ function AddItems({ onSuccess }) {
             {error && <div className="col-12 text-danger">{error}</div>}
 
             <div className="col-12 d-flex justify-content-center x_btn_main">
-              <button type="button" className="btn btn-secondary mx-2">
+              <button type="button" className="btn btn-secondary mx-2" onClick={onCancel}>
                 Cancel
               </button>
               <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
-                {loading ? "Saving..." : "Create"}
+                {loading ? "Saving..." : (itemId ? "Update" : "Create")}
               </button>
             </div>
           </form>
