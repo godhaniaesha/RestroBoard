@@ -11,8 +11,7 @@ import XCustomSelect from "../Component/XCustomSelect";
 function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
   const { selectedItem, loading, error, createSuccess, updateSuccess } = useSelector((state) => state.stock);
-  // const suppliers = useSelector(selectSuppliers);
-  const suppliers = 'sdfg'
+  const suppliers = useSelector((state) => state.supplier.suppliers);
   const categories = useSelector((state) => state.category.categories);
 
   const [expiryDate, setExpiryDate] = useState(null);
@@ -362,7 +361,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 Supplier
               </label>
               <XCustomSelect
-                options={suppliers.map((sup) => ({ value: sup._id, label: sup.name }))}
+                options={(suppliers || []).map((sup) => ({ value: sup._id, label: sup.name }))}
                 value={supplier}
                 onChange={setSupplier}
                 placeholder="Select Supplier..."
