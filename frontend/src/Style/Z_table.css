@@ -2087,6 +2087,7 @@ body {
 .Z_noDataImage {
   width: 330px;
   opacity: 0.6;
+}
 
 /* Pagination Styles for Stock Table */
 .Z_pagination_container {
