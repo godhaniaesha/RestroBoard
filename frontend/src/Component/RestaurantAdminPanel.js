@@ -37,7 +37,6 @@ import AddDishes from '../Container/AddDishes';
 import SupplierList from '../Container/SupplierList';
 import AddCategory from '../Container/AddCategory';
 import CategoryList from '../Container/CategoryList';
-import InventoryReport from '../Container/InventoryReport';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../redux/slice/auth.slice';
@@ -119,11 +118,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             icon: <FaBoxOpen />,
           },
           { id: "inventory-add", label: "Add Items", icon: <FaPlus /> },
-          {
-            id: "inventory-reports",
-            label: "Inventory Reports",
-            icon: <FaFileAlt />,
-          },
+          
         ],
       },
       {
@@ -224,11 +219,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             label: "Stock Management",
             icon: <FaBoxOpen />,
           },
-          {
-            id: "inventory-reports",
-            label: "Inventory Reports",
-            icon: <FaFileAlt />,
-          },
+          
         ],
       },
       {
@@ -850,10 +841,6 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
             <AddLeave onNavigate={onNavigate}></AddLeave>
           </>
         )
-      case 'inventory-reports':
-        return (
-          <InventoryReport></InventoryReport>
-        );
 
       case 'billing':
         return (
