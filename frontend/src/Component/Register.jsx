@@ -16,6 +16,7 @@ import {
 
 import Loogin_bg from "../Image/Loogin_bg.png";
 import "../Style/z_Style.css";
+import Spinner from "../Spinner";
 
 function Register() {
   const dispatch = useDispatch();
@@ -194,7 +195,7 @@ function Register() {
             </p>
 
             {loading && (
-              <p className="text-center text-secondary">Loading...</p>
+            <Spinner></Spinner>
             )}
 
             {mode === "signin" && (

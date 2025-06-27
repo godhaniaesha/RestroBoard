@@ -8,6 +8,7 @@ import CustomCalendar from "../Component/CustomCalendar";
 import XCustomSelect from "../Component/XCustomSelect";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
+import Spinner from "../Spinner";
 
 function EditEmployee() {
   const dispatch = useDispatch();
@@ -102,7 +103,7 @@ function EditEmployee() {
     }
   };
 
-  if (loading || !userData) return <p>Loading employee data...</p>;
+  if (loading || !userData) return  <Spinner></Spinner>;
 
   return (
     <section className="x_employee-section">

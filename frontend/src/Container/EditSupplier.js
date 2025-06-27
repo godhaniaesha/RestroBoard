@@ -8,14 +8,21 @@ import {
 import { toast } from "react-toastify";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
+import Spinner from "../Spinner";
 
-export default function EditSupplier({ setActiveItem }) {
+export default function EditSupplier({ setActiveItem, supplierId: propSupplierId, onNavigate }) {
   const dispatch = useDispatch();
-  const { singleSupplier, loading, success, error } = useSelector(
+  const { supplierData, loading, success, error } = useSelector(
     (state) => state.supplier
   );
 
-  const supplierId = localStorage.getItem("editSupplierId");
+  const supplierId = propSupplierId || localStorage.getItem("editSupplierId");
+
+  useEffect(() => {
+    if (propSupplierId) {
+      localStorage.setItem("editSupplierId", propSupplierId);
+    }
+  }, [propSupplierId]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -37,43 +44,43 @@ export default function EditSupplier({ setActiveItem }) {
   }, [dispatch, supplierId]);
 
   useEffect(() => {
-    if (singleSupplier) {
+    if (supplierData) {
       setFormData({
-        name: singleSupplier.name || "",
-        phone: singleSupplier.phone || "",
-        whatsapp_number: singleSupplier.whatsapp_number || "",
-        email: singleSupplier.email || "",
-        address: singleSupplier.address || "",
-        ingredients_supplied: singleSupplier.ingredients_supplied || "",
-        role: singleSupplier.role || "supplier",
+        name: supplierData.name || "",
+        phone: supplierData.phone || "",
+        whatsapp_number: supplierData.whatsapp_number || "",
+        email: supplierData.email || "",
+        address: supplierData.address || "",
+        ingredients_supplied: supplierData.ingredients_supplied || "",
+        role: supplierData.role || "supplier",
       });
 
-      if (singleSupplier.supplyer_image) {
-        setSupplierImgPreviewUrl(singleSupplier.supplyer_image);
+      // Show backend image only if new image isn't selected
+      if (supplierData.supplyer_image && !supplierImg) {
+        setSupplierImgPreviewUrl(`http://localhost:3000${supplierData.supplyer_image}`);
       }
     }
-  }, [singleSupplier]);
+  }, [supplierData]);
 
   useEffect(() => {
     if (success) {
       toast.success(success);
       dispatch(clearSupplierState());
+      setSupplierImg(null);
+      setSupplierImgPreviewUrl(null);
       localStorage.removeItem("editSupplierId");
-      setActiveItem("supplier-list");
+      onNavigate("supplier-list");
     }
 
     if (error) {
       toast.error(error);
       dispatch(clearSupplierState());
     }
-  }, [success, error, dispatch, setActiveItem]);
+  }, [success, error, dispatch, onNavigate]);
 
   const removeSupplierImage = () => {
     setSupplierImg(null);
-    if (supplierImgPreviewUrl) {
-      URL.revokeObjectURL(supplierImgPreviewUrl);
-      setSupplierImgPreviewUrl(null);
-    }
+    setSupplierImgPreviewUrl(null);
     const fileInput = document.getElementById("supplierImgInput");
     if (fileInput) {
       fileInput.value = "";
@@ -101,6 +108,11 @@ export default function EditSupplier({ setActiveItem }) {
 
     dispatch(updateSupplier({ id: supplierId, data: updateData }));
   };
+
+  // Show spinner when loading on first fetch or during update
+  if (loading && !supplierData) {
+    return <Spinner />;
+  }
 
   return (
     <section className="x_employee-section">
@@ -231,7 +243,10 @@ export default function EditSupplier({ setActiveItem }) {
             <button
               type="button"
               className="btn btn-secondary mx-2"
-              onClick={() => setActiveItem("supplier-list")}
+              onClick={() => {
+                localStorage.removeItem("editSupplierId");
+                onNavigate("supplier-list");
+              }}
             >
               Cancel
             </button>

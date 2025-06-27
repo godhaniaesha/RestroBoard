@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllSuppliers, deleteSupplier } from "../redux/slice/supplier.slice";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../Style/Z_table.css";
+import Spinner from "../Spinner";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -16,7 +17,8 @@ function SupplierList({ onNavigate }) {
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    onNavigate('supplier-edit')
+    localStorage.setItem('supplierId-local',id)
+    onNavigate('supplier-edit',id)
   };
 
   const handleDelete = (id) => {
@@ -45,7 +47,7 @@ function SupplierList({ onNavigate }) {
         </div>
         <div className="Z_empListTableWrapper">
           {loading ? (
-            <p className="text-center">Loading suppliers...</p>
+             <Spinner></Spinner>
           ) : (
             <table className="Z_empListTable">
               <thead>
@@ -97,10 +99,17 @@ function SupplierList({ onNavigate }) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center">
-                      No suppliers found.
-                    </td>
-                  </tr>
+                  <td colSpan="8" className="Z_empListNoDataContainer">
+                    <div className="Z_empListNoData">
+                      <img
+                        src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                        alt="No data"
+                        className="Z_noDataImage"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                
                 )}
               </tbody>
             </table>

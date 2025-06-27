@@ -41,8 +41,6 @@ export const getAllSuppliers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/getAllSuppliers`, getAuthHeader());
-   
-      
       return response.data.result;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Error occurred");
@@ -63,14 +61,14 @@ export const getSupplierById = createAsyncThunk(
   }
 );
 
-// 4. Update Supplier (with image)
+// 4. ✅ FIXED: Update Supplier (with image)
 export const updateSupplier = createAsyncThunk(
   "supplier/updateSupplier",
-  async ({ id, formData }, { rejectWithValue }) => {
+  async ({ id, data }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
         `${API_URL}/updateSupplier/${id}`,
-        formData,
+        data,
         {
           headers: {
             ...getAuthHeader().headers,
@@ -165,7 +163,7 @@ const supplierSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Update Supplier
+      // ✅ Update Supplier
       .addCase(updateSupplier.pending, (state) => {
         state.loading = true;
         state.error = null;

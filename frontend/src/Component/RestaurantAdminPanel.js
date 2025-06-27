@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import {
   FaHome, FaUsers, FaClipboardList, FaBoxOpen, FaReceipt,
   FaChartBar, FaCog, FaCalendarAlt, FaUtensils, FaConciergeBell,
@@ -47,9 +48,11 @@ import AddHoliday from '../Container/AddHoliday';
 import Holidaylist from '../Container/Holidaylist';
 import EditHolidays from '../Container/EditHolidays';
 import EditSupplier from '../Container/EditSupplier';
+import Spinner from '../Spinner';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
+const VALID_ROLES = ["admin", "manager", "supplyer", "saif", "waiter"];
 const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const [hoverTimeout, setHoverTimeout] = useState(null);
@@ -59,7 +62,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
   const prevIsMobileRef = useRef(isMobile);
 
   const menuItems = {
-    Admin: [
+    admin: [
       {
         id: "dashboard",
         label: "Dashboard",
@@ -193,7 +196,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
       { id: "reports", label: "Reports", icon: <FaChartBar /> },
      
     ],
-    Manager: [
+    manager: [
       { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
       {
         id: "category",
@@ -276,7 +279,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
       { id: "leaves", label: "Leave Approvals", icon: <FaCalendarAlt /> },
       { id: "reports", label: "Reports", icon: <FaChartBar /> },
     ],
-    Chef: [
+    saif: [
       {
         id: "hotel-information",
         label: "Hotel Information",
@@ -286,7 +289,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
       { id: "ingredients", label: "Ingredients", icon: <FaUtensils /> },
       { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
-    Waiter: [
+    waiter: [
       {
         id: "hotel-information",
         label: "Hotel Information",
@@ -295,7 +298,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
 
       { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
     ],
-    Housekeeping: [
+    supplyer: [
       {
         id: "cleaning-tasks",
         label: "Cleaning Tasks",
@@ -826,7 +829,7 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
         case 'supplier-edit':
         return (
           <>
-            <EditSupplier onNavigate={onNavigate}></EditSupplier>
+            <EditSupplier supplierId={editingCategoryId} onNavigate={onNavigate} />
           </>
         )
       case 'leave-add':
@@ -934,9 +937,115 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
 };
 
 // Main Component
+// const RestaurantAdminPanel = () => {
+//   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
+//   const [userRole, setUserRole] = useState('Admin');
+//   const [sidebarOpen, setSidebarOpen] = useState(true);
+//   const [isMobile, setIsMobile] = useState(false);
+//   const [isHovered, setIsHovered] = useState(false);
+//   const [editingCategoryId, setEditingCategoryId] = useState(null);
+
+//   const handleNavigate = (view, id = null) => {
+//     setActiveItem(view);
+//     setEditingCategoryId(id);
+//   };
+
+//   useEffect(() => {
+//     const checkScreenSize = () => {
+//       const mobile = window.innerWidth <= 768;
+//       setIsMobile(mobile);
+//       if (mobile) {
+//         setSidebarOpen(false);
+//       } else {
+//         setSidebarOpen(true);
+//       }
+//     };
+
+//     checkScreenSize();
+//     window.addEventListener('resize', checkScreenSize);
+//     return () => window.removeEventListener('resize', checkScreenSize);
+//   }, []);
+//   useEffect(() => {
+//     localStorage.setItem('activeAdminPanelItem', activeItem);
+//   }, [activeItem]);
+//   // Improved toggleSidebar function
+//   const toggleSidebar = () => {
+//     console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
+//     setSidebarOpen(prevState => {
+//       const newState = !prevState;
+//       console.log('New sidebar state:', newState); // Debug માટે
+//       return newState;
+//     });
+
+//     // જો sidebar hover state માં છે તેને clear કરો
+//     if (isHovered) {
+//       setIsHovered(false);
+//     }
+//   };
+
+//   const handleMenuClick = (component) => {
+//     setEditingCategoryId(null); // Reset editing state when changing views
+//     setActiveItem(component);
+//   };
+
+//   const handleEditCategory = (id) => {
+//     setEditingCategoryId(id);
+//     setActiveItem('category-add'); // Switch to the form view
+//   };
+
+//   return (
+//     <div className='d_main_admin'>
+//       <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
+//         <Sidebar
+//           activeItem={activeItem}
+//           onItemClick={handleNavigate}
+//           userRole={userRole}
+//           isOpen={sidebarOpen}
+//           isMobile={isMobile}
+//           onToggleSidebar={toggleSidebar}
+//           onSetHovered={setIsHovered}
+//         />
+
+//         <div className="main-layout">
+//           <Navbar
+//             userRole={userRole}
+//             toggleSidebar={toggleSidebar}
+//             isOpen={sidebarOpen}
+//             isMobile={isMobile}
+//           />
+
+//           <ContentRouter
+//             activeItem={activeItem}
+//             setActiveItem={setActiveItem}
+//             userRole={userRole}
+//             onNavigate={handleNavigate}
+//             editingCategoryId={editingCategoryId}
+//           />
+//         </div>
+
+//         <div className="role-switcher-container">
+//           <select
+//             className="role-switcher"
+//             value={userRole}
+//             onChange={(e) => setUserRole(e.target.value)}
+//           >
+//             <option value="Admin">Admin</option>
+//             <option value="Manager">Manager</option>
+//             <option value="Chef">Chef</option>
+//             <option value="Waiter">Waiter</option>
+//             <option value="Housekeeping">Housekeeping</option>
+//             <option value="Receptionist">Receptionist</option>
+//           </select>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default RestaurantAdminPanel;
 const RestaurantAdminPanel = () => {
   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
-  const [userRole, setUserRole] = useState('Admin');
+  const [userRole, setUserRole] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -948,47 +1057,65 @@ const RestaurantAdminPanel = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("Decoded token:", decoded);
+        
+        if (VALID_ROLES.includes(decoded.role?.toLowerCase())) {
+          setUserRole(decoded.role);
+        } else {
+          console.error("Invalid role in token");
+          setUserRole(null);
+        }
+      } catch (err) {
+        console.error("Invalid token", err);
+        setUserRole(null);
+      }
+    } else {
+      setUserRole(null);
+    }
+  }, []);
+
+  useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (mobile) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
-      }
+      setSidebarOpen(!mobile);
     };
 
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
   useEffect(() => {
     localStorage.setItem('activeAdminPanelItem', activeItem);
   }, [activeItem]);
-  // Improved toggleSidebar function
-  const toggleSidebar = () => {
-    console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
-    setSidebarOpen(prevState => {
-      const newState = !prevState;
-      console.log('New sidebar state:', newState); // Debug માટે
-      return newState;
-    });
 
-    // જો sidebar hover state માં છે તેને clear કરો
-    if (isHovered) {
-      setIsHovered(false);
-    }
+  const toggleSidebar = () => {
+    setSidebarOpen(prev => !prev);
+    if (isHovered) setIsHovered(false);
   };
 
   const handleMenuClick = (component) => {
-    setEditingCategoryId(null); // Reset editing state when changing views
+    setEditingCategoryId(null);
     setActiveItem(component);
   };
 
   const handleEditCategory = (id) => {
     setEditingCategoryId(id);
-    setActiveItem('category-add'); // Switch to the form view
+    setActiveItem('category-add');
   };
+
+  if (!userRole) {
+    return (
+      <div className="loading-screen">
+         <Spinner></Spinner>
+      </div>
+    );
+  }
 
   return (
     <div className='d_main_admin'>
@@ -1018,21 +1145,6 @@ const RestaurantAdminPanel = () => {
             onNavigate={handleNavigate}
             editingCategoryId={editingCategoryId}
           />
-        </div>
-
-        <div className="role-switcher-container">
-          <select
-            className="role-switcher"
-            value={userRole}
-            onChange={(e) => setUserRole(e.target.value)}
-          >
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Chef">Chef</option>
-            <option value="Waiter">Waiter</option>
-            <option value="Housekeeping">Housekeeping</option>
-            <option value="Receptionist">Receptionist</option>
-          </select>
         </div>
       </div>
     </div>

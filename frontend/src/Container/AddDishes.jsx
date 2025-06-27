@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../Style/x_app.css';
 import uplod from '../Image/cloud-upload.svg';
+import Spinner from '../Spinner';
 
 export default function AddDishes({onNavigate}) {
   const dispatch = useDispatch();
@@ -172,7 +173,7 @@ export default function AddDishes({onNavigate}) {
             >
               <option value="">Select category</option>
               {categoryLoading ? (
-                <option disabled>Loading...</option>
+                <option disabled> <Spinner></Spinner></option>
               ) : (
                 categories?.map((cat) => (
                   <option key={cat._id} value={cat._id}>

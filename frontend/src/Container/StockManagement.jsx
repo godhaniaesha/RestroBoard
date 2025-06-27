@@ -4,6 +4,7 @@ import { fetchItems, deleteItem } from "../redux/slice/stockmanage.slice";
 import "../Style/Z_table.css";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
+import Spinner from "../Spinner";
 
 function StockManagement() {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function StockManagement() {
           </div>
         </div>
         <div className="Z_SM_tableWrapper">
-          {loading && <p>Loading...</p>}
+          {loading &&  <Spinner></Spinner>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           <table className="Z_SM_table">
             <thead>

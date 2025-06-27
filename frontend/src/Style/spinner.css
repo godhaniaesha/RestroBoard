@@ -1,0 +1,49 @@
+:root {
+    --dot-color: #1f2e3d;
+    --dot-active-color: #163b60;
+  }
+  
+  .x_spinner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .x_progress-dots {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .x_progress-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--dot-color);
+    opacity: 0.3;
+    animation: x_step-fill 1.2s infinite;
+  }
+  
+  .x_progress-dots span:nth-child(1) { animation-delay: 0s; }
+  .x_progress-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .x_progress-dots span:nth-child(3) { animation-delay: 0.4s; }
+  .x_progress-dots span:nth-child(4) { animation-delay: 0.6s; }
+  .x_progress-dots span:nth-child(5) { animation-delay: 0.8s; }
+  
+  @keyframes x_step-fill {
+    0%, 100% {
+      background-color: var(--dot-color);
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      background-color: var(--dot-active-color);
+      opacity: 1;
+      transform: scale(1.4);
+    }
+  }
+  

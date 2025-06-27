@@ -58,9 +58,9 @@ export const getAllSuppliers = async (req, res) => {
             return sendUnauthorizedResponse(res, "Authentication required");
         }
 
-        if (!req.user.isAdmin) {
-            return sendForbiddenResponse(res, "Access denied. Only admins can view all waiters.");
-        }
+        // if (!req.user.isAdmin) {
+        //     return sendForbiddenResponse(res, "Access denied. Only admins can view all waiters.");
+        // }
 
         // Find all supplyers with role 'supplyer'
         const supplyers = await Supplier.find({ role: 'supplyer' }).select('-password');
