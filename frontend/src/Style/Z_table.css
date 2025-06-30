@@ -1812,7 +1812,7 @@ body {
    ================================= */
 
 .Z_DashAnstic_section {
-  padding: 2rem 1rem;
+  padding: 10px 1.5rem;
   background: var(--primary-bg-color);
   min-height: 100vh;
 }

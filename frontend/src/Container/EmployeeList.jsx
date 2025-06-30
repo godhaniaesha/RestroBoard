@@ -212,12 +212,15 @@ function EmployeeList({ setActiveItem }) {
                     ) : (
                       <tr>
                         <td colSpan="7" className="Z_empListNoDataContainer">
-                          <div className="Z_empListNoData">
+                          <div style={{ textAlign: "center", padding: "2rem 0" }}>
                             <img
-                              src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                              src={require('../Image/hey.jpg')}
                               alt="No data"
                               className="Z_noDataImage"
                             />
+                            {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                              No employees found.
+                            </div> */}
                           </div>
                         </td>
                       </tr>

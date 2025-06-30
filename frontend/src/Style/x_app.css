@@ -56,7 +56,7 @@ textarea {
   border: 2px dashed #cbd5e0;
   background-color: var(--img-bg-color);
   border-radius: 6px;
-  padding: 2.5rem;
+  padding: 4.5rem;
   text-align: center;
   transition: background-color 0.3s ease;
 }
@@ -95,7 +95,7 @@ textarea {
 /* Responsive design */
 @media (max-width: 768px) {
   .x_dropzone {
-    padding: 1rem;
+    padding: 2rem;
   }
 
   .x_dz-message {
@@ -162,7 +162,7 @@ textarea {
 }
 @media (max-width: 576px) {
   .x_dropzone {
-    padding: 0;
+    padding: 0.9rem;
   }
 }
 
@@ -299,6 +299,10 @@ textarea {
   z-index: 10; /* Ensure it's above the image and other elements */
 }
 
+.btn:focus {
+  box-shadow: none !important;
+}
+
 .x_remove-image-btn:hover {
   background-color: rgba(255, 0, 0, 1);
 }
@@ -400,12 +404,13 @@ textarea {
 }
 
 /* InventoryReport custom styles - all classes prefixed with x_ */
-.x_rep_title{
+.x_rep_title {
   color: var(--dark-color);
   margin-bottom: 2rem;
   font-weight: 700;
-  font-size: 2rem;}
-  /* padding: 2rem;
+  font-size: 2rem;
+}
+/* padding: 2rem;
   background-color: var(--primary-bg-color);
 } */
 .x_inv_section {
@@ -474,7 +479,6 @@ textarea {
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
-  
 }
 .x_inv_chartCard--linefull {
   width: 100%;
@@ -612,7 +616,8 @@ textarea {
     flex-direction: column;
     gap: 0;
   }
-  .x_inv_chartCard, .x_inv_tableCard {
+  .x_inv_chartCard,
+  .x_inv_tableCard {
     max-width: 100%;
     margin-bottom: 18px;
   }
@@ -630,7 +635,8 @@ textarea {
   .x_inv_container {
     padding: 10px 2px 18px 2px;
   }
-  .x_inv_chartCard, .x_inv_tableCard {
+  .x_inv_chartCard,
+  .x_inv_tableCard {
     padding: 10px 4px 8px 4px;
   }
   .x_inv_searchInput {

@@ -95,8 +95,16 @@ export default function DashboardOverview() {
   const uniqueStockItems = allStockItems.filter((item, index, self) =>
     index === self.findIndex((t) => t._id === item._id)
   );
+
+  // Filter to show only out of stock and low stock items
+  const filteredStockItems = uniqueStockItems.filter(item => {
+    const quantity = Number(item.quantity);
+    const minThreshold = Number(item.minimum_threshold);
+    return quantity === 0 || quantity <= minThreshold;
+  });
+
   // Filter by search
-  const filteredStock = uniqueStockItems.filter(
+  const filteredStock = filteredStockItems.filter(
     (item) =>
       item.item_name?.toLowerCase().includes(search.toLowerCase()) ||
       (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
@@ -126,76 +134,78 @@ export default function DashboardOverview() {
     <Container fluid className="d_dashboard_overview">
       <h2 className="d_dashboard_title">Dashboard Overview</h2>
 
-      <Row>
-        <Col md={3} lg={3}>
-          <Card className="d_summary_card d_card_revenue">
-            <Card.Body>
-              <div className="d_card_icon">
-                <FaDollarSign />
-              </div>
-              <div>
-                <Card.Title>Today's Revenue</Card.Title>
-                <Card.Text>
-                  {dashboard.totalExpense?.totalExpense !== undefined
-                    ? `₹${dashboard.totalExpense.totalExpense}`
-                    : 'Loading...'}
-                </Card.Text>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3} lg={3}>
-          <Card className="d_summary_card d_card_orders">
-            <Card.Body>
-              <div className="d_card_icon">
-                <FaShoppingCart />
-              </div>
-              <div>
-                <Card.Title>Total Employees</Card.Title>
-                <Card.Text>
-                  {dashboard.employeeCounts?.total !== undefined
-                    ? dashboard.employeeCounts.total
-                    : 'Loading...'}
-                </Card.Text>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3} lg={3}>
-          <Card className="d_summary_card d_card_customers">
-            <Card.Body>
-              <div className="d_card_icon">
-                <FaUsers />
-              </div>
-              <div>
-                <Card.Title>Suppliers</Card.Title>
-                <Card.Text>
-                  {dashboard.supplierCount?.supplier !== undefined
-                    ? dashboard.supplierCount.supplier
-                    : 'Loading...'}
-                </Card.Text>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={3} lg={3}>
-          <Card className="d_summary_card d_card_pending">
-            <Card.Body>
-              <div className="d_card_icon">
-                <FaClock />
-              </div>
-              <div>
-                <Card.Title>Total Items</Card.Title>
-                <Card.Text>
-                  {dashboard.totalItems?.totalItem !== undefined
-                    ? dashboard.totalItems.totalItem
-                    : 'Loading...'}
-                </Card.Text>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      <div className='Z_Crds'>
+        <Row>
+          <Col md={3} lg={3}>
+            <Card className="d_summary_card d_card_revenue">
+              <Card.Body>
+                <div className="d_card_icon">
+                  <FaDollarSign />
+                </div>
+                <div>
+                  <Card.Title>Today's Revenue</Card.Title>
+                  <Card.Text>
+                    {dashboard.totalExpense?.totalExpense !== undefined
+                      ? `₹${dashboard.totalExpense.totalExpense}`
+                      : 'Loading...'}
+                  </Card.Text>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3} lg={3}>
+            <Card className="d_summary_card d_card_orders">
+              <Card.Body>
+                <div className="d_card_icon">
+                  <FaShoppingCart />
+                </div>
+                <div>
+                  <Card.Title>Total Employees</Card.Title>
+                  <Card.Text>
+                    {dashboard.employeeCounts?.total !== undefined
+                      ? dashboard.employeeCounts.total
+                      : 'Loading...'}
+                  </Card.Text>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3} lg={3}>
+            <Card className="d_summary_card d_card_customers">
+              <Card.Body>
+                <div className="d_card_icon">
+                  <FaUsers />
+                </div>
+                <div>
+                  <Card.Title>Suppliers</Card.Title>
+                  <Card.Text>
+                    {dashboard.supplierCount?.supplier !== undefined
+                      ? dashboard.supplierCount.supplier
+                      : 'Loading...'}
+                  </Card.Text>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3} lg={3}>
+            <Card className="d_summary_card d_card_pending">
+              <Card.Body>
+                <div className="d_card_icon">
+                  <FaClock />
+                </div>
+                <div>
+                  <Card.Title>Total Items</Card.Title>
+                  <Card.Text>
+                    {dashboard.totalItems?.totalItem !== undefined
+                      ? dashboard.totalItems.totalItem
+                      : 'Loading...'}
+                  </Card.Text>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </div>
 
       <Row>
         <Col lg={7} md={12} className="mb-4">
@@ -213,7 +223,7 @@ export default function DashboardOverview() {
                     <Line type="monotone" dataKey={dashboard.weeklyItemAdditions[0].totalSales !== undefined ? "totalSales" : "sales"} stroke="#456268" activeDot={{ r: 8 }} />
                   </LineChart>
                 ) : (
-                  <div style={{textAlign: 'center', paddingTop: '100px'}}>Loading...</div>
+                  <div style={{ textAlign: 'center', paddingTop: '100px' }}>Loading...</div>
                 )}
               </ResponsiveContainer>
             </Card.Body>
@@ -245,7 +255,7 @@ export default function DashboardOverview() {
                     <Legend />
                   </PieChart>
                 ) : (
-                  <div style={{textAlign: 'center', paddingTop: '100px'}}>Loading...</div>
+                  <div style={{ textAlign: 'center', paddingTop: '100px' }}>Loading...</div>
                 )}
               </ResponsiveContainer>
             </Card.Body>
@@ -258,7 +268,7 @@ export default function DashboardOverview() {
           <section>
             <div className="Z_SM_container">
               <div className="Z_SM_headerRow">
-                <h4 className="Z_SM_title mb-0">Stock Management</h4>
+                <h4 className="Z_SM_title mb-0">Low Stock Management</h4>
                 <div className="Z_SM_controls">
                   <input
                     className="Z_SM_searchInput"

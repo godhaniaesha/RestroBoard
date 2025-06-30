@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa';
 import styles from './HotelOverview.module.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { getAllDish } from '../redux/slice/dish.slice';
@@ -16,7 +16,7 @@ import { getAllHotel } from '../redux/slice/hotel.slice';
 const testimonials = [
   { text: 'Amazing food and wonderful hospitality! Will visit again.', author: 'Priya S.' },
   { text: 'The rooms were spotless and the staff was very friendly.', author: 'Rahul M.' },
-  { text: 'Best butter chicken I have ever had!', author: 'Ayesha K.' },
+  { text: 'Best butter chicken I have ever  perfectly spiced!', author: 'Ayesha K.' },
   { text: 'The ambiance is perfect for a family dinner. Highly recommended!', author: 'Sandeep J.' },
   { text: 'A delightful experience from start to finish. The service is impeccable.', author: 'Neha P.' }
 ];
@@ -78,8 +78,8 @@ export default function HotelOverview() {
       <section className="py-5" style={{ background: 'var(--white-color)' }}>
         <Container>
           <Row className="justify-content-center align-items-center">
-            <Col md={8} className="text-center">
-              <h2 className="fw-bold mb-3" style={{ color: 'var(--button-color)' }}>About {hotel?.hotel_name || 'RestroBoard Hotel'}</h2>
+            <Col md={8} className={` text-center`}>
+              <h2 className={`fw-bold mb-3 ${styles['Z_resp_title']} ` }style={{ color: 'var(--button-color)' }}>About {hotel?.hotel_name || 'RestroBoard Hotel'}</h2>
               <p style={{ fontSize: '1.1rem', color: '#3a4a5a' }}>{hotel?.description}</p>
             </Col>
           </Row>
@@ -114,7 +114,7 @@ export default function HotelOverview() {
           </Row>
           <div className={styles['d_ho-slider-outer']}>
             <Swiper
-              modules={[Navigation]}
+              modules={[Navigation, Autoplay]}
               className={styles['d_ho_swiper_wrapper']}
               navigation={{
                 prevEl: prevDishRef.current,
@@ -133,6 +133,8 @@ export default function HotelOverview() {
                 992: { slidesPerView: 4, spaceBetween: 30 },
                 1200: { slidesPerView: 5, spaceBetween: 30 },
               }}
+              autoplay={{ delay: 2000, disableOnInteraction: false }}
+              loop={true}
             >
               {dishes?.map((dish, idx) => (
                 <SwiperSlide key={idx}>
@@ -167,7 +169,7 @@ export default function HotelOverview() {
       </section>
 
       {/* Testimonials */}
-      <section className={`py-5 ${styles['d_ho-testimonial-bg']}`}>
+      <section className={`py-5 ${styles['d_ho-testimonial-bg Z_resp_slider']}`}>
         <Container>
           <Row className="mb-4">
             <Col>
@@ -178,7 +180,7 @@ export default function HotelOverview() {
           </Row>
           <div className={styles['d_ho-testimonial-outer']}>
             <Swiper
-              modules={[Navigation]}
+              modules={[Navigation, Autoplay]}
               className={styles['d_ho_swiper_wrapper']}
               navigation={{
                 prevEl: prevTestimonialRef.current,
@@ -195,6 +197,8 @@ export default function HotelOverview() {
                 768: { slidesPerView: 2, spaceBetween: 30 },
                 992: { slidesPerView: 3, spaceBetween: 30 },
               }}
+              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              loop={true}
             >
               {testimonials.map((t, i) => (
                 <SwiperSlide key={i}>

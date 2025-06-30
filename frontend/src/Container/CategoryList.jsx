@@ -131,17 +131,20 @@ function CategoryList({ onNavigate }) {
                     ))
                   : !loading && (
                     <tr>
-                    <td colSpan="4" className="Z_empListNoDataContainer">
-                      <div className="Z_empListNoData">
-                        <img
-                          src={require('../Image/hey.jpg')} // Make sure this path points to your image
-                          alt="No data"
-                          className="Z_noDataImage"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                    )}
+                      <td colSpan="4" className="Z_empListNoDataContainer">
+                        <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                          <img
+                            src={require('../Image/hey.jpg')}
+                            alt="No data"
+                            className="Z_noDataImage"
+                          />
+                          {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                            No categories found.
+                          </div> */}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
               </tbody>
             </table>
             <div className="Z_pagination_container">

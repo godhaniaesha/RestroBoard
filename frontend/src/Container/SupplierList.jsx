@@ -17,8 +17,8 @@ function SupplierList({ onNavigate }) {
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    localStorage.setItem('supplierId-local',id)
-    onNavigate('supplier-edit',id)
+    localStorage.setItem("supplierId-local", id);
+    onNavigate("supplier-edit", id);
   };
 
   const handleDelete = (id) => {
@@ -47,7 +47,7 @@ function SupplierList({ onNavigate }) {
         </div>
         <div className="Z_empListTableWrapper">
           {loading ? (
-             <Spinner></Spinner>
+            <Spinner></Spinner>
           ) : (
             <table className="Z_empListTable">
               <thead>
@@ -68,7 +68,7 @@ function SupplierList({ onNavigate }) {
                     <tr className="Z_empListTr" key={idx}>
                       <td className="Z_empListTd">
                         <img
-                            src={`http://localhost:3000${sup.supplyer_image}`}
+                          src={`http://localhost:3000${sup.supplyer_image}`}
                           alt={sup.name}
                           className="Z_empListPhoto"
                         />
@@ -78,7 +78,9 @@ function SupplierList({ onNavigate }) {
                       <td className="Z_empListTd">{sup.email}</td>
                       <td className="Z_empListTd">{sup.whatsapp_number}</td>
                       <td className="Z_empListTd">{sup.address}</td>
-                      <td className="Z_empListTd">{sup.ingredients_supplied}</td>
+                      <td className="Z_empListTd">
+                        {sup.ingredients_supplied}
+                      </td>
                       <td className="Z_empListTd">
                         <button
                           className="Z_empListActionBtn"
@@ -99,17 +101,22 @@ function SupplierList({ onNavigate }) {
                   ))
                 ) : (
                   <tr>
-                  <td colSpan="8" className="Z_empListNoDataContainer">
-                    <div className="Z_empListNoData">
-                      <img
-                        src={require('../Image/hey.jpg')} // Make sure this path points to your image
-                        alt="No data"
-                        className="Z_noDataImage"
-                      />
-                    </div>
-                  </td>
-                </tr>
-                
+                    <td colSpan="8" className="Z_empListNoDataContainer">
+                      <div
+                        className="Z_empListNoData"
+                        style={{ textAlign: "center", padding: "2rem 0" }}
+                      >
+                        <img
+                          src={require("../Image/hey.jpg")}
+                          alt="No data"
+                          className="Z_noDataImage"
+                        />
+                        {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                          No suppliers found.
+                        </div> */}
+                      </div>
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
