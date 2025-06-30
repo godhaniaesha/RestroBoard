@@ -948,8 +948,8 @@
 
   .d_main_admin .col-lg-3,
   .d_main_admin .col-lg-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 
   .d_main_admin .page-title {
@@ -978,6 +978,12 @@
 
   .d_main_admin .nav-actions {
     gap: 10px;
+  }
+  .d_main_admin .card {
+    margin-bottom: 0px;
+  }
+  .Z_Crds {
+    margin-bottom: 15px;
   }
 }
 
@@ -1009,13 +1015,18 @@
   }
 
   .d_main_admin .btn {
-    font-size: 12px;
-    padding: 6px 12px;
+    font-size: 16px;
+    padding: 8px 26px;
   }
 
   .d_main_admin .btn-sm {
     padding: 3px 6px;
     font-size: 10px;
+  }
+  .d_main_admin .col-lg-3,
+  .d_main_admin .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 }
 

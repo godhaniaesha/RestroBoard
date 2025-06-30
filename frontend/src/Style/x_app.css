@@ -56,7 +56,7 @@ textarea {
   border: 2px dashed #cbd5e0;
   background-color: var(--img-bg-color);
   border-radius: 6px;
-  padding: 2.5rem;
+  padding: 4.5rem;
   text-align: center;
   transition: background-color 0.3s ease;
 }
@@ -97,7 +97,7 @@ textarea {
 /* Responsive design */
 @media (max-width: 768px) {
   .x_dropzone {
-    padding: 1rem;
+    padding: 2rem;
   }
 
   .x_dz-message {
@@ -324,6 +324,10 @@ textarea {
   /* Ensure it's above the image and other elements */
 }
 
+.btn:focus {
+  box-shadow: none !important;
+}
+
 .x_remove-image-btn:hover {
   background-color: rgb(50 74 99);
 }
@@ -453,7 +457,6 @@ textarea {
   font-weight: 700;
   font-size: 2rem;
 }
-
 /* padding: 2rem;
   background-color: var(--primary-bg-color);
 } */
@@ -529,7 +532,6 @@ textarea {
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
-
 }
 
 .x_inv_chartCard--linefull {
@@ -685,7 +687,6 @@ textarea {
     flex-direction: column;
     gap: 0;
   }
-
   .x_inv_chartCard,
   .x_inv_tableCard {
     max-width: 100%;
@@ -708,7 +709,6 @@ textarea {
   .x_inv_container {
     padding: 10px 2px 18px 2px;
   }
-
   .x_inv_chartCard,
   .x_inv_tableCard {
     padding: 10px 4px 8px 4px;

@@ -10,15 +10,14 @@
 }
 
 .d_dashboard_overview {
-  padding: 2rem;
+  padding: 10px 2rem;
   background-color: var(--primary-bg-color);
 }
 
 .d_dashboard_title {
   color: var(--dark-color);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-weight: 700;
-  font-size: 2rem;
 }
 
 .d_summary_card {
@@ -27,12 +26,12 @@
   color: var(--button-color);
   margin-bottom: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .d_summary_card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .d_summary_card .card-body {
@@ -58,18 +57,26 @@
   font-weight: 700;
 }
 
-.d_card_revenue { background: linear-gradient(45deg, #007bff, #3395ff); }
-.d_card_orders { background: linear-gradient(45deg, #28a745, #52b788); }
-.d_card_customers { background: linear-gradient(45deg, #ffc107, #ffd54f); }
-.d_card_pending { background: linear-gradient(45deg, #dc3545, #ef5350); }
+.d_card_revenue {
+  background: linear-gradient(45deg, #007bff, #3395ff);
+}
+.d_card_orders {
+  background: linear-gradient(45deg, #28a745, #52b788);
+}
+.d_card_customers {
+  background: linear-gradient(45deg, #ffc107, #ffd54f);
+}
+.d_card_pending {
+  background: linear-gradient(45deg, #dc3545, #ef5350);
+}
 
-
-.d_chart_card, .d_products_card {
+.d_chart_card,
+.d_products_card {
   background-color: var(--white-color);
   border: none;
   border-radius: 10px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .d_chart_card .card-title,
@@ -83,7 +90,7 @@
   background: var(--white-color) !important;
   border: 1px solid #ddd !important;
   border-radius: 5px !important;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .recharts-tooltip-label {
@@ -129,16 +136,28 @@
   color: #fff;
 }
 
-.d_status_completed { background-color: var(--success-color); }
-.d_status_pending { background-color: var(--warning-color); color: var(--dark-color); }
-.d_status_cancelled { background-color: var(--danger-color); }
+.d_status_completed {
+  background-color: var(--success-color);
+}
+.d_status_pending {
+  background-color: var(--warning-color);
+  color: var(--dark-color);
+}
+.d_status_cancelled {
+  background-color: var(--danger-color);
+}
 
-@media (max-width:576px){
-  .recharts-responsive-container{
-    height: 370px !important;
-   
+@media only screen and (max-width: 1024px) {
+  .d_dashboard_title {
+    font-size: 25px;
   }
-  .recharts-wrapper{
+}
+
+@media (max-width: 576px) {
+  .recharts-responsive-container {
+    height: 370px !important;
+  }
+  .recharts-wrapper {
     max-height: 370px !important;
   }
 }

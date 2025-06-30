@@ -96,7 +96,9 @@ function SupplierList({ onNavigate }) {
                       <td className="Z_empListTd">{sup.email}</td>
                       <td className="Z_empListTd">{sup.whatsapp_number}</td>
                       <td className="Z_empListTd">{sup.address}</td>
-                      <td className="Z_empListTd">{sup.ingredients_supplied}</td>
+                      <td className="Z_empListTd">
+                        {sup.ingredients_supplied}
+                      </td>
                       <td className="Z_empListTd">
                         <button
                           className="Z_empListActionBtn"
@@ -118,16 +120,21 @@ function SupplierList({ onNavigate }) {
                 ) : (
                   <tr>
                     <td colSpan="8" className="Z_empListNoDataContainer">
-                      <div className="Z_empListNoData">
+                      <div
+                        className="Z_empListNoData"
+                        style={{ textAlign: "center", padding: "2rem 0" }}
+                      >
                         <img
-                          src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                          src={require("../Image/hey.jpg")}
                           alt="No data"
                           className="Z_noDataImage"
                         />
+                        {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                          No suppliers found.
+                        </div> */}
                       </div>
                     </td>
                   </tr>
-
                 )}
               </tbody>
             </table>

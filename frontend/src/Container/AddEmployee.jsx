@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createRegister, getRegisterById, updateProfileUser, clearSuccess } from "../redux/slice/user.slice.js";
+import {
+  createRegister,
+  getRegisterById,
+  updateProfileUser,
+  clearSuccess,
+} from "../redux/slice/user.slice.js";
 import XCustomSelect from "../Component/XCustomSelect";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
 
 function AddEmployee({ employeeId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
-  const { loading, error, success, userData: selectedEmployee } = useSelector((state) => state.user);
+  const {
+    loading,
+    error,
+    success,
+    userData: selectedEmployee,
+  } = useSelector((state) => state.user);
   const isEditMode = Boolean(employeeId);
 
   const [formState, setFormState] = useState({
@@ -22,11 +33,12 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const roleOptions = [
-    { value: 'manager', label: 'Manager' },
-    { value: 'saif', label: 'Chef' },
-    { value: 'waiter', label: 'Waiter' },
+    { value: "manager", label: "Manager" },
+    { value: "saif", label: "Chef" },
+    { value: "waiter", label: "Waiter" },
   ];
 
   // Fetch employee data if in edit mode
@@ -40,13 +52,14 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
   useEffect(() => {
     if (isEditMode && selectedEmployee && selectedEmployee._id === employeeId) {
       setFormState({
-        firstName: selectedEmployee.firstName || '',
-        lastName: selectedEmployee.lastName || '',
-        email: selectedEmployee.email || '',
-        phone: selectedEmployee.phone || '',
-        password: '', // Password is not edited here
-        address: selectedEmployee.address || '',
-        role: roleOptions.find(r => r.value === selectedEmployee.role) || null,
+        firstName: selectedEmployee.firstName || "",
+        lastName: selectedEmployee.lastName || "",
+        email: selectedEmployee.email || "",
+        phone: selectedEmployee.phone || "",
+        password: "", // Password is not edited here
+        address: selectedEmployee.address || "",
+        role:
+          roleOptions.find((r) => r.value === selectedEmployee.role) || null,
       });
       if (selectedEmployee.image) {
         setImagePreviewUrl(`http://localhost:3000${selectedEmployee.image}`);
@@ -60,7 +73,11 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
   // Handle success after creating or updating
   useEffect(() => {
     if (success) {
-      alert(isEditMode ? "Employee updated successfully!" : "Employee added successfully!");
+      alert(
+        isEditMode
+          ? "Employee updated successfully!"
+          : "Employee added successfully!"
+      );
       dispatch(clearSuccess());
       if (!isEditMode) {
         // Reset form after create
@@ -76,7 +93,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
         setImageFile(null);
         setImagePreviewUrl(null);
         const fileInput = document.getElementById("imageInput");
-        if (fileInput) fileInput.value = '';
+        if (fileInput) fileInput.value = "";
       }
       if (onSuccess) {
         onSuccess();
@@ -104,11 +121,11 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormState(prevState => ({ ...prevState, [name]: value }));
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleRoleChange = (selectedOption) => {
-    setFormState(prevState => ({ ...prevState, role: selectedOption }));
+    setFormState((prevState) => ({ ...prevState, role: selectedOption }));
   };
 
   const handleImageChange = (e) => {
@@ -131,21 +148,21 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
     }
 
     const formData = new FormData();
-    formData.append('firstName', formState.firstName);
-    formData.append('lastName', formState.lastName);
-    formData.append('email', formState.email);
-    formData.append('phone', formState.phone);
-    formData.append('address', formState.address);
-    formData.append('role', formState.role.value);
-    
+    formData.append("firstName", formState.firstName);
+    formData.append("lastName", formState.lastName);
+    formData.append("email", formState.email);
+    formData.append("phone", formState.phone);
+    formData.append("address", formState.address);
+    formData.append("role", formState.role.value);
+
     if (imageFile) {
-      formData.append('image', imageFile);
+      formData.append("image", imageFile);
     }
 
     if (isEditMode) {
       dispatch(updateProfileUser({ id: employeeId, formData }));
     } else {
-      formData.append('password', formState.password);
+      formData.append("password", formState.password);
       dispatch(createRegister(formData));
     }
   };
@@ -153,12 +170,16 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
   return (
     <>
       <section className="x_employee-section">
-        <h4 className="x_employee-heading">{isEditMode ? 'Edit Employee' : 'Add Employee'} Form</h4>
+        <h4 className="x_employee-heading">
+          {isEditMode ? "Edit Employee" : "Add Employee"} Form
+        </h4>
         <div className="x_popup">
           <div
-            className={`x_dropzone x_dropzone-multiple dz-clickable ${imagePreviewUrl ? 'x_has-image' : ''}`}
-            onClick={() => document.getElementById('imageInput').click()}
-            style={{ cursor: 'pointer' }}
+            className={`x_dropzone x_dropzone-multiple dz-clickable ${
+              imagePreviewUrl ? "x_has-image" : ""
+            }`}
+            onClick={() => document.getElementById("imageInput").click()}
+            style={{ cursor: "pointer" }}
           >
             {!imagePreviewUrl && (
               <div
@@ -173,12 +194,16 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
               id="imageInput"
               type="file"
               accept="image/*"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               onChange={handleImageChange}
             />
             {imagePreviewUrl && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
-                <img src={imagePreviewUrl} alt="Employee" className="x_uploaded-image" />
+                <img
+                  src={imagePreviewUrl}
+                  alt="Employee"
+                  className="x_uploaded-image"
+                />
                 <button
                   type="button"
                   className="x_remove-image-btn"
@@ -194,7 +219,9 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
 
           <form className="row g-3 mt-3" onSubmit={handleSubmit}>
             <div className="col-md-6">
-              <label htmlFor="firstName" className="form-label">First Name</label>
+              <label htmlFor="firstName" className="form-label">
+                First Name
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -208,7 +235,9 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="lastName" className="form-label">Last Name</label>
+              <label htmlFor="lastName" className="form-label">
+                Last Name
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -222,7 +251,9 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="email" className="form-label">Email Address</label>
+              <label htmlFor="email" className="form-label">
+                Email Address
+              </label>
               <input
                 type="email"
                 className="form-control"
@@ -236,7 +267,9 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="phone" className="form-label">Phone</label>
+              <label htmlFor="phone" className="form-label">
+                Phone
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -248,25 +281,47 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
                 required
               />
             </div>
-            
+
             {!isEditMode && (
               <div className="col-md-6">
-                <label htmlFor="password" className="form-label">Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  name="password"
-                  placeholder="Enter password"
-                  value={formState.password}
-                  onChange={handleInputChange}
-                  required
-                />
+                <label htmlFor="password" className="form-label X_form">
+                  Password
+                </label>
+                <div className="position-relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    value={formState.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-link position-absolute end-0 top-0 h-100 d-flex align-items-center pe-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      zIndex: 10,
+                    }}
+                  >
+                    {showPassword ? (
+                      <FaEye color="gray" />
+                    ) : (
+                      <FaEyeSlash color="gray" />
+                    )}
+                  </button>
+                </div>
               </div>
             )}
 
             <div className="col-md-6">
-              <label htmlFor="role" className="form-label">Role</label>
+              <label htmlFor="role" className="form-label">
+                Role
+              </label>
               <XCustomSelect
                 options={roleOptions}
                 value={formState.role}
@@ -290,7 +345,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
                 onChange={handleInputChange}
               ></textarea>
             </div>
-            
+
             {error && <div className="col-12 text-danger">{error}</div>}
 
             <div className="col-12 d-flex justify-content-center x_btn_main">
