@@ -7,6 +7,7 @@ import supplierReducer from '../slice/supplier.slice';
 import userReducer from '../slice/user.slice';
 import dishReducer from '../slice/dish.slice';
 import leaveReducer from '../slice/leave.slice';
+import dashboardReducer from '../slice/dashboard.slice'
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,7 +17,8 @@ export const rootReducer = combineReducers({
   hotel: hotelReducer,
   dish: dishReducer,
   supplier: supplierReducer,
-  leave: leaveReducer
+  leave: leaveReducer,
+  dashboard: dashboardReducer
 });
 
 export default rootReducer;
