@@ -68,7 +68,7 @@ export const getAllSuppliers = async (req, res) => {
         if (!suppliers || suppliers.length === 0) {
             return sendSuccessResponse(res, "No suppliers found", []);
         }
-
+          
         // Send a success response with the fetched suppliers
         return sendSuccessResponse(res, "Suppliers fetched successfully", suppliers)
         // Find all supplyers with role 'supplyer'
