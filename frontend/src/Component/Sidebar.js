@@ -15,7 +15,6 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar })
       { id: 'inventory', label: 'Inventory', icon: <FaBoxOpen /> },
       { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
       { id: 'billing', label: 'Billing', icon: <FaReceipt /> },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       { id: 'leaves', label: 'Leave Management', icon: <FaCalendarAlt /> },
       { id: 'settings', label: 'Settings', icon: <FaCog /> },
     ],
@@ -23,7 +22,6 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar })
       { id: 'dashboard', label: 'Dashboard', icon: <FaHome /> },
       { id: 'inventory', label: 'Inventory', icon: <FaBoxOpen /> },
       { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
-      { id: 'reports', label: 'Reports', icon: <FaChartBar /> },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
     Chef: [

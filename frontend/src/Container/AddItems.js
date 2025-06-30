@@ -7,6 +7,7 @@ import CustomCalendar from "../Component/CustomCalendar";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
+import { IoClose } from "react-icons/io5";
 
 function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
@@ -221,7 +222,8 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                   onClick={removeSupplierImage}
                   title="Remove image"
                 >
-                  &times;
+                  <IoClose />
+                  {/* &times; */}
                 </button>
               </div>
             )}

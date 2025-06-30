@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
 import Spinner from "../Spinner";
+import { IoClose } from "react-icons/io5";
 
 export default function EditSupplier({ setActiveItem, supplierId: propSupplierId, onNavigate }) {
   const dispatch = useDispatch();
@@ -160,7 +161,8 @@ export default function EditSupplier({ setActiveItem, supplierId: propSupplierId
                 onClick={removeSupplierImage}
                 title="Remove image"
               >
-                &times;
+                <IoClose />
+                {/* &times; */}
               </button>
             </div>
           )}

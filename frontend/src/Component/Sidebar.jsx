@@ -9,7 +9,6 @@ const icons = {
   Inventory: <FaBoxOpen />,
   Orders: <FaReceipt />,
   Billing: <FaCashRegister />,
-  Reports: <FaChartBar />,
   Leaves: <FaCalendarCheck />,
   Settings: <FaCog />,
 };
@@ -25,7 +24,6 @@ function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
       // { label: 'Suppliers', path: '/suppliers' },
       { label: 'Orders', path: '/orders' },
       { label: 'Billing', path: '/billing' },
-      { label: 'Reports', path: '/reports' },
       { label: 'Leaves', path: '/leaves' },
       { label: 'Settings', path: '/settings' },
     ],
@@ -34,7 +32,6 @@ function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
       { label: 'Inventory', path: '/inventory' },
       // { label: 'Suppliers', path: '/suppliers' },
       { label: 'Orders', path: '/orders' },
-      { label: 'Reports', path: '/reports' },
       { label: 'Leaves', path: '/leaves' },
     ],
     chef: [
@@ -62,7 +59,6 @@ function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
   // Group links for section headings
   const sections = [
     { heading: 'Management', items: navLinks[userRole].slice(0, 5) },
-    { heading: 'Reports', items: navLinks[userRole].slice(5, 7) },
     { heading: 'Settings', items: navLinks[userRole].slice(7) },
   ];
 

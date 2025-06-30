@@ -4,6 +4,7 @@ import { getAllSuppliers, deleteSupplier } from "../redux/slice/supplier.slice";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../Style/Z_table.css";
 import Spinner from "../Spinner";
+import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -11,14 +12,31 @@ function SupplierList({ onNavigate }) {
   const dispatch = useDispatch();
   const { suppliers, loading } = useSelector((state) => state.supplier);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
+  const closeDeleteModal = () => {
+    setItemToDelete(null);
+    setIsModalOpen(false);
+  };
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      dispatch(deleteSupplier(itemToDelete._id));
+      closeDeleteModal();
+    }
+  };
+
+  const openDeleteModal = (item) => {
+    setItemToDelete(item);
+    setIsModalOpen(true);
+  };
   useEffect(() => {
     dispatch(getAllSuppliers());
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    localStorage.setItem('supplierId-local',id)
-    onNavigate('supplier-edit',id)
+    localStorage.setItem('supplierId-local', id)
+    onNavigate('supplier-edit', id)
   };
 
   const handleDelete = (id) => {
@@ -47,7 +65,7 @@ function SupplierList({ onNavigate }) {
         </div>
         <div className="Z_empListTableWrapper">
           {loading ? (
-             <Spinner></Spinner>
+            <Spinner></Spinner>
           ) : (
             <table className="Z_empListTable">
               <thead>
@@ -68,7 +86,7 @@ function SupplierList({ onNavigate }) {
                     <tr className="Z_empListTr" key={idx}>
                       <td className="Z_empListTd">
                         <img
-                            src={`http://localhost:3000${sup.supplyer_image}`}
+                          src={`http://localhost:3000${sup.supplyer_image}`}
                           alt={sup.name}
                           className="Z_empListPhoto"
                         />
@@ -90,7 +108,7 @@ function SupplierList({ onNavigate }) {
                         <button
                           className="Z_empListActionBtn"
                           title="Delete"
-                          onClick={() => handleDelete(sup._id)}
+                          onClick={() =>  openDeleteModal(sup._id)}
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -99,17 +117,17 @@ function SupplierList({ onNavigate }) {
                   ))
                 ) : (
                   <tr>
-                  <td colSpan="8" className="Z_empListNoDataContainer">
-                    <div className="Z_empListNoData">
-                      <img
-                        src={require('../Image/hey.jpg')} // Make sure this path points to your image
-                        alt="No data"
-                        className="Z_noDataImage"
-                      />
-                    </div>
-                  </td>
-                </tr>
-                
+                    <td colSpan="8" className="Z_empListNoDataContainer">
+                      <div className="Z_empListNoData">
+                        <img
+                          src={require('../Image/hey.jpg')} // Make sure this path points to your image
+                          alt="No data"
+                          className="Z_noDataImage"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+
                 )}
               </tbody>
             </table>
@@ -123,9 +141,8 @@ function SupplierList({ onNavigate }) {
               <button
                 key={i + 1}
                 onClick={() => handlePageChange(i + 1)}
-                className={`Z_empListPageBtn ${
-                  currentPage === i + 1 ? "active" : ""
-                }`}
+                className={`Z_empListPageBtn ${currentPage === i + 1 ? "active" : ""
+                  }`}
               >
                 {i + 1}
               </button>
@@ -133,6 +150,12 @@ function SupplierList({ onNavigate }) {
           </div>
         )}
       </div>
+      <DeleteConfirmationModal
+        isOpen={isModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDelete}
+        itemName={itemToDelete ? itemToDelete.item_name : ""}
+      />
     </section>
   );
 }

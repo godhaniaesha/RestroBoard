@@ -11,14 +11,20 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, itemName }) => {
         <p className="Z_delete_conf_message">
           Are you sure you want to delete <strong>{itemName}</strong>? This action cannot be undone.
         </p>
-        <div className="Z_deleteConf_actions">
+        <div className="col-12 d-flex justify-content-center x_btn_main" style={{ marginTop: '2rem' }}>
+          <button type="button" className="btn btn-secondary mx-2" onClick={onClose}>Cancel</button>
+          <button type="submit" className="btn btn-primary mx-2" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+        {/* <div className="Z_deleteConf_actions">
           <button onClick={onClose} className="Z_deleteConf_btn Z_deleteConf_btn--cancel">
             Cancel
           </button>
           <button onClick={onConfirm} className="Z_deleteConf_btn Z_deleteConf_btn--delete">
             Delete
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

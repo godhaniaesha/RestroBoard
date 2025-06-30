@@ -9,6 +9,7 @@ import XCustomSelect from "../Component/XCustomSelect";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
 import Spinner from "../Spinner";
+import { IoClose } from "react-icons/io5";
 
 function EditEmployee() {
   const dispatch = useDispatch();
@@ -151,7 +152,8 @@ function EditEmployee() {
                 onClick={removeSupplierImage}
                 title="Remove image"
               >
-                &times;
+                <IoClose />
+                {/* &times; */}
               </button>
             </div>
           )}

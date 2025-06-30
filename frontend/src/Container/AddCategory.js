@@ -10,6 +10,7 @@ import {
 } from '../redux/slice/category.slice';
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
+import { IoClose } from "react-icons/io5";
 
 export default function AddCategory({ categoryId, onNavigate }) {
   const id = categoryId;
@@ -127,7 +128,8 @@ export default function AddCategory({ categoryId, onNavigate }) {
                   onClick={removeImage}
                   title="Remove image"
                 >
-                  &times;
+                  <IoClose />
+                  {/* &times; */}
                 </button>
               </div>
             )}

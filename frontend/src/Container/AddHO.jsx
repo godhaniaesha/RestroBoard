@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
+import { IoClose } from "react-icons/io5";
 
 export default function AddHO({ onNavigate }) {
   const dispatch = useDispatch();
@@ -171,7 +172,8 @@ export default function AddHO({ onNavigate }) {
                 <div className="dz-preview d-flex flex-column x_dz-preview x_image-preview">
                   <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
                   <button type="button" className="x_remove-image-btn" onClick={removeSupplierImage}>
-                    &times;
+                    <IoClose />
+                    {/* &times; */}
                   </button>
                 </div>
               )}
@@ -218,9 +220,9 @@ export default function AddHO({ onNavigate }) {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    padding: "8px 16px",
-                    borderRadius: "20px",
-                    border: amenities.includes(option.label) ? "2px solid #1f2e3d" : "1px solid #ccc",
+                    padding: "8px 12px",
+                    borderRadius: "25px",
+                    border: amenities.includes(option.label) ? "1.5px solid #1f2e3d" : "1px solid #ccc",
                     background: amenities.includes(option.label) ? "#e7f1ff" : "#fff",
                     color: amenities.includes(option.label) ? "#1f2e3d" : "#333",
                     cursor: "pointer",

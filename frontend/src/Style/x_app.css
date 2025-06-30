@@ -83,6 +83,7 @@ textarea {
   margin-top: 3rem;
   margin-bottom: 1rem;
 }
+
 .x_btn_main .btn {
   border: none;
   border-radius: 0% !important;
@@ -92,6 +93,7 @@ textarea {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 /* Responsive design */
 @media (max-width: 768px) {
   .x_dropzone {
@@ -160,9 +162,14 @@ textarea {
     padding: 0px !important;
   }
 }
+
 @media (max-width: 576px) {
   .x_dropzone {
-    padding: 0;
+    padding: 0.5rem;
+  }
+
+  .x_employee-section {
+    padding: 0.5rem;
   }
 }
 
@@ -172,6 +179,7 @@ textarea {
   width: 100%;
   font-family: inherit;
 }
+
 .x_customSelect__control {
   width: 100%;
   background: var(--img-bg-color);
@@ -189,11 +197,13 @@ textarea {
   outline: none;
   box-sizing: border-box;
 }
+
 .x_customSelect__control:focus,
 .x_customSelect--open .x_customSelect__control {
   border-color: var(--button-color);
   box-shadow: 0 0 0 2px #d8e1e9;
 }
+
 .x_customSelect__value {
   flex: 1;
   text-align: left;
@@ -203,18 +213,22 @@ textarea {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .x_customSelect__placeholder {
   color: #a0aec0;
 }
+
 .x_customSelect__arrow {
   margin-left: 0.5rem;
   /* font-size: 1.1em; */
   color: #7b8ca6;
   transition: transform 0.2s;
 }
+
 .x_customSelect--open .x_customSelect__arrow {
   transform: rotate(180deg);
 }
+
 .x_customSelect__menu {
   position: absolute;
   top: calc(100% + 2px);
@@ -230,6 +244,7 @@ textarea {
   margin-top: 2px;
   padding: 0.25rem 0;
 }
+
 .x_customSelect__option {
   /* padding: 0.75rem 1.25rem; */
   padding: 0.2rem 0.5rem;
@@ -239,21 +254,25 @@ textarea {
   transition: background 0.15s, color 0.15s;
   background: transparent;
 }
+
 .x_customSelect__option:hover,
 .x_customSelect__option:focus {
   background: #e2e8f0;
   color: var(--button-color);
 }
+
 .x_customSelect__option--selected {
   background: #3a5a7a;
   color: #fff;
 }
+
 @media (max-width: 600px) {
   .x_customSelect__control {
     min-height: 36px;
     /* font-size: 0.95rem; */
     padding: 0 0.7rem;
   }
+
   .x_customSelect__option {
     /* font-size: 0.95rem; */
     padding: 0.6rem 1rem;
@@ -264,20 +283,25 @@ textarea {
   /* Applied to the dz-preview div when an image is present */
   position: relative;
   width: 100%;
-  height: 100%; /* Occupy the full height of the dropzone */
+  height: 100%;
+  /* Occupy the full height of the dropzone */
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  padding: 0; /* Remove padding from this container */
+  padding: 0;
+  /* Remove padding from this container */
 }
 
 .x_uploaded-image {
   max-width: 350px;
   max-height: 100%;
-  object-fit: contain; /* Ensures the entire image is visible within its bounds */
-  padding: 2.5rem; /* Apply the original dropzone padding to the image itself */
-  box-sizing: border-box; /* Include padding in the element's total width and height */
+  object-fit: contain;
+  /* Ensures the entire image is visible within its bounds */
+  padding: 2.5rem;
+  /* Apply the original dropzone padding to the image itself */
+  box-sizing: border-box;
+  /* Include padding in the element's total width and height */
 }
 
 .x_remove-image-btn {
@@ -296,66 +320,82 @@ textarea {
   font-size: 1.2rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  z-index: 10; /* Ensure it's above the image and other elements */
+  z-index: 10;
+  /* Ensure it's above the image and other elements */
 }
 
 .x_remove-image-btn:hover {
-  background-color: rgba(255, 0, 0, 1);
+  background-color: rgb(50 74 99);
 }
 
 /* Adjust dropzone padding when an image is present */
 .x_dropzone.x_has-image {
-  padding: 0; /* Remove padding from the dropzone itself */
-  display: flex; /* To center the image preview */
+  padding: 0;
+  /* Remove padding from the dropzone itself */
+  display: flex;
+  /* To center the image preview */
   align-items: center;
-  min-height: 200px; /* Ensure a minimum height for the dropzone when image is present */
+  min-height: 200px;
+  /* Ensure a minimum height for the dropzone when image is present */
 }
+
 @media (max-width: 1920px) {
   .sidebar-closed .x_remove-image-btn {
     right: 40% !important;
   }
+
   .x_remove-image-btn {
     right: 42% !important;
   }
 }
+
 @media (max-width: 1600px) {
   .sidebar-closed .x_remove-image-btn {
     right: 41% !important;
   }
+
   .x_remove-image-btn {
     right: 39% !important;
   }
 }
+
 @media (max-width: 1440px) {
   .sidebar-closed .x_remove-image-btn {
     right: 39% !important;
   }
+
   .x_remove-image-btn {
     right: 37% !important;
   }
 }
+
 @media (max-width: 1200px) {
   .sidebar-closed .x_remove-image-btn {
     top: 30px !important;
     right: 26% !important;
   }
+
   .x_remove-image-btn {
     right: 3% !important;
   }
 }
+
 @media (max-width: 1024px) {
   .x_remove-image-btn {
     right: 30% !important;
   }
+
   .sidebar-closed .x_remove-image-btn {
     top: 41px !important;
     right: 34% !important;
   }
 }
+
 @media (max-width: 991px) {
   .x_remove-image-btn {
     right: 27% !important;
   }
+
   .sidebar-closed .x_remove-image-btn {
     top: 44px !important;
     right: 30% !important;
@@ -364,7 +404,8 @@ textarea {
 
 @media (max-width: 768px) {
   .x_uploaded-image {
-    padding: 1rem; /* Adjust padding for smaller screens */
+    padding: 1rem;
+    /* Adjust padding for smaller screens */
   }
 
   .sidebar-closed .x_remove-image-btn,
@@ -376,22 +417,28 @@ textarea {
 
 @media (max-width: 576px) {
   .x_uploaded-image {
-    padding: 0.5rem; /* Further adjust padding for very small screens */
+    padding: 0.5rem;
+    /* Further adjust padding for very small screens */
   }
+
   .sidebar-closed .x_remove-image-btn,
   .x_remove-image-btn {
     top: 16px !important;
     right: 17% !important;
   }
 }
+
 @media (max-width: 470px) {
+
   .sidebar-closed .x_remove-image-btn,
   .x_remove-image-btn {
     top: 16px !important;
     right: 12% !important;
   }
 }
+
 @media (max-width: 320px) {
+
   .sidebar-closed .x_remove-image-btn,
   .x_remove-image-btn {
     top: 16px !important;
@@ -400,12 +447,14 @@ textarea {
 }
 
 /* InventoryReport custom styles - all classes prefixed with x_ */
-.x_rep_title{
+.x_rep_title {
   color: var(--dark-color);
   margin-bottom: 2rem;
   font-weight: 700;
-  font-size: 2rem;}
-  /* padding: 2rem;
+  font-size: 2rem;
+}
+
+/* padding: 2rem;
   background-color: var(--primary-bg-color);
 } */
 .x_inv_section {
@@ -415,6 +464,7 @@ textarea {
   padding: 2rem;
   background-color: var(--primary-bg-color);
 }
+
 /* .x_inv_container {
   max-width: 1200px;
   margin: 0 auto;
@@ -427,6 +477,7 @@ textarea {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .x_inv_summaryCard {
   flex: 1 1 180px;
   min-width: 180px;
@@ -440,15 +491,18 @@ textarea {
   justify-content: center;
   transition: box-shadow 0.2s;
 }
+
 .x_inv_summaryCard:hover {
   box-shadow: 0 4px 16px #0002;
 }
+
 .x_inv_cardTitle {
   color: #7b8ca7;
   font-size: 15px;
   margin-bottom: 4px;
   font-weight: 500;
 }
+
 .x_inv_cardValue {
   font-weight: 700;
   font-size: 26px;
@@ -462,6 +516,7 @@ textarea {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .x_inv_chartCard {
   flex: 1 1 320px;
   min-width: 260px;
@@ -474,8 +529,9 @@ textarea {
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
-  
+
 }
+
 .x_inv_chartCard--linefull {
   width: 100%;
   max-width: 100%;
@@ -490,6 +546,7 @@ textarea {
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 .x_inv_chartTitle {
   text-align: center;
   margin-bottom: 12px;
@@ -497,6 +554,7 @@ textarea {
   font-size: 18px;
   color: #222e3a;
 }
+
 .x_inv_tableCard {
   flex: 2 1 480px;
   min-width: 320px;
@@ -508,11 +566,13 @@ textarea {
   display: flex;
   flex-direction: column;
 }
+
 .x_inv_controls {
   margin-bottom: 12px;
   display: flex;
   justify-content: flex-end;
 }
+
 .x_inv_searchInput {
   width: 220px;
   padding: 8px 12px;
@@ -524,9 +584,11 @@ textarea {
   outline: none;
   transition: border 0.2s;
 }
+
 .x_inv_searchInput:focus {
   border: 1.5px solid #2196f3;
 }
+
 .x_inv_tableWrapper {
   width: 100%;
   overflow-x: auto;
@@ -541,11 +603,13 @@ textarea {
   margin-top: 12px;
   margin-bottom: 8px;
 }
+
 .x_dot_col {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .x_dot_grid {
   display: grid;
   grid-template-columns: repeat(5, 14px);
@@ -553,6 +617,7 @@ textarea {
   gap: 4px;
   margin-bottom: 8px;
 }
+
 .x_dot {
   width: 12px;
   height: 12px;
@@ -561,9 +626,11 @@ textarea {
   display: inline-block;
   transition: background 0.2s;
 }
+
 .x_dot_filled {
   box-shadow: 0 1px 4px #0002;
 }
+
 .x_dot_percent {
   margin-top: 2px;
   font-size: 15px;
@@ -576,6 +643,7 @@ textarea {
   text-align: center;
   margin-bottom: 2px;
 }
+
 .x_dot_label {
   font-size: 14px;
   color: #222e3a;
@@ -583,24 +651,29 @@ textarea {
   margin-top: 2px;
   margin-bottom: 2px;
 }
+
 @media (max-width: 600px) {
   .x_dot_matrix_chart {
     gap: 12px;
   }
+
   .x_dot_grid {
     grid-template-columns: repeat(5, 10px);
     grid-template-rows: repeat(5, 10px);
     gap: 2px;
   }
+
   .x_dot {
     width: 8px;
     height: 8px;
   }
+
   .x_dot_percent {
     font-size: 13px;
     min-width: 30px;
     padding: 1px 6px 1px 6px;
   }
+
   .x_dot_label {
     font-size: 12px;
   }
@@ -612,27 +685,35 @@ textarea {
     flex-direction: column;
     gap: 0;
   }
-  .x_inv_chartCard, .x_inv_tableCard {
+
+  .x_inv_chartCard,
+  .x_inv_tableCard {
     max-width: 100%;
     margin-bottom: 18px;
   }
 }
+
 @media (max-width: 600px) {
   .x_inv_summaryRow {
     flex-direction: column;
     gap: 12px;
   }
+
   .x_inv_summaryCard {
     min-width: 0;
     width: 100%;
     padding: 14px 0 10px 0;
   }
+
   .x_inv_container {
     padding: 10px 2px 18px 2px;
   }
-  .x_inv_chartCard, .x_inv_tableCard {
+
+  .x_inv_chartCard,
+  .x_inv_tableCard {
     padding: 10px 4px 8px 4px;
   }
+
   .x_inv_searchInput {
     width: 100%;
     font-size: 14px;
@@ -651,12 +732,14 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+
 @media (max-width: 900px) {
   .x_inv_rechart_wrapper {
     min-height: 220px;
     padding: 0 2px 0 0;
   }
 }
+
 @media (max-width: 600px) {
   .x_inv_rechart_wrapper {
     min-height: 140px;

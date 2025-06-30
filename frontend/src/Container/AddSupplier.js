@@ -4,6 +4,7 @@
   import { toast } from "react-toastify";
   import uplod from "../Image/cloud-upload.svg";
   import "../Style/x_app.css";
+  import { IoClose } from "react-icons/io5";
 
   export default function AddSupplier() {
     const dispatch = useDispatch();
@@ -140,7 +141,8 @@
                   onClick={removeSupplierImage}
                   title="Remove image"
                 >
-                  &times;
+                  <IoClose />
+                  {/* &times; */}
                 </button>
               </div>
             )}
@@ -199,7 +201,7 @@
               />
             </div>
 
-            <div className="col-12">
+            <div className="col-12" style={{ paddingRight: '8px', paddingLeft: '8px' }}>
               <label htmlFor="address" className="form-label">Address</label>
               <textarea
                 className="form-control"

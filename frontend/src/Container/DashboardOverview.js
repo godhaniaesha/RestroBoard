@@ -32,8 +32,21 @@ const recentOrders = [
   { id: '#1238', customer: 'Chris Brown', time: '10:50 AM', items: 4, total: 55.75, status: 'Cancelled' },
 ];
 
-
-
+// Custom Tooltip for Pie Chart
+const CustomPieTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const entry = payload[0];
+    const name = entry.name || entry.payload.name || entry.payload._id;
+    const percent = entry.percent ? (entry.percent * 100).toFixed(0) : null;
+    return (
+      <div style={{ background: '#fff', border: '1px solid #ccc', padding: 8, borderRadius: 4 }}>
+        <span style={{ fontWeight: 600 }}>{name}</span>
+        {percent !== null && <span style={{ marginLeft: 8 }}>{percent}%</span>}
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function DashboardOverview() {
 
@@ -46,6 +59,13 @@ export default function DashboardOverview() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const dashboard = useSelector((state) => state.dashboard);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     dispatch(getTotalExpense());
@@ -235,13 +255,15 @@ export default function DashboardOverview() {
                       fill="#8884d8"
                       dataKey={dashboard.topSellingProducts[0].sold !== undefined ? "sold" : dashboard.topSellingProducts[0].count !== undefined ? "count" : "value"}
                       nameKey={dashboard.topSellingProducts[0].name ? "name" : "_id"}
-                      label={({ name, _id, percent }) => `${name || _id} ${(percent * 100).toFixed(0)}%`}
+                      {...(windowWidth >= 1920 ? {
+                        label: ({ name, _id, percent }) => `${name || _id} ${(percent * 100).toFixed(0)}%`
+                      } : {})}
                     >
                       {dashboard.topSellingProducts.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip content={<CustomPieTooltip />} />
                     <Legend />
                   </PieChart>
                 ) : (

@@ -30,7 +30,6 @@ import AddItems from '../Container/AddItems';
 import AddSupplier from '../Container/AddSupplier';
 import AddLeave from '../Container/AddLeave';
 import ActiveOrder from '../Container/ActiveOrder';
-import DashAnalytics from '../Container/DashAnalytics';
 import HotelOverview from '../Container/HotelOverview';
 import AddHO from '../Container/AddHO';
 import AddDishes from '../Container/AddDishes';
@@ -67,11 +66,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         icon: <FaHome />,
         subItems: [
           { id: "dashboard-overview", label: "Overview", icon: <FaEye /> },
-          {
-            id: "dashboard-analytics",
-            label: "Analytics",
-            icon: <FaChartBar />,
-          },
         ],
       },
       
@@ -187,7 +181,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           },
         ],
       },
-      { id: "reports", label: "Reports", icon: <FaChartBar /> },
      
     ],
     manager: [
@@ -291,7 +284,6 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         ],
       },
       { id: "leaves", label: "Leave Approvals", icon: <FaCalendarAlt /> },
-      { id: "reports", label: "Reports", icon: <FaChartBar /> },
     ],
     saif: [
       {
@@ -697,10 +689,6 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
           </>
         );
 
-      case 'dashboard-analytics':
-        return (
-          <DashAnalytics></DashAnalytics>
-        );
 
       case 'employees':
       case 'employees-list':

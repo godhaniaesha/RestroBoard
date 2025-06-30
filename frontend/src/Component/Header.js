@@ -12,7 +12,6 @@ function Header({ userRole = 'admin', onLogout, onSidebarToggle }) {
       { label: 'Inventory', path: '/inventory' },
       { label: 'Orders', path: '/orders' },
       { label: 'Billing', path: '/billing' },
-      { label: 'Reports', path: '/reports' },
       { label: 'Leaves', path: '/leaves' },
       { label: 'Settings', path: '/settings' },
     ],
@@ -20,7 +19,6 @@ function Header({ userRole = 'admin', onLogout, onSidebarToggle }) {
       { label: 'Dashboard', path: '/' },
       { label: 'Inventory', path: '/inventory' },
       { label: 'Orders', path: '/orders' },
-      { label: 'Reports', path: '/reports' },
       { label: 'Leaves', path: '/leaves' },
     ],
     chef: [

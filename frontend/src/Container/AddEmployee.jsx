@@ -4,6 +4,7 @@ import { createRegister, getRegisterById, updateProfileUser, clearSuccess } from
 import XCustomSelect from "../Component/XCustomSelect";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
+import { IoClose } from "react-icons/io5";
 
 function AddEmployee({ employeeId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
@@ -184,7 +185,8 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
                   onClick={removeImage}
                   title="Remove image"
                 >
-                  &times;
+                  <IoClose />
+                  {/* &times; */}
                 </button>
               </div>
             )}
@@ -276,7 +278,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
               />
             </div>
 
-            <div className="col-12">
+            <div className="col-12" style={{ paddingRight: '8px', paddingLeft: '8px' }}>
               <label htmlFor="address" className="form-label">Address</label>
               <textarea
                 className="form-control"
@@ -294,7 +296,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
             <div className="col-12 d-flex justify-content-center x_btn_main">
               <button type="button" className="btn btn-secondary mx-2" onClick={onCancel}>Cancel</button>
               <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
-                {loading ? 'Saving...' : (isEditMode ? 'Update Employee' : 'Create Employee')}
+                {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
               </button>
             </div>
           </form>

@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../Style/x_app.css';
 import uplod from '../Image/cloud-upload.svg';
 import Spinner from '../Spinner';
+import { IoClose } from "react-icons/io5";
 
 export default function AddDishes({onNavigate}) {
   const dispatch = useDispatch();
@@ -134,7 +135,8 @@ export default function AddDishes({onNavigate}) {
                     onClick={removeSupplierImage}
                     title="Remove image"
                   >
-                    &times;
+                    <IoClose />
+                    {/* &times; */}
                   </button>
                 </div>
               )}
