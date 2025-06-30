@@ -184,7 +184,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             label: "Approved Leaves",
             icon: <FaCheck />,
           },
-          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+      
           {
             id: "leaves-calendar",
             label: "Leave Calendar",
@@ -256,7 +256,18 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
         ],
       },
-      { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
+      { id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
+        subItems :[
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+          {id:'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
+
+        ]
+       },
     ],
     Chef: [
       { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },

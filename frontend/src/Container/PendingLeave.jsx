@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "../Style/Z_table.css";
 import {
   FaRegCheckCircle,
@@ -7,57 +8,33 @@ import {
   FaCaretLeft,
   FaCaretRight,
 } from "react-icons/fa";
-
-const pendingLeavesData = [
-  {
-    photo_url: "https://randomuser.me/api/portraits/women/68.jpg",
-    name: "Jocelyn Gouse",
-    leave_type: "Annual Leave",
-    start_date: "2024-07-20",
-    end_date: "2024-07-25",
-    reason: "Family vacation to the Bahamas.",
-    status: "Pending",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/75.jpg",
-    name: "Jaydon Siphron",
-    leave_type: "Sick Leave",
-    start_date: "2024-07-18",
-    end_date: "2024-07-18",
-    reason: "Feeling unwell, doctor's appointment.",
-    status: "Pending",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/women/50.jpg",
-    name: "Mira Herwitz",
-    leave_type: "Personal Leave",
-    start_date: "2024-07-22",
-    end_date: "2024-07-23",
-    reason: "Important personal appointment.",
-    status: "Pending",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/45.jpg",
-    name: "Ruben Torff",
-    leave_type: "Sick Leave",
-    start_date: "2024-07-19",
-    end_date: "2024-07-19",
-    reason: "Migraine.",
-    status: "Pending",
-  },
-];
+import { db_getLeavesByUserId } from "../redux/slice/leave.slice"; // Assuming this path
 
 function PendingLeave() {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth); // Assuming user info is in state.auth
+  const { leaves, isLoading, isError, message } = useSelector((state) => state.leave); // Assuming leave state has leaves, isLoading, isError, message
+
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const filteredLeaves = pendingLeavesData.filter(
-    (leave) =>
-      leave.name.toLowerCase().includes(search.toLowerCase()) ||
-      leave.leave_type.toLowerCase().includes(search.toLowerCase()) ||
-      leave.reason.toLowerCase().includes(search.toLowerCase())
+  // Fetch leaves when component mounts or user changes
+  useEffect(() => {
+    if (user && user.id) { // Ensure user and user.id exist
+      dispatch(db_getLeavesByUserId(user.id));
+    }
+  }, [user, dispatch]); // Depend on user and dispatch
+
+  // Use the leaves from Redux state, or an empty array if not loaded yet
+  const currentLeaves = leaves || [];
+
+  const filteredLeaves = currentLeaves.filter((leave) =>
+    (leave?.emp_name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (leave?.leave_type || "").toLowerCase().includes(search.toLowerCase()) ||
+    (leave?.leave_reason || "").toLowerCase().includes(search.toLowerCase())
   );
+  
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -67,6 +44,14 @@ function PendingLeave() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  if (isLoading) {
+    return <div>Loading leaves...</div>; // Basic loading indicator
+  }
+
+  if (isError) {
+    return <div>Error: {message}</div>; // Basic error display
+  }
 
   return (
     <section className="Z_LP_section">
@@ -96,50 +81,58 @@ function PendingLeave() {
               </tr>
             </thead>
             <tbody>
-              {paginatedLeaves.map((leave, idx) => (
-                <tr className="Z_LP_Tr" key={idx}>
-                  <td className="Z_LP_Td">
-                    <div className="Z_LP_empCell">
-                      <img
-                        src={leave.photo_url}
-                        alt={leave.name}
-                        className="Z_LP_photo"
-                      />
-                      <span>{leave.name}</span>
-                    </div>
-                  </td>
-                  <td className="Z_LP_Td">{leave.leave_type}</td>
-                  <td className="Z_LP_Td">{`${leave.start_date} to ${leave.end_date}`}</td>
-                  <td className="Z_LP_Td">{leave.reason}</td>
-                  <td className="Z_LP_Td">
-                    <span
-                      className={`Z_LP_status Z_LP_status--${leave.status.toLowerCase()}`}
-                    >
-                      {leave.status}
-                    </span>
-                  </td>
-                  <td className="Z_LP_Td">
-                    <button
-                      className="Z_LP_actionBtn Z_LP_actionBtn--approve"
-                      title="Approve"
-                    >
-                      <FaRegCheckCircle />
-                    </button>
-                    <button
-                      className="Z_LP_actionBtn Z_LP_actionBtn--reject"
-                      title="Reject"
-                    >
-                      <FaRegTimesCircle />
-                    </button>
-                    <button
-                      className="Z_LP_actionBtn Z_LP_actionBtn--delete"
-                      title="Delete"
-                    >
-                      <FaRegTrashAlt />
-                    </button>
+              {paginatedLeaves.length > 0 ? (
+                paginatedLeaves.map((leave, idx) => (
+                  <tr className="Z_LP_Tr" key={idx}>
+                    <td className="Z_LP_Td">
+                      <div className="Z_LP_empCell">
+                        <img
+                          src={leave.photo_url}
+                          alt={leave.name}
+                          className="Z_LP_photo"
+                        />
+                        <span>{leave.name}</span>
+                      </div>
+                    </td>
+                    <td className="Z_LP_Td">{leave.leave_type}</td>
+                    <td className="Z_LP_Td">{`${leave.start_date} to ${leave.end_date}`}</td>
+                    <td className="Z_LP_Td">{leave.reason}</td>
+                    <td className="Z_LP_Td">
+                      <span
+                        className={`Z_LP_status Z_LP_status--${leave.status.toLowerCase()}`}
+                      >
+                        {leave.status}
+                      </span>
+                    </td>
+                    <td className="Z_LP_Td">
+                      <button
+                        className="Z_LP_actionBtn Z_LP_actionBtn--approve"
+                        title="Approve"
+                      >
+                        <FaRegCheckCircle />
+                      </button>
+                      <button
+                        className="Z_LP_actionBtn Z_LP_actionBtn--reject"
+                        title="Reject"
+                      >
+                        <FaRegTimesCircle />
+                      </button>
+                      <button
+                        className="Z_LP_actionBtn Z_LP_actionBtn--delete"
+                        title="Delete"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="Z_LP_Td" style={{ textAlign: "center" }}>
+                    No pending leaves found.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
           <div className="Z_pagination_container">
