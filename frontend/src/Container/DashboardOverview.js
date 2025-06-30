@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteItem, fetchItemById, fetchItems } from '../redux/slice/stockmanage.slice';
 import AddItems from './AddItems';
 import DeleteConfirmationModal from '../Component/DeleteConfirmationModal';
+import { getTotalExpense, getEmployeeCounts, getSupplierCount, getTotalItems, getTopSellingProducts, getWeeklyItemAdditions, getLowStockItems, getOutOfStockItems } from '../redux/slice/dashboard.slice';
 
 const salesData = [
   { name: 'Mon', sales: 4000 },
@@ -19,14 +20,6 @@ const salesData = [
   { name: 'Fri', sales: 6000 },
   { name: 'Sat', sales: 8000 },
   { name: 'Sun', sales: 7500 },
-];
-
-const topProducts = [
-  { name: 'Margherita Pizza', sold: 120, revenue: 1200 },
-  { name: 'Cheeseburger', sold: 90, revenue: 990 },
-  { name: 'Caesar Salad', sold: 70, revenue: 770 },
-  { name: 'Pasta Carbonara', sold: 110, revenue: 1430 },
-  { name: 'Chocolate Cake', sold: 50, revenue: 350 },
 ];
 
 const COLORS = ['#4E6688', '#748DA6', '#9BB8CD', '#7F8CAA', '#A6AEBF'];
@@ -45,23 +38,28 @@ const recentOrders = [
 export default function DashboardOverview() {
 
   const dispatch = useDispatch();
-  const { items, loading, error, selectedItem } = useSelector((state) => state.stock);
+  const { loading, error } = useSelector((state) => state.stock);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [editItemId, setEditItemId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const dashboard = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    dispatch(fetchItems());
+    dispatch(getTotalExpense());
+    dispatch(getEmployeeCounts());
+    dispatch(getSupplierCount());
+    dispatch(getTotalItems());
+    dispatch(getTopSellingProducts());
+    dispatch(getWeeklyItemAdditions());
+    dispatch(getLowStockItems());
+    dispatch(getOutOfStockItems());
   }, [dispatch]);
 
   // Fetch item details when editItemId changes
   useEffect(() => {
-    if (editItemId) {
-      dispatch(fetchItemById(editItemId));
-    }
   }, [editItemId, dispatch]);
 
   const openDeleteModal = (item) => {
@@ -76,7 +74,6 @@ export default function DashboardOverview() {
 
   const confirmDelete = () => {
     if (itemToDelete) {
-      dispatch(deleteItem(itemToDelete._id));
       closeDeleteModal();
     }
   };
@@ -87,27 +84,27 @@ export default function DashboardOverview() {
 
   const handleFormSuccess = () => {
     setEditItemId(null);
-    dispatch(fetchItems());
   };
 
-  // Filter for only Out of Stock and Low Stock items
-  const filteredStock = items.filter(
-    (item) => {
-      const quantity = Number(item.quantity);
-      return (
-        quantity === 0 || quantity <= item.minimum_threshold
-      ) && (
-        item.item_name.toLowerCase().includes(search.toLowerCase()) ||
-        (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  // Combine low stock and out of stock items from dashboard
+  const allStockItems = [
+    ...(dashboard.lowStockItems || []),
+    ...(dashboard.outOfStockItems || [])
+  ];
+  // Remove duplicates by _id
+  const uniqueStockItems = allStockItems.filter((item, index, self) =>
+    index === self.findIndex((t) => t._id === item._id)
   );
-
-  // Calculate paginated data
+  // Filter by search
+  const filteredStock = uniqueStockItems.filter(
+    (item) =>
+      item.item_name?.toLowerCase().includes(search.toLowerCase()) ||
+      (item.category_id?.category_name || "").toLowerCase().includes(search.toLowerCase())
+  );
+  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const paginatedStock = filteredStock.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(filteredStock.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
@@ -119,7 +116,7 @@ export default function DashboardOverview() {
     return (
       <AddItems
         itemId={editItemId}
-        editItem={selectedItem}
+        editItem={dashboard.selectedItem}
         onSuccess={handleFormSuccess}
         onCancel={() => setEditItemId(null)}
       />
@@ -138,7 +135,11 @@ export default function DashboardOverview() {
               </div>
               <div>
                 <Card.Title>Today's Revenue</Card.Title>
-                <Card.Text>$1,250</Card.Text>
+                <Card.Text>
+                  {dashboard.totalExpense?.totalExpense !== undefined
+                    ? `₹${dashboard.totalExpense.totalExpense}`
+                    : 'Loading...'}
+                </Card.Text>
               </div>
             </Card.Body>
           </Card>
@@ -150,8 +151,12 @@ export default function DashboardOverview() {
                 <FaShoppingCart />
               </div>
               <div>
-                <Card.Title>Total Orders</Card.Title>
-                <Card.Text>150</Card.Text>
+                <Card.Title>Total Employees</Card.Title>
+                <Card.Text>
+                  {dashboard.employeeCounts?.total !== undefined
+                    ? dashboard.employeeCounts.total
+                    : 'Loading...'}
+                </Card.Text>
               </div>
             </Card.Body>
           </Card>
@@ -163,8 +168,12 @@ export default function DashboardOverview() {
                 <FaUsers />
               </div>
               <div>
-                <Card.Title>New Customers</Card.Title>
-                <Card.Text>35</Card.Text>
+                <Card.Title>Suppliers</Card.Title>
+                <Card.Text>
+                  {dashboard.supplierCount?.supplier !== undefined
+                    ? dashboard.supplierCount.supplier
+                    : 'Loading...'}
+                </Card.Text>
               </div>
             </Card.Body>
           </Card>
@@ -176,8 +185,12 @@ export default function DashboardOverview() {
                 <FaClock />
               </div>
               <div>
-                <Card.Title>Pending Deliveries</Card.Title>
-                <Card.Text>12</Card.Text>
+                <Card.Title>Total Items</Card.Title>
+                <Card.Text>
+                  {dashboard.totalItems?.totalItem !== undefined
+                    ? dashboard.totalItems.totalItem
+                    : 'Loading...'}
+                </Card.Text>
               </div>
             </Card.Body>
           </Card>
@@ -190,14 +203,18 @@ export default function DashboardOverview() {
             <Card.Body>
               <Card.Title>Weekly Sales</Card.Title>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={salesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="sales" stroke="#456268" activeDot={{ r: 8 }} />
-                </LineChart>
+                {dashboard.weeklyItemAdditions && dashboard.weeklyItemAdditions.length > 0 ? (
+                  <LineChart data={dashboard.weeklyItemAdditions} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey={dashboard.weeklyItemAdditions[0].day ? "day" : "name"} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey={dashboard.weeklyItemAdditions[0].totalSales !== undefined ? "totalSales" : "sales"} stroke="#456268" activeDot={{ r: 8 }} />
+                  </LineChart>
+                ) : (
+                  <div style={{textAlign: 'center', paddingTop: '100px'}}>Loading...</div>
+                )}
               </ResponsiveContainer>
             </Card.Body>
           </Card>
@@ -207,25 +224,29 @@ export default function DashboardOverview() {
             <Card.Body>
               <Card.Title>Top Selling Products</Card.Title>
               <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={topProducts}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="sold"
-                    nameKey="name"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {topProducts.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
+                {dashboard.topSellingProducts && dashboard.topSellingProducts.length > 0 ? (
+                  <PieChart>
+                    <Pie
+                      data={dashboard.topSellingProducts}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey={dashboard.topSellingProducts[0].sold !== undefined ? "sold" : dashboard.topSellingProducts[0].count !== undefined ? "count" : "value"}
+                      nameKey={dashboard.topSellingProducts[0].name ? "name" : "_id"}
+                      label={({ name, _id, percent }) => `${name || _id} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {dashboard.topSellingProducts.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                ) : (
+                  <div style={{textAlign: 'center', paddingTop: '100px'}}>Loading...</div>
+                )}
               </ResponsiveContainer>
             </Card.Body>
           </Card>
