@@ -37,7 +37,7 @@ import SupplierList from '../Container/SupplierList';
 import AddCategory from '../Container/AddCategory';
 import CategoryList from '../Container/CategoryList';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { logoutUser } from '../redux/slice/auth.slice';
 import EditEmployee from '../Container/EditEmployee';
 import { FaCalendarXmark, FaRegCalendarXmark } from 'react-icons/fa6';
@@ -50,9 +50,13 @@ import Spinner from '../Spinner';
 
 // Sidebar Component
 const VALID_ROLES = ["admin", "manager", "supplyer", "saif", "waiter"];
-const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
+const Sidebar = ({ userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const activeItem = location.pathname.substring(1) || 'dashboard-overview';
 
   const prevActiveItemRef = useRef(activeItem);
   const prevIsOpenRef = useRef(isOpen);
@@ -68,7 +72,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           { id: "dashboard-overview", label: "Overview", icon: <FaEye /> },
         ],
       },
-      
+
       {
         id: "employees",
         label: "Employee Management",
@@ -112,7 +116,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             icon: <FaBoxOpen />,
           },
           { id: "inventory-add", label: "Add Items", icon: <FaPlus /> },
-          
+
         ],
       },
       {
@@ -122,7 +126,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         subItems: [
           { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
           { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
-          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />, hidden: true },
         ],
       },
       {
@@ -173,7 +177,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             label: "Approved Leaves",
             icon: <FaCheck />,
           },
-      
+
           {
             id: "leaves-calendar",
             label: "Leave Calendar",
@@ -181,7 +185,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           },
         ],
       },
-     
+
     ],
     manager: [
       { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -212,7 +216,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             label: "Stock Management",
             icon: <FaBoxOpen />,
           },
-          
+
         ],
       },
       {
@@ -222,7 +226,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         subItems: [
           { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
           { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
-          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  }
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />, hidden: true }
 
         ],
       },
@@ -240,18 +244,19 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
         ],
       },
-      { id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
-        subItems :[
+      {
+        id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
+        subItems: [
           { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
           {
             id: "leaves-calendar",
             label: "Leave Calendar",
             icon: <FaCalendarAlt />,
           },
-          {id:'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
+          { id: 'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
 
         ]
-       },
+      },
     ],
     Chef: [
       { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
@@ -291,9 +296,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         label: "Hotel Information",
         icon: <FaDesktop />,
       },
-
-      { id: "ingredients", label: "Ingredients", icon: <FaUtensils /> },
-      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+      { id: "leave-add", label: "Leave", icon: <FaCalendarAlt /> },
     ],
     waiter: [
       {
@@ -301,8 +304,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         label: "Hotel Information",
         icon: <FaDesktop />,
       },
-
-      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+      { id: "leave-add", label: "Leave", icon: <FaCalendarAlt /> },
     ],
     supplyer: [
       {
@@ -367,7 +369,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
     if (hasSubItems) {
       toggleSubmenu(itemId);
     } else {
-      onItemClick(itemId);
+      navigate(`/${itemId}`);
       if (isMobile) {
         onToggleSidebar();
       }
@@ -375,7 +377,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
   };
 
   const handleSubItemClick = (itemId) => {
-    onItemClick(itemId);
+    navigate(`/${itemId}`);
     if (isMobile) {
       onToggleSidebar();
     }
@@ -678,366 +680,12 @@ const Navbar = ({ userRole, toggleSidebar, isOpen, isMobile }) => {
 };
 
 // Content Router Component
-const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editingCategoryId }) => {
-  const renderContent = () => {
-    switch (activeItem) {
-      case 'dashboard':
-      case 'dashboard-overview':
-        return (
-          <>
-            <DashboardOverview onNavigate={onNavigate} />
-          </>
-        );
-
-
-      case 'employees':
-      case 'employees-list':
-        return (
-          <>
-            <EmployeeList setActiveItem={setActiveItem} />
-          </>
-        );
-
-      case 'employees-add':
-        return (
-          <>
-            <AddEmployee onNavigate={onNavigate}></AddEmployee>
-          </>
-        );
-      case 'employees-edit':
-        return (
-          <>
-            <EditEmployee></EditEmployee>
-          </>
-        );
-      case 'suppliers':
-      case 'supplier-list':
-        return (
-          <>
-            <SupplierList onNavigate={onNavigate}></SupplierList>
-          </>
-        );
-      case 'category-add':
-        return (
-          <>
-            <AddCategory categoryId={editingCategoryId} onNavigate={onNavigate} />
-          </>
-        );
-      case 'category-list':
-        return (
-          <>
-            <CategoryList onNavigate={onNavigate} />
-          </>
-        );
-
-
-      case 'orders':
-      case 'orders-active':
-        return (
-          <>
-            <ActiveOrder onNavigate={onNavigate}></ActiveOrder>
-          </>
-        );
-
-
-      case 'hotel-information-contact':
-        return (
-          <>
-            <AddHO onNavigate={onNavigate}></AddHO>
-          </>
-        );
-      case 'add-dish':
-        return (
-          <>
-            <AddDishes onNavigate={onNavigate}></AddDishes>
-          </>
-        );
-      case 'hotel-information':
-        return (
-          <>
-            <HotelOverview onNavigate={onNavigate}></HotelOverview>
-          </>
-        );
-
-
-      case 'orders-completed':
-        return (
-          <div className="content-section">
-            <h2>Completed Orders</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Completed orders list will be displayed here.</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'orders-history':
-        return (
-          <div className="content-section">
-            <h2>Order History</h2>
-            <div className="card">
-              <div className="card-body">
-                <p>Order history and reports will be displayed here.</p>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'inventory':
-      case 'inventory-stock':
-        return (
-          // <div className="content-section">
-          //   <h2>Inventory Management</h2>
-          //   <div className="card">
-          //     <div className="card-body">
-          //       <div className="inventory-section">
-          //         <h5>Stock Levels</h5>
-          //         <div className="inventory-item">
-          //           <span>Tomatoes</span>
-          //           <div className="progress">
-          //             <div className="progress-bar bg-success" style={{ width: '75%' }}></div>
-          //           </div>
-          //           <span>75%</span>
-          //         </div>
-          //         <div className="inventory-item">
-          //           <span>Rice</span>
-          //           <div className="progress">
-          //             <div className="progress-bar bg-warning" style={{ width: '25%' }}></div>
-          //           </div>
-          //           <span>25%</span>
-          //         </div>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>
-          <>
-            <StockManagement onNavigate={onNavigate}></StockManagement>
-          </>
-        );
-
-      case 'inventory-add':
-        return (
-          <>
-            <AddItems onNavigate={onNavigate}></AddItems>
-          </>
-        );
-      case 'supplier-add':
-        return (
-          <>
-            <AddSupplier supplierId={editingCategoryId} onNavigate={onNavigate}></AddSupplier>
-          </>
-        )
-        case 'supplier-edit':
-        return (
-          <>
-            <EditSupplier supplierId={editingCategoryId} onNavigate={onNavigate} />
-          </>
-        )
-      case 'leave-add':
-        return (
-          <>
-            <AddLeave onNavigate={onNavigate}></AddLeave>
-          </>
-        )
-
-      case 'billing':
-        return (
-          // <div className="content-section">
-          //   <h2>Billing & Payments</h2>
-          //   <div className="card">
-          //     <div className="card-body">
-          //       <h5>Recent Transactions</h5>
-          //       <div className="table-responsive">
-          //         <table className="table">
-          //           <thead>
-          //             <tr>
-          //               <th>Bill ID</th>
-          //               <th>Table</th>
-          //               <th>Amount</th>
-          //               <th>Payment Method</th>
-          //               <th>Status</th>
-          //             </tr>
-          //           </thead>
-          //           <tbody>
-          //             <tr>
-          //               <td>#B001</td>
-          //               <td>Table 3</td>
-          //               <td>₹1,250</td>
-          //               <td>Card</td>
-          //               <td><span className="badge bg-success">Paid</span></td>
-          //             </tr>
-          //           </tbody>
-          //         </table>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>
-          <>
-            <Billing onNavigate={onNavigate}></Billing>
-          </>
-        );
-      case 'leaves-approved':
-        return (
-          <>
-            <ApprovedLeave onNavigate={onNavigate}></ApprovedLeave>
-          </>
-        )
-
-      case 'leaves-calendar':
-        return (
-          <Calender onNavigate={onNavigate} />
-        );
-      case 'holidays':
-      case 'holidays-list':
-        return (
-          <>
-            <Holidaylist onNavigate={onNavigate}></Holidaylist>
-          </>
-        )
-      case 'add-holiday':
-        return (
-          <>
-            <AddHoliday onNavigate={onNavigate}></AddHoliday>
-          </>
-        )
-      case 'holiday-edit' :
-        return (
-          <>
-            <EditHolidays onNavigate={onNavigate}></EditHolidays>
-          </>
-        )
-      default:
-        return (
-          // <div className="content-section">
-          //   <h2>{activeItem.charAt(0).toUpperCase() + activeItem.slice(1).replace('-', ' ')}</h2>
-          //   <div className="card">
-          //     <div className="card-body">
-          //       <p>Content for {activeItem} will be displayed here.</p>
-          //       <p>This section is accessible to <strong>{userRole}</strong> role.</p>
-          //     </div>
-          //   </div>
-          // </div>
-          <>
-            <PendingLeave onNavigate={onNavigate}></PendingLeave>
-          </>
-        );
-    }
-  };
-
-  return <div className="main-content">{renderContent()}</div>;
+const ContentRouter = ({ setActiveItem, userRole, onNavigate, editingCategoryId }) => {
+  return <Outlet />;
 };
 
 // Main Component
-// const RestaurantAdminPanel = () => {
-//   const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
-//   const [userRole, setUserRole] = useState('Admin');
-//   const [sidebarOpen, setSidebarOpen] = useState(true);
-//   const [isMobile, setIsMobile] = useState(false);
-//   const [isHovered, setIsHovered] = useState(false);
-//   const [editingCategoryId, setEditingCategoryId] = useState(null);
-
-//   const handleNavigate = (view, id = null) => {
-//     setActiveItem(view);
-//     setEditingCategoryId(id);
-//   };
-
-//   useEffect(() => {
-//     const checkScreenSize = () => {
-//       const mobile = window.innerWidth <= 768;
-//       setIsMobile(mobile);
-//       if (mobile) {
-//         setSidebarOpen(false);
-//       } else {
-//         setSidebarOpen(true);
-//       }
-//     };
-
-//     checkScreenSize();
-//     window.addEventListener('resize', checkScreenSize);
-//     return () => window.removeEventListener('resize', checkScreenSize);
-//   }, []);
-//   useEffect(() => {
-//     localStorage.setItem('activeAdminPanelItem', activeItem);
-//   }, [activeItem]);
-//   // Improved toggleSidebar function
-//   const toggleSidebar = () => {
-//     console.log('Toggle sidebar clicked, current state:', sidebarOpen); // Debug માટે
-//     setSidebarOpen(prevState => {
-//       const newState = !prevState;
-//       console.log('New sidebar state:', newState); // Debug માટે
-//       return newState;
-//     });
-
-//     // જો sidebar hover state માં છે તેને clear કરો
-//     if (isHovered) {
-//       setIsHovered(false);
-//     }
-//   };
-
-//   const handleMenuClick = (component) => {
-//     setEditingCategoryId(null); // Reset editing state when changing views
-//     setActiveItem(component);
-//   };
-
-//   const handleEditCategory = (id) => {
-//     setEditingCategoryId(id);
-//     setActiveItem('category-add'); // Switch to the form view
-//   };
-
-//   return (
-//     <div className='d_main_admin'>
-//       <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
-//         <Sidebar
-//           activeItem={activeItem}
-//           onItemClick={handleNavigate}
-//           userRole={userRole}
-//           isOpen={sidebarOpen}
-//           isMobile={isMobile}
-//           onToggleSidebar={toggleSidebar}
-//           onSetHovered={setIsHovered}
-//         />
-
-//         <div className="main-layout">
-//           <Navbar
-//             userRole={userRole}
-//             toggleSidebar={toggleSidebar}
-//             isOpen={sidebarOpen}
-//             isMobile={isMobile}
-//           />
-
-//           <ContentRouter
-//             activeItem={activeItem}
-//             setActiveItem={setActiveItem}
-//             userRole={userRole}
-//             onNavigate={handleNavigate}
-//             editingCategoryId={editingCategoryId}
-//           />
-//         </div>
-
-//         <div className="role-switcher-container">
-//           <select
-//             className="role-switcher"
-//             value={userRole}
-//             onChange={(e) => setUserRole(e.target.value)}
-//           >
-//             <option value="Admin">Admin</option>
-//             <option value="Manager">Manager</option>
-//             <option value="Chef">Chef</option>
-//             <option value="Waiter">Waiter</option>
-//             <option value="Housekeeping">Housekeeping</option>
-//             <option value="Receptionist">Receptionist</option>
-//           </select>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RestaurantAdminPanel;
 const RestaurantAdminPanel = () => {
-  const [activeItem, setActiveItem] = useState(() => localStorage.getItem('activeAdminPanelItem') || 'dashboard');
-  // Always get user role from localStorage
   const getInitialRole = () => {
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -1051,13 +699,10 @@ const RestaurantAdminPanel = () => {
     return 'Admin';
   };
   const [userRole, setUserRole] = useState(getInitialRole());
-  // const [userRole, setUserRole] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [editingCategoryId, setEditingCategoryId] = useState(null);
 
-  // Update userRole if localStorage changes (e.g., after login)
   useEffect(() => {
     const handleStorage = () => {
       setUserRole(getInitialRole());
@@ -1071,8 +716,7 @@ const RestaurantAdminPanel = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("Decoded token:", decoded);
-        
+
         if (VALID_ROLES.includes(decoded.role?.toLowerCase())) {
           setUserRole(decoded.role);
         } else {
@@ -1100,58 +744,29 @@ const RestaurantAdminPanel = () => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('activeAdminPanelItem', activeItem);
-  }, [activeItem]);
-
-  // Improved toggleSidebar function
-  // const toggleSidebar = () => {
-  //   setSidebarOpen(prevState => !prevState);
-  //   if (isHovered) {
-  //     setIsHovered(false);
-  //   }
-  // };
-
-  const handleNavigate = (view, id = null) => {
-    setActiveItem(view);
-    setEditingCategoryId(id);
-  }
-
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
     if (isHovered) setIsHovered(false);
   };
 
-  const handleMenuClick = (component) => {
-    setEditingCategoryId(null);
-    setActiveItem(component);
-  };
-
-  const handleEditCategory = (id) => {
-    setEditingCategoryId(id);
-    setActiveItem('category-add');
-  };
-
   if (!userRole) {
     return (
       <div className="loading-screen">
-         <Spinner></Spinner>
+        <Spinner />
       </div>
     );
   }
 
   return (
     <div className='d_main_admin'>
-      <div className={`admin-panel  ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
+      <div className={`admin-panel ${!sidebarOpen ? 'sidebar-closed' : ''} ${isMobile ? 'mobile' : ''} ${isHovered && !sidebarOpen && !isMobile ? 'sidebar-hovered' : ''}`}>
         <Sidebar
-          activeItem={activeItem}
-          onItemClick={handleNavigate}
           userRole={userRole}
           isOpen={sidebarOpen}
-          toggleSidebar={toggleSidebar}
+          onToggleSidebar={toggleSidebar}
           isMobile={isMobile}
           isHovered={isHovered}
-          setIsHovered={setIsHovered}
+          onSetHovered={setIsHovered}
         />
 
         <div className="main-layout">
@@ -1161,13 +776,9 @@ const RestaurantAdminPanel = () => {
             isOpen={sidebarOpen}
             isMobile={isMobile}
           />
-
-          <ContentRouter
-            activeItem={activeItem}
-            userRole={userRole}
-            onNavigate={handleNavigate}
-            editingCategoryId={editingCategoryId}
-          />
+          <div className="main-content">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>
