@@ -157,7 +157,7 @@ export const getLeavesByUserId = async (req, res) => {
 export const updateLeaveDetails = async (req, res) => {
     try {
         const { id } = req.params;
-        const { emp_name, leave_type, start_date, start_time, end_date, end_time, leave_reason } = req.body;
+        const { emp_name, leave_type, start_date, start_time, end_date, end_time, leave_reason,leave_status,approvedBy,approvedByRole } = req.body;
 
         const leave = await Leave.findById(id);
         if (!leave) {
@@ -182,6 +182,9 @@ export const updateLeaveDetails = async (req, res) => {
         if (end_date) leave.end_date = parseDate(end_date);
         if (end_time) leave.end_time = end_time;
         if (leave_reason) leave.leave_reason = leave_reason;
+        if (leave_status) leave.leave_status = leave_status;
+        if (approvedBy) leave.approvedBy = approvedBy;
+        if (approvedByRole) leave.approvedByRole = approvedByRole;
 
         await leave.save();
 

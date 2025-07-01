@@ -47,6 +47,7 @@ import Holidaylist from '../Container/Holidaylist';
 import EditHolidays from '../Container/EditHolidays';
 import EditSupplier from '../Container/EditSupplier';
 import Spinner from '../Spinner';
+import EditLeave from '../Container/EditLeave';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
@@ -74,7 +75,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           },
         ],
       },
-      
+
       {
         id: "employees",
         label: "Employee Management",
@@ -118,7 +119,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             icon: <FaBoxOpen />,
           },
           { id: "inventory-add", label: "Add Items", icon: <FaPlus /> },
-          
+
         ],
       },
       {
@@ -128,7 +129,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         subItems: [
           { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
           { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
-          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  },
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />, hidden: true },
         ],
       },
       {
@@ -146,40 +147,21 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         ],
       },
       {
-        id: "holidays",
-        label: "Holidays",
-        icon: <FaRegCalendarAlt />,
-        subItems: [
-          { id: "add-holiday", label: "Add Holiday", icon: <FaCalendarPlus /> },
-          {
-            id: "holidays-list",
-            label: "Holiday List",
-            icon: <FaRegCalendarXmark />,
-          },
-          {
-            id: "holiday-edit",
-            label: "Edit holiday",
-            icon: <FaCalendarCheck />,
-            hidden: true,
-          },
-        ],
-      },
-      {
         id: "leaves",
         label: "Leave Management",
         icon: <FaCalendarAlt />,
         subItems: [
           {
-            id: "leaves-pending",
-            label: "Pending Requests",
-            icon: <FaClock />,
-          },
-          {
             id: "leaves-approved",
             label: "Approved Leaves",
             icon: <FaCheck />,
           },
-      
+          {
+            id: 'edit-leaves',
+            label: "Edit Leaves",
+            icon: <FaUserEdit />,
+            hidden: true,
+          },
           {
             id: "leaves-calendar",
             label: "Leave Calendar",
@@ -188,7 +170,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         ],
       },
       { id: "reports", label: "Reports", icon: <FaChartBar /> },
-     
+
     ],
     manager: [
       { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -219,7 +201,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
             label: "Stock Management",
             icon: <FaBoxOpen />,
           },
-          
+
         ],
       },
       {
@@ -229,7 +211,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         subItems: [
           { id: "supplier-list", label: "Supplier List", icon: <FaUsers /> },
           { id: "supplier-add", label: "Add Supplier", icon: <FaUserPlus /> },
-          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />,hidden: true  }
+          { id: "supplier-edit", label: "Edit Supplier", icon: <FaUserEdit />, hidden: true }
 
         ],
       },
@@ -247,28 +229,30 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           { id: "add-dish", label: "Add Dish", icon: <FaUserFriends /> },
         ],
       },
-      { id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
-        subItems :[
-          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+      {
+        id: "leaves",
+        label: "Leave Management",
+        icon: <FaCalendarAlt />,
+        subItems: [
+             { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-approved",
+            label: "Approved Leaves",
+            icon: <FaCheck />,
+          },
+          {
+            id: 'edit-leaves',
+            label: "Edit Leaves",
+            icon: <FaUserEdit />,
+            hidden: true,
+          },
           {
             id: "leaves-calendar",
             label: "Leave Calendar",
             icon: <FaCalendarAlt />,
           },
-          {id:'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
-
-        ]
-       },
-    ],
-    Chef: [
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
-
-      { id: 'ingredients', label: 'Ingredients', icon: <FaUtensils /> },
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
-    ],
-    Waiter: [
-      { id: 'hotel-information', label: 'Hotel Information', icon: <FaDesktop /> },
-      { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },
+        ],
+      },
     ],
     Housekeeping: [
       {
@@ -301,7 +285,19 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
       },
 
       { id: "ingredients", label: "Ingredients", icon: <FaUtensils /> },
-      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+      {
+        id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
+        subItems: [
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+          { id: 'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
+
+        ]
+      },
     ],
     waiter: [
       {
@@ -310,7 +306,19 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
         icon: <FaDesktop />,
       },
 
-      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+      {
+        id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
+        subItems: [
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+          { id: 'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
+
+        ]
+      },
     ],
     supplyer: [
       {
@@ -326,7 +334,19 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
           },
         ],
       },
-      { id: "leave-apply", label: "Apply Leave", icon: <FaCalendarAlt /> },
+      {
+        id: 'leaves', label: 'Leave', icon: <FaCalendarAlt />,
+        subItems: [
+          { id: "leave-add", label: "Add Leaves", icon: <FaCheck /> },
+          {
+            id: "leaves-calendar",
+            label: "Leave Calendar",
+            icon: <FaCalendarAlt />,
+          },
+          { id: 'leaves-approved', label: "Approved Leaves", icon: <FaCheck /> },
+
+        ]
+      },
     ],
     Receptionist: [
       { id: "dashboard", label: "Dashboard", icon: <FaHome /> },
@@ -840,7 +860,7 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
             <AddSupplier supplierId={editingCategoryId} onNavigate={onNavigate}></AddSupplier>
           </>
         )
-        case 'supplier-edit':
+      case 'supplier-edit':
         return (
           <>
             <EditSupplier supplierId={editingCategoryId} onNavigate={onNavigate} />
@@ -855,40 +875,12 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
 
       case 'billing':
         return (
-          // <div className="content-section">
-          //   <h2>Billing & Payments</h2>
-          //   <div className="card">
-          //     <div className="card-body">
-          //       <h5>Recent Transactions</h5>
-          //       <div className="table-responsive">
-          //         <table className="table">
-          //           <thead>
-          //             <tr>
-          //               <th>Bill ID</th>
-          //               <th>Table</th>
-          //               <th>Amount</th>
-          //               <th>Payment Method</th>
-          //               <th>Status</th>
-          //             </tr>
-          //           </thead>
-          //           <tbody>
-          //             <tr>
-          //               <td>#B001</td>
-          //               <td>Table 3</td>
-          //               <td>₹1,250</td>
-          //               <td>Card</td>
-          //               <td><span className="badge bg-success">Paid</span></td>
-          //             </tr>
-          //           </tbody>
-          //         </table>
-          //       </div>
-          //     </div>
-          //   </div>
-          // </div>
+
           <>
             <Billing onNavigate={onNavigate}></Billing>
           </>
         );
+
       case 'leaves-approved':
         return (
           <>
@@ -899,6 +891,10 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
       case 'leaves-calendar':
         return (
           <Calender onNavigate={onNavigate} />
+        )
+      case 'edit-leaves':
+        return (
+          <EditLeave leaveid={editingCategoryId} onNavigate={onNavigate} />
         );
       case 'holidays':
       case 'holidays-list':
@@ -913,7 +909,7 @@ const ContentRouter = ({ activeItem, setActiveItem, userRole, onNavigate, editin
             <AddHoliday onNavigate={onNavigate}></AddHoliday>
           </>
         )
-      case 'holiday-edit' :
+      case 'holiday-edit':
         return (
           <>
             <EditHolidays onNavigate={onNavigate}></EditHolidays>
@@ -1084,7 +1080,7 @@ const RestaurantAdminPanel = () => {
       try {
         const decoded = jwtDecode(token);
         console.log("Decoded token:", decoded);
-        
+
         if (VALID_ROLES.includes(decoded.role?.toLowerCase())) {
           setUserRole(decoded.role);
         } else {
@@ -1147,7 +1143,7 @@ const RestaurantAdminPanel = () => {
   if (!userRole) {
     return (
       <div className="loading-screen">
-         <Spinner></Spinner>
+        <Spinner></Spinner>
       </div>
     );
   }

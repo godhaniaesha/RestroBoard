@@ -159,11 +159,12 @@ const leaveSlice = createSlice({
       .addCase(db_createLeave.pending, (state) => {
         state.loading = true;
       })
-      .addCase(db_createLeave.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = "Leave created successfully";
-        state.leaves.push(action.payload);
-      })
+     .addCase(db_createLeave.fulfilled, (state, action) => {
+  state.loading = false;
+  state.success = "Leave created successfully";
+  state.leaves.push(action.payload);
+  state.userLeaves.push(action.payload); // ✅ Add this
+})
       .addCase(db_createLeave.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -216,7 +217,9 @@ const leaveSlice = createSlice({
         state.loading = false;
         state.success = "Leave deleted successfully";
         state.leaves = state.leaves.filter(leave => leave._id !== action.payload.id);
+        state.userLeaves = state.userLeaves.filter(leave => leave._id !== action.payload.id); // ✅ Add this line
       })
+
       .addCase(db_deleteLeave.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

@@ -38,7 +38,7 @@ export const sendNotFoundResponse = (res, message) => {
     });
 };
 
-export const sendBadRequestResponse = (res, message) => {
+export const    sendBadRequestResponse = (res, message) => {
     return res.status(400).json({
         success: false,
         message,
