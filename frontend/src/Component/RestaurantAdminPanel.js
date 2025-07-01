@@ -49,7 +49,7 @@ import Spinner from '../Spinner';
 // import TakeNewOrderForm from './TakeNewOrderForm';
 
 // Sidebar Component
-const VALID_ROLES = ["admin", "manager", "supplyer", "saif", "waiter"];
+const VALID_ROLES = ["admin", "manager", "supplyer", "chef", "waiter"];
 const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSetHovered }) => {
   const [expandedMenus, setExpandedMenus] = useState({});
   const [hoverTimeout, setHoverTimeout] = useState(null);
@@ -285,7 +285,7 @@ const Sidebar = ({ activeItem, onItemClick, userRole, isOpen, isMobile, isHovere
       },
       { id: "leaves", label: "Leave Approvals", icon: <FaCalendarAlt /> },
     ],
-    saif: [
+    chef: [
       {
         id: "hotel-information",
         label: "Hotel Information",

@@ -88,7 +88,7 @@ export const createLeave = async (req, res) => {
 
         // After creating the leave
         const user = await Register.findById(req.user._id);
-        if (user && ['saif', 'waiter', 'manager'].includes(user.role)) {
+        if (user && ['chef', 'waiter', 'manager'].includes(user.role)) {
             user.leave_balance = (user.leave_balance || 50) - 1;
             await user.save();
         }

@@ -214,7 +214,7 @@ export const getAllEmployee = async (req, res) => {
         // Find all Employee with role 'waiter'
         const Employee = await Register.find({
             $or: [
-                { role: "saif" },
+                { role: "chef" },
                 { role: "waiter" },
                 { role: "manager" },
                 { role: "supplier" },

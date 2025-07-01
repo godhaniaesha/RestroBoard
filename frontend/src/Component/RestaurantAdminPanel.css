@@ -259,12 +259,14 @@
 .d_main_admin .submenu-link:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
+   border-radius: 0 25px 25px 0;
 }
 
 .d_main_admin .submenu-link-active {
   background: rgba(255, 255, 255, 0.15);
   color: white;
   font-weight: 500;
+      border-radius: 0 25px 25px 0;
 }
 
 .d_main_admin .submenu-icon {

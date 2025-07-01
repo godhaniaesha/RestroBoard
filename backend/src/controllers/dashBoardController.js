@@ -24,13 +24,13 @@ export const getTotalExpense = async (req, res) => {
 
 export const getEmployeeCounts = async (req, res) => {
     try {
-        const saifCount = await registerModel.countDocuments({ role: 'saif' });
+        const chefCount = await registerModel.countDocuments({ role: 'chef' });
         const waiterCount = await registerModel.countDocuments({ role: 'waiter' });
         const managerCount = await registerModel.countDocuments({ role: 'manager' });
-        const total = saifCount + waiterCount + managerCount;
+        const total = chefCount + waiterCount + managerCount;
         return sendSuccessResponse(res, "Employee counts fetched successfully", {
             total,
-            saif: saifCount,
+            chef: chefCount,
             waiter: waiterCount,
             manager: managerCount
         });

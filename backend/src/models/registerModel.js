@@ -13,7 +13,7 @@ const registerSchema = mongoose.Schema({
     phone: { type: String },
     role: {
         type: String,
-        enum: ["admin", "manager", "supplyer", "saif", "waiter"],
+        enum: ["admin", "manager", "supplyer", "chef", "waiter"],
         default: "waiter"
     },
     password: { type: String },

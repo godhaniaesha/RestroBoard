@@ -76,7 +76,7 @@ export const isManager = async (req, res, next) => {
 
 export const canCreateLeave = (req, res, next) => {
     const { role } = req.user;
-    if (role === 'manager' || role === 'saif' || role === 'waiter') {
+    if (role === 'manager' || role === 'chef' || role === 'waiter') {
         return next();
     }
     return sendForbiddenResponse(res, "Access denied. Only Managers, Saifs, and Waiters can create leave requests.");
@@ -101,7 +101,7 @@ export const canChangeLeaveStatus = async (req, res, next) => {
             return sendForbiddenResponse(res, "You cannot approve or reject your own leave request.");
         }
 
-        if ((leaveOwnerRole === 'saif' || leaveOwnerRole === 'waiter') && (currentUser.role === 'manager' || currentUser.isAdmin)) {
+        if ((leaveOwnerRole === 'chef' || leaveOwnerRole === 'waiter') && (currentUser.role === 'manager' || currentUser.isAdmin)) {
             return next();
         }
 

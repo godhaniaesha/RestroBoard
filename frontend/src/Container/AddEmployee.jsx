@@ -37,7 +37,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
 
   const roleOptions = [
     { value: "manager", label: "Manager" },
-    { value: "saif", label: "Chef" },
+    { value: "chef", label: "Chef" },
     { value: "waiter", label: "Waiter" },
   ];
 
@@ -73,11 +73,11 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
   // Handle success after creating or updating
   useEffect(() => {
     if (success) {
-      alert(
-        isEditMode
-          ? "Employee updated successfully!"
-          : "Employee added successfully!"
-      );
+      // alert(
+      //   isEditMode
+      //     ? "Employee updated successfully!"
+      //     : "Employee added successfully!"
+      // );
       dispatch(clearSuccess());
       if (!isEditMode) {
         // Reset form after create
