@@ -1,57 +1,119 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  db_getLeavesByUserId,
+  db_getAllLeaves,
+} from "../redux/slice/leave.slice";
+import { getRegisterById } from "../redux/slice/user.slice";
+import { jwtDecode } from "jwt-decode";
 import "../Style/Z_table.css";
-import { FaRegTrashAlt, FaCaretLeft, FaCaretRight } from "react-icons/fa";
+import { FaCaretLeft, FaCaretRight, FaRegEdit } from "react-icons/fa";
 
-const approvedLeavesData = [
-  {
-    photo_url: "https://randomuser.me/api/portraits/women/60.jpg",
-    name: "Corey Gouse",
-    leave_type: "Annual Leave",
-    start_date: "2024-06-10",
-    end_date: "2024-06-15",
-    reason: "Family vacation.",
-    status: "Approved",
-    approved_by: "Admin",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/men/65.jpg",
-    name: "Kian Siphron",
-    leave_type: "Sick Leave",
-    start_date: "2024-06-20",
-    end_date: "2024-06-20",
-    reason: "Doctor's appointment.",
-    status: "Approved",
-    approved_by: "Admin",
-  },
-  {
-    photo_url: "https://randomuser.me/api/portraits/women/62.jpg",
-    name: "Adison Herwitz",
-    leave_type: "Personal Leave",
-    start_date: "2024-06-25",
-    end_date: "2024-06-26",
-    reason: "Personal matters.",
-    status: "Approved",
-    approved_by: "Manager",
-  },
-];
+function ApprovedLeave({ onNavigate }) {
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
-function ApprovedLeave() {
+  let userRole = "";
+  let userIdFromToken = "";
+
+  try {
+    const decoded = jwtDecode(token);
+    userRole = decoded?.role || "";
+    userIdFromToken = decoded?._id || "";
+  } catch (err) {
+    console.error("Token decode error:", err);
+  }
+
+  const isAdminOrManager = userRole === "admin" || userRole === "manager";
+
+  const leaves = useSelector((state) =>
+    isAdminOrManager ? state.leave.leaves : state.leave.userLeaves
+  );
+  const { loading } = useSelector((state) => state.leave);
+
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [approverNames, setApproverNames] = useState({});
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+
   const itemsPerPage = 5;
 
-  const filteredLeaves = approvedLeavesData.filter(
+  const fetchLeaves = () => {
+    if (isAdminOrManager) {
+      dispatch(db_getAllLeaves());
+    } else if (userId) {
+      dispatch(db_getLeavesByUserId(userId));
+    }
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, [dispatch, userId, isAdminOrManager]);
+
+  useEffect(() => {
+    if (shouldRefresh) {
+      fetchLeaves();
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
+
+  // Optional: Refresh leaves every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchLeaves();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const uniqueApproverIds = [
+      ...new Set(
+        (leaves || [])
+          .map((leave) => leave.approvedBy)
+          .filter((id) => id && id !== "null")
+      ),
+    ];
+
+    const fetchApproverNames = async () => {
+      const names = {};
+      for (const id of uniqueApproverIds) {
+        try {
+          const result = await dispatch(getRegisterById(id)).unwrap();
+          names[id] = `${result.firstName || ""} ${result.lastName || ""}`.trim();
+        } catch (error) {
+          names[id] = "Unknown";
+        }
+      }
+      setApproverNames(names);
+    };
+
+    if (uniqueApproverIds.length > 0) {
+      fetchApproverNames();
+    }
+  }, [leaves, dispatch]);
+
+  const searchText = (search || "").toLowerCase();
+
+  const filteredLeaves = (leaves || []).filter(
     (leave) =>
-      leave.name.toLowerCase().includes(search.toLowerCase()) ||
-      leave.leave_type.toLowerCase().includes(search.toLowerCase()) ||
-      leave.approved_by.toLowerCase().includes(search.toLowerCase())
+      (leave.emp_name || "").toLowerCase().includes(searchText) ||
+      (leave.leave_type || "").toLowerCase().includes(searchText) ||
+      (approverNames[leave.approvedBy] || "")
+        .toLowerCase()
+        .includes(searchText) ||
+      (leave.leave_status || "").toLowerCase().includes(searchText)
   );
 
-  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const paginatedLeaves = filteredLeaves.slice(indexOfFirstItem, indexOfLastItem);
+  const paginatedLeaves = filteredLeaves.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
   const totalPages = Math.ceil(filteredLeaves.length / itemsPerPage);
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -60,7 +122,9 @@ function ApprovedLeave() {
     <section className="Z_AL_section">
       <div className="Z_AL_container">
         <div className="Z_AL_headerRow">
-          <h4 className="Z_AL_title">Approved Leave History</h4>
+          <h4 className="Z_AL_title">
+            {isAdminOrManager ? "All Leave History" : "Your Leave History"}
+          </h4>
           <div className="Z_AL_controls">
             <input
               className="Z_AL_searchInput"
@@ -71,113 +135,142 @@ function ApprovedLeave() {
             />
           </div>
         </div>
-        <div className="Z_AL_tableWrapper">
-          <table className="Z_AL_table">
-            <thead>
-              <tr>
-                <th className="Z_AL_Th">Employee</th>
-                <th className="Z_AL_Th">Leave Type</th>
-                <th className="Z_AL_Th">Dates</th>
-                <th className="Z_AL_Th">Reason</th>
-                <th className="Z_AL_Th">Approved By</th>
-                <th className="Z_AL_Th">Status</th>
-                <th className="Z_AL_Th">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedLeaves.map((leave, idx) => (
-                <tr className="Z_AL_Tr" key={idx}>
-                  <td className="Z_AL_Td">
-                    <div className="Z_AL_empCell">
-                      <img
-                        src={leave.photo_url}
-                        alt={leave.name}
-                        className="Z_AL_photo"
-                      />
-                      <span>{leave.name}</span>
-                    </div>
-                  </td>
-                  <td className="Z_AL_Td">{leave.leave_type}</td>
-                  <td className="Z_AL_Td">{`${leave.start_date} to ${leave.end_date}`}</td>
-                  <td className="Z_AL_Td">{leave.reason}</td>
-                  <td className="Z_AL_Td">{leave.approved_by}</td>
-                  <td className="Z_AL_Td">
-                    <span
-                      className={`Z_AL_status Z_AL_status--${leave.status.toLowerCase()}`}
-                    >
-                      {leave.status}
-                    </span>
-                  </td>
-                  <td className="Z_AL_Td">
-                    <button
-                      className="Z_AL_actionBtn Z_AL_actionBtn--delete"
-                      title="Delete"
-                    >
-                      <FaRegTrashAlt />
-                    </button>
-                  </td>
+
+        {loading ? (
+          <div className="Z_AL_loading">Loading...</div>
+        ) : (
+          <div className="Z_AL_tableWrapper">
+            <table className="Z_AL_table">
+              <thead>
+                <tr>
+                  {isAdminOrManager && <th className="Z_AL_Th">Employee</th>}
+                  <th className="Z_AL_Th">Leave Type</th>
+                  <th className="Z_AL_Th">Dates</th>
+                  <th className="Z_AL_Th">Times</th>
+                  <th className="Z_AL_Th">Reason</th>
+                  <th className="Z_AL_Th">Updated By</th>
+                  <th className="Z_AL_Th">Status</th>
+                  {isAdminOrManager && <th className="Z_AL_Th">Action</th>}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="Z_pagination_container">
-            <button
-              className="Z_pagination_btn"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <FaCaretLeft />
-            </button>
-            {totalPages <= 4 ? (
-              [...Array(totalPages)].map((_, idx) => (
+              </thead>
+              <tbody>
+                {paginatedLeaves.length > 0 ? (
+                  paginatedLeaves.map((leave, idx) => {
+                    const isOwnLeave = leave.userId === userIdFromToken;
+                    const isEditDisabled =
+                      leave.leave_status === "cancelled" ||
+                      (userRole === "manager" && isOwnLeave);
+
+                    return (
+                      <tr className="Z_AL_Tr" key={idx}>
+                        {isAdminOrManager && (
+                          <td className="Z_AL_Td">
+                            <div className="Z_AL_empCell">
+                              <img
+                                src={
+                                  leave.photo || "https://via.placeholder.com/40"
+                                }
+                                alt={leave.emp_name}
+                                className="Z_AL_photo"
+                              />
+                              <span>{leave.emp_name || "N/A"}</span>
+                            </div>
+                          </td>
+                        )}
+                        <td className="Z_AL_Td">{leave.leave_type || "N/A"}</td>
+                        <td className="Z_AL_Td">
+                          {`${leave.start_date?.slice(0, 10) || "-"} to ${
+                            leave.end_date?.slice(0, 10) || "-"
+                          }`}
+                        </td>
+                        <td className="Z_AL_Td">
+                          {`${leave.start_time || "-"} to ${leave.end_time || "-"}`}
+                        </td>
+                        <td className="Z_AL_Td">{leave.leave_reason || "N/A"}</td>
+                        <td className="Z_AL_Td">
+                          {approverNames[leave.approvedBy] || "Not updated"}
+                        </td>
+                        <td className="Z_AL_Td">
+                          <span
+                            className={`Z_AL_status Z_AL_status--${
+                              leave.leave_status || "pending"
+                            }`}
+                          >
+                            {leave.leave_status || "Pending"}
+                          </span>
+                        </td>
+                        {isAdminOrManager && (
+                          <td className="Z_AL_Td">
+                            <button
+                              className="Z_AL_actionBtn Z_AL_actionBtn--edit me-2"
+                              title={
+                                leave.leave_status === "cancelled"
+                                  ? "Edit Disabled (Cancelled Leave)"
+                                  : userRole === "manager" && isOwnLeave
+                                  ? "Edit Disabled (Own Leave)"
+                                  : "Edit"
+                              }
+                              onClick={() => {
+                                if (!isEditDisabled) {
+                                  localStorage.setItem("editleaveid", leave._id);
+                                  onNavigate("edit-leaves", leave._id);
+                                  setShouldRefresh(true); // trigger refresh on return
+                                }
+                              }}
+                              disabled={isEditDisabled}
+                              style={{
+                                cursor: isEditDisabled ? "not-allowed" : "pointer",
+                                opacity: isEditDisabled ? 0.5 : 1,
+                              }}
+                            >
+                              <FaRegEdit />
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td className="Z_AL_Td" colSpan={isAdminOrManager ? 8 : 7}>
+                      No leave records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+
+            <div className="Z_pagination_container">
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaCaretLeft />
+              </button>
+
+              {[...Array(totalPages)].map((_, idx) => (
                 <button
                   key={idx + 1}
-                  className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                  className={`Z_pagination_page${
+                    currentPage === idx + 1 ? " Z_pagination_active" : ""
+                  }`}
                   onClick={() => handlePageChange(idx + 1)}
                 >
                   {idx + 1}
                 </button>
-              ))
-            ) : (
-              <>
-                <button
-                  className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
-                  onClick={() => handlePageChange(1)}
-                >1</button>
-                {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
-                {currentPage > 2 && currentPage < totalPages - 1 && (
-                  <button
-                    className="Z_pagination_page Z_pagination_active"
-                    onClick={() => handlePageChange(currentPage)}
-                  >
-                    {currentPage}
-                  </button>
-                )}
-                {currentPage < totalPages - 1 && (
-                  <button
-                    className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
-                    onClick={() => handlePageChange(totalPages - 1)}
-                  >
-                    {totalPages - 1}
-                  </button>
-                )}
-                <button
-                  className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
-                  onClick={() => handlePageChange(totalPages)}
-                >
-                  {totalPages}
-                </button>
-              </>
-            )}
-            <button
-              className="Z_pagination_btn"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <FaCaretRight />
-            </button>
+              ))}
+
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <FaCaretRight />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

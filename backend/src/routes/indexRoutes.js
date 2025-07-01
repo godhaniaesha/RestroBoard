@@ -74,7 +74,7 @@ indexRoutes.delete("/deleteDish/:id", UserAuth, isAdminOrManager, deleteDish);
 
 // Leave Routes
 indexRoutes.post("/createLeave", UserAuth, canCreateLeave, createLeave);
-indexRoutes.get("/getAllLeaves", UserAuth, isAdminOrManager, getAllLeaves);
+indexRoutes.get("/getAllLeaves", UserAuth, getAllLeaves);
 indexRoutes.get("/getLeavesByUserId/:userId", UserAuth, canViewUserLeaves, getLeavesByUserId);
 indexRoutes.put("/updateLeaveDetails/:id", UserAuth, canUpdateLeaveDetails, updateLeaveDetails);
 indexRoutes.delete("/deleteLeave/:id", UserAuth, canDeleteOwnLeave, deleteLeave);

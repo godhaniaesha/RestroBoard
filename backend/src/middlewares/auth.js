@@ -127,9 +127,9 @@ export const canUpdateLeaveDetails = async (req, res, next) => {
             return sendNotFoundResponse(res, "Leave not found");
         }
 
-        if (String(leave.userId) !== String(req.user._id)) {
-            return sendForbiddenResponse(res, "You can only update your own leave requests.");
-        }
+        // if (String(leave.userId) !== String(req.user._id)) {
+        //     return sendForbiddenResponse(res, "You can only update your own leave requests.");
+        // }
 
         if (leave.leave_status !== 'pending') {
             return sendForbiddenResponse(res, `You cannot update a leave that has already been ${leave.leave_status}.`);
