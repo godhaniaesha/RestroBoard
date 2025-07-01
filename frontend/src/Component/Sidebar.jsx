@@ -15,6 +15,7 @@ const icons = {
 
 function Sidebar({ userRole = 'admin', isOpen = true, onClose, onLogout }) {
   const [collapsed, setCollapsed] = useState(false);
+  
   const [hovered, setHovered] = useState(false);
   const navLinks = {
     admin: [
