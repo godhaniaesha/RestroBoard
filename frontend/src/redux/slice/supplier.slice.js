@@ -16,7 +16,7 @@ const getAuthHeader = () => {
 // 1. Create Supplier (with image upload)
 export const createSupplier = createAsyncThunk(
   "supplier/createSupplier",
-  async (formData, { rejectWithValue }) => {
+  async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
         `${API_URL}/createSupplier`,
@@ -30,7 +30,17 @@ export const createSupplier = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -38,12 +48,22 @@ export const createSupplier = createAsyncThunk(
 // 2. Get All Suppliers
 export const getAllSuppliers = createAsyncThunk(
   "supplier/getAllSuppliers",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getAllSuppliers`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -51,12 +71,22 @@ export const getAllSuppliers = createAsyncThunk(
 // 3. Get Supplier By ID
 export const getSupplierById = createAsyncThunk(
   "supplier/getSupplierById",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getSupplierById/${id}`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -64,7 +94,7 @@ export const getSupplierById = createAsyncThunk(
 // 4. ✅ FIXED: Update Supplier (with image)
 export const updateSupplier = createAsyncThunk(
   "supplier/updateSupplier",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, data }, thunkAPI) => {
     try {
       const response = await axios.put(
         `${API_URL}/updateSupplier/${id}`,
@@ -78,7 +108,17 @@ export const updateSupplier = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -86,12 +126,22 @@ export const updateSupplier = createAsyncThunk(
 // 5. Delete Supplier
 export const deleteSupplier = createAsyncThunk(
   "supplier/deleteSupplier",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteSupplier/${id}`, getAuthHeader());
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

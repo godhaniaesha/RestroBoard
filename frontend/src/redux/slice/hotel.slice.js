@@ -16,7 +16,7 @@ const getAuthHeader = () => {
 // 1. Create Hotel (with image)
 export const createHotel = createAsyncThunk(
   "hotel/createHotel",
-  async (formData, { rejectWithValue }) => {
+  async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
         `${API_URL}/createHotel`,
@@ -30,7 +30,17 @@ export const createHotel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -38,12 +48,22 @@ export const createHotel = createAsyncThunk(
 // 2. Get All Hotels
 export const getAllHotel = createAsyncThunk(
   "hotel/getAllHotel",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getAllHotel`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -51,12 +71,22 @@ export const getAllHotel = createAsyncThunk(
 // 3. Get Hotel By ID
 export const getHotelById = createAsyncThunk(
   "hotel/getHotelById",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getHotelById/${id}`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -64,7 +94,7 @@ export const getHotelById = createAsyncThunk(
 // 4. Update Hotel (with image)
 export const updateHotel = createAsyncThunk(
   "hotel/updateHotel",
-  async ({ id, data }, { rejectWithValue }) => {
+  async ({ id, data }, thunkAPI) => {
     try {
       const response = await axios.put(
         `${API_URL}/updateHotel/${id}`,
@@ -78,7 +108,17 @@ export const updateHotel = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -87,12 +127,22 @@ export const updateHotel = createAsyncThunk(
 // 5. Delete Hotel
 export const deleteHotel = createAsyncThunk(
   "hotel/deleteHotel",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteHotel/${id}`, getAuthHeader());
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

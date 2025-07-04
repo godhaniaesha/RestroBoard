@@ -11,7 +11,7 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post(`${API_URL}/loginUser`, credentials);
 
       console.log(response, "response");
-      
+
       return response;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -74,6 +74,8 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
+      alert("logoutUser");
+
       const token = localStorage.getItem('token'); // ⬅️ fetch token here
       const response = await axios.post(`${API_URL}/logoutUser`, {}, {
         headers: { Authorization: `Bearer ${token}` }

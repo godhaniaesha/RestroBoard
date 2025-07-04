@@ -128,10 +128,19 @@ function PendingLeave() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="Z_LP_Td" style={{ textAlign: "center" }}>
-                    No pending leaves found.
-                  </td>
-                </tr>
+                      <td colSpan="6" className="Z_empListNoDataContainer">
+                        <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                          <img
+                            src={require('../Image/hey.jpg')}
+                            alt="No data"
+                            className="Z_noDataImage"
+                          />
+                          {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                            No categories found.
+                          </div> */}
+                        </div>
+                      </td>
+                    </tr>
               )}
             </tbody>
           </table>

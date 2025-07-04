@@ -26,8 +26,8 @@ const isAdminOrManager = (req, res, next) => {
 indexRoutes.post("/createRegister", upload.single("image"), convertJfifToJpeg, createRegister)
 indexRoutes.get("/getRegisterById/:id", UserAuth, getRegisterById)
 indexRoutes.put("/updateProfileUser/:id", UserAuth, upload.single("image"), convertJfifToJpeg, updateProfileUser)
-indexRoutes.get("/getAllEmployee", UserAuth, isAdmin, getAllEmployee)
-indexRoutes.delete("/deleteEmployee/:id", UserAuth, isAdmin, deleteEmployee)
+indexRoutes.get("/getAllEmployee", UserAuth, isAdminOrManager, getAllEmployee)
+indexRoutes.delete("/deleteEmployee/:id", UserAuth, isAdminOrManager, deleteEmployee)
 
 // Supplier Routes (Admin or Manager)
 indexRoutes.post("/createSupplier", UserAuth, isAdminOrManager, upload.single("supplyer_image"), convertJfifToJpeg, createSupplier);

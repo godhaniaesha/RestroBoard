@@ -7,6 +7,7 @@ import XCustomSelect from "../Component/XCustomSelect";
 import "../Style/x_app.css";
 import { toast, ToastContainer } from "react-toastify";
 import { getRegisterById } from "../redux/slice/user.slice";
+import { useNavigate } from "react-router-dom";
 
 // Enum values
 const LEAVE_TYPES = [
@@ -15,7 +16,8 @@ const LEAVE_TYPES = [
   { value: "Emergency Leave", label: "Emergency Leave" },
 ];
 
-export default function AddLeave({ onNavigate }) {
+export default function AddLeave() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, success, error } = useSelector((state) => state.leave);
   const { userData } = useSelector((state) => state.user);
@@ -140,9 +142,9 @@ useEffect(() => {
       setReason("");
 
       // Navigate if needed
-      if (onNavigate) {
+      if (navigate) {
         setTimeout(() => {
-          onNavigate("leaves-approved"); // Replace with your desired page
+          navigate("leaves-approved"); // Replace with your desired page
         }, 1000); // slight delay for user to see toast
       }
     }
@@ -151,7 +153,7 @@ useEffect(() => {
       toast.error(error);
       dispatch(db_clearLeaveState());
     }
-  }, [success, error, dispatch, onNavigate]);
+  }, [success, error, dispatch, navigate]);
 
 
   return (

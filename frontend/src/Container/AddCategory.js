@@ -11,8 +11,10 @@ import {
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
-export default function AddCategory({ categoryId, onNavigate }) {
+export default function AddCategory({ categoryId}) {
+  const navigate = useNavigate();
   const id = categoryId;
   const dispatch = useDispatch();
 
@@ -49,13 +51,13 @@ export default function AddCategory({ categoryId, onNavigate }) {
   useEffect(() => {
     if (updateSuccess) {
       dispatch(resetUpdateSuccess());
-      onNavigate('category-list');
+      navigate('category-list');
     }
     if (createSuccess) {
       dispatch(resetCreateSuccess());
-      onNavigate('category-list');
+      navigate('category-list');
     }
-  }, [createSuccess, updateSuccess, onNavigate, dispatch]);
+  }, [createSuccess, updateSuccess, navigate, dispatch]);
 
 
   const handleImageChange = (e) => {
@@ -163,7 +165,7 @@ export default function AddCategory({ categoryId, onNavigate }) {
             </div>
             {error && <div className="col-12 text-danger">{error}</div>}
             <div className="col-12 d-flex justify-content-center x_btn_main">
-              <button type="button" className="btn btn-secondary mx-2" onClick={() => onNavigate('category-list')}>Cancel</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={() => navigate('category-list')}>Cancel</button>
               <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
                 {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
               </button>

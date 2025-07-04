@@ -16,12 +16,22 @@ const getAuthHeader = () => {
 // Create Leave
 export const db_createLeave = createAsyncThunk(
   "leave/createLeave",
-  async (leaveData, { rejectWithValue }) => {
+  async (leaveData, thunkAPI) => {
     try {
       const res = await axios.post(`${API_URL}/createLeave`, leaveData, getAuthHeader());
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error creating leave");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -29,12 +39,22 @@ export const db_createLeave = createAsyncThunk(
 // Get All Leaves (admin/manager only)
 export const db_getAllLeaves = createAsyncThunk(
   "leave/getAllLeaves",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const res = await axios.get(`${API_URL}/getAllLeaves`, getAuthHeader());
       return res.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error getting all leaves");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -42,12 +62,22 @@ export const db_getAllLeaves = createAsyncThunk(
 // Get Leaves by User ID
 export const db_getLeavesByUserId = createAsyncThunk(
   "leave/getLeavesByUserId",
-  async (userId, { rejectWithValue }) => {
+  async (userId, thunkAPI) => {
     try {
       const res = await axios.get(`${API_URL}/getLeavesByUserId/${userId}`, getAuthHeader());
       return res.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error getting user leaves");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -55,12 +85,22 @@ export const db_getLeavesByUserId = createAsyncThunk(
 // Update Leave Details
 export const db_updateLeaveDetails = createAsyncThunk(
   "leave/updateLeaveDetails",
-  async ({ id, leaveData }, { rejectWithValue }) => {
+  async ({ id, leaveData }, thunkAPI) => {
     try {
       const res = await axios.put(`${API_URL}/updateLeaveDetails/${id}`, leaveData, getAuthHeader());
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error updating leave");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -68,12 +108,22 @@ export const db_updateLeaveDetails = createAsyncThunk(
 // Delete Leave
 export const db_deleteLeave = createAsyncThunk(
   "leave/deleteLeave",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const res = await axios.delete(`${API_URL}/deleteLeave/${id}`, getAuthHeader());
       return { id, ...res.data };
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error deleting leave");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -81,12 +131,22 @@ export const db_deleteLeave = createAsyncThunk(
 // Update Leave Status
 export const db_updateLeaveStatus = createAsyncThunk(
   "leave/updateLeaveStatus",
-  async ({ id, statusData }, { rejectWithValue }) => {
+  async ({ id, statusData }, thunkAPI) => {
     try {
       const res = await axios.put(`${API_URL}/updateLeaveStatus/${id}`, statusData, getAuthHeader());
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error updating status");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -94,12 +154,22 @@ export const db_updateLeaveStatus = createAsyncThunk(
 // Get Pending Leaves
 export const db_getPendingLeaves = createAsyncThunk(
   "leave/getPendingLeaves",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const res = await axios.get(`${API_URL}/getPendingLeaves`, getAuthHeader());
       return res.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error getting pending leaves");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -107,12 +177,22 @@ export const db_getPendingLeaves = createAsyncThunk(
 // Get Approved Leaves
 export const db_getApprovedLeaves = createAsyncThunk(
   "leave/getApprovedLeaves",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const res = await axios.get(`${API_URL}/getApprovedLeaves`, getAuthHeader());
       return res.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error getting approved leaves");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -120,12 +200,22 @@ export const db_getApprovedLeaves = createAsyncThunk(
 // Get Rejected Leaves
 export const db_getRejectedLeaves = createAsyncThunk(
   "leave/getRejectedLeaves",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const res = await axios.get(`${API_URL}/getRejectedLeaves`, getAuthHeader());
       return res.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error getting rejected leaves");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -159,12 +249,12 @@ const leaveSlice = createSlice({
       .addCase(db_createLeave.pending, (state) => {
         state.loading = true;
       })
-     .addCase(db_createLeave.fulfilled, (state, action) => {
-  state.loading = false;
-  state.success = "Leave created successfully";
-  state.leaves.push(action.payload);
-  state.userLeaves.push(action.payload); // ✅ Add this
-})
+      .addCase(db_createLeave.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = "Leave created successfully";
+        state.leaves.push(action.payload);
+        state.userLeaves.push(action.payload); // ✅ Add this
+      })
       .addCase(db_createLeave.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;

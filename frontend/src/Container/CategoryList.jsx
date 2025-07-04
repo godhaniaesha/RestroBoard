@@ -6,10 +6,11 @@ import { fetchCategories, deleteCategory } from "../redux/slice/category.slice";
 import { FaRegEdit, FaRegTrashAlt, FaCaretLeft, FaCaretRight } from "react-icons/fa";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 import Spinner from "../Spinner";
+import { useNavigate } from "react-router-dom";
 
-function CategoryList({ onNavigate }) {
+function CategoryList() {
   const dispatch = useDispatch();
-  // const navigate = useNavigate(); // No longer needed
+  const navigate = useNavigate(); // No longer needed
   const { categories, loading, error } = useSelector((state) => state.category);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -22,7 +23,7 @@ function CategoryList({ onNavigate }) {
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    onNavigate('category-add', id);
+    navigate('category-add', id);
   };
 
   const openDeleteModal = (category) => {

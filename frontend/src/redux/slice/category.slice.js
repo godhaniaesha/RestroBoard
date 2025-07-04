@@ -3,11 +3,11 @@ import axios from 'axios';
 
 export const fetchCategories = createAsyncThunk(
     'category/fetchCategories',
-    async (_, { rejectWithValue }) => {
+    async (_, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return rejectWithValue('Token not found in local storage.');
+                return thunkAPI.rejectWithValue('Token not found in local storage.');
             }
             const config = {
                 headers: {
@@ -15,39 +15,59 @@ export const fetchCategories = createAsyncThunk(
                 },
             };
             const response = await axios.get('http://localhost:3000/api/getAllCategories', config);
-            console.log(response.data.result,'category');
-            
+            console.log(response.data.result, 'category');
+
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+        } catch (err) {
+            const message = err.response?.data?.message || "Error occurred";
+            console.log(message, "message");
+
+            console.log(message === "Invalid token.", "message");
+
+            if (message === "Invalid token.") {
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+            }
+            return thunkAPI.thunkAPI.rejectWithValue(message);
         }
     }
 );
 
 export const getCategoryById = createAsyncThunk(
     'category/getCategoryById',
-    async (id, { rejectWithValue }) => {
+    async (id, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return rejectWithValue('Token not found in local storage.');
+                return thunkAPI.rejectWithValue('Token not found in local storage.');
             }
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const response = await axios.get(`http://localhost:3000/api/getCategoryById/${id}`, config);
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+        } catch (err) {
+            const message = err.response?.data?.message || "Error occurred";
+            console.log(message, "message");
+
+            console.log(message === "Invalid token.", "message");
+
+            if (message === "Invalid token.") {
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+            }
+            return thunkAPI.thunkAPI.rejectWithValue(message);
         }
     }
 );
 
 export const updateCategory = createAsyncThunk(
     'category/updateCategory',
-    async ({ id, formData }, { rejectWithValue }) => {
+    async ({ id, formData }, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return rejectWithValue('Token not found in local storage.');
+                return thunkAPI.rejectWithValue('Token not found in local storage.');
             }
             const config = {
                 headers: {
@@ -57,19 +77,29 @@ export const updateCategory = createAsyncThunk(
             };
             const response = await axios.put(`http://localhost:3000/api/updateCategory/${id}`, formData, config);
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+        } catch (err) {
+            const message = err.response?.data?.message || "Error occurred";
+            console.log(message, "message");
+
+            console.log(message === "Invalid token.", "message");
+
+            if (message === "Invalid token.") {
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+            }
+            return thunkAPI.thunkAPI.rejectWithValue(message);
         }
     }
 );
 
 export const createCategory = createAsyncThunk(
     'category/createCategory',
-    async (formData, { rejectWithValue }) => {
+    async (formData, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return rejectWithValue('Token not found in local storage.');
+                return thunkAPI.rejectWithValue('Token not found in local storage.');
             }
             const config = {
                 headers: {
@@ -79,25 +109,45 @@ export const createCategory = createAsyncThunk(
             };
             const response = await axios.post('http://localhost:3000/api/createCategory', formData, config);
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+        } catch (err) {
+            const message = err.response?.data?.message || "Error occurred";
+            console.log(message, "message");
+
+            console.log(message === "Invalid token.", "message");
+
+            if (message === "Invalid token.") {
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+            }
+            return thunkAPI.thunkAPI.rejectWithValue(message);
         }
     }
 );
 
 export const deleteCategory = createAsyncThunk(
     'category/deleteCategory',
-    async (id, { rejectWithValue }) => {
+    async (id, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return rejectWithValue('Token not found in local storage.');
+                return thunkAPI.rejectWithValue('Token not found in local storage.');
             }
             const config = { headers: { Authorization: `Bearer ${token}` } };
             await axios.delete(`http://localhost:3000/api/deleteCategory/${id}`, config);
             return id;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
+        } catch (err) {
+            const message = err.response?.data?.message || "Error occurred";
+            console.log(message, "message");
+
+            console.log(message === "Invalid token.", "message");
+
+            if (message === "Invalid token.") {
+                localStorage.removeItem('user');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+            }
+            return thunkAPI.thunkAPI.rejectWithValue(message);
         }
     }
 );

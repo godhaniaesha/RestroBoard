@@ -16,7 +16,7 @@ const getAuthHeader = () => {
 // 1. Create Register (with image upload)
 export const createRegister = createAsyncThunk(
   "user/createRegister",
-  async (formData, { rejectWithValue }) => {
+  async (formData, thunkAPI) => {
     try {
       const response = await axios.post(
         `${API_URL}/createRegister`,
@@ -29,7 +29,17 @@ export const createRegister = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -37,12 +47,22 @@ export const createRegister = createAsyncThunk(
 // 2. Get Register By ID
 export const getRegisterById = createAsyncThunk(
   "user/getRegisterById",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getRegisterById/${id}`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -50,7 +70,7 @@ export const getRegisterById = createAsyncThunk(
 // 3. Update Profile User (with image)
 export const updateProfileUser = createAsyncThunk(
   "user/updateProfileUser",
-  async ({ id, formData }, { rejectWithValue }) => {
+  async ({ id, formData }, thunkAPI) => {
     try {
       const response = await axios.put(
         `${API_URL}/updateProfileUser/${id}`,
@@ -64,7 +84,17 @@ export const updateProfileUser = createAsyncThunk(
       );
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -72,12 +102,22 @@ export const updateProfileUser = createAsyncThunk(
 // 4. Get All Employees (Admin only)
 export const getAllEmployee = createAsyncThunk(
   "user/getAllEmployee",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getAllEmployee`, getAuthHeader());
       return response.data.result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -85,12 +125,22 @@ export const getAllEmployee = createAsyncThunk(
 // 5. Delete Employee (Admin only)
 export const deleteEmployee = createAsyncThunk(
   "user/deleteEmployee",
-  async (id, { rejectWithValue }) => {
+  async (id, thunkAPI) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteEmployee/${id}`, getAuthHeader());
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

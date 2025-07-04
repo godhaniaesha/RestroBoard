@@ -24,7 +24,7 @@ const Sidebar = ({ activeItem, setActiveItem, userRole, isOpen, toggleSidebar })
       { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
       { id: 'leaves', label: 'Leave Approvals', icon: <FaCalendarAlt /> },
     ],
-    Chef: [
+    chef: [
       { id: 'ingredients', label: 'Ingredients', icon: <FaUtensils /> },
       { id: 'orders', label: 'Orders', icon: <FaClipboardList /> },
       { id: 'leave-apply', label: 'Apply Leave', icon: <FaCalendarAlt /> },

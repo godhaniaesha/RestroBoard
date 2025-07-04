@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { logoutUser } from "./auth.slice";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -15,15 +16,23 @@ const getAuthHeader = () => {
 // 1. Get Total Expense
 export const getTotalExpense = createAsyncThunk(
   "dashboard/getTotalExpense",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getTotalExpense`, getAuthHeader());
-      console.log("API response (getTotalExpense):", response.data);
       const result = response.data.result || response.data;
-      console.log("Returned (getTotalExpense):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -31,7 +40,7 @@ export const getTotalExpense = createAsyncThunk(
 // 2. Get Employee Counts
 export const getEmployeeCounts = createAsyncThunk(
   "dashboard/getEmployeeCounts",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getEmployeeCounts`, getAuthHeader());
       console.log("API response (getEmployeeCounts):", response.data);
@@ -39,7 +48,17 @@ export const getEmployeeCounts = createAsyncThunk(
       console.log("Returned (getEmployeeCounts):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -47,7 +66,7 @@ export const getEmployeeCounts = createAsyncThunk(
 // 3. Get Supplier Count
 export const getSupplierCount = createAsyncThunk(
   "dashboard/getSupplierCount",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getSupplierCount`, getAuthHeader());
       console.log("API response (getSupplierCount):", response.data);
@@ -55,7 +74,17 @@ export const getSupplierCount = createAsyncThunk(
       console.log("Returned (getSupplierCount):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -63,7 +92,7 @@ export const getSupplierCount = createAsyncThunk(
 // 4. Get Weekly Item Additions
 export const getWeeklyItemAdditions = createAsyncThunk(
   "dashboard/getWeeklyItemAdditions",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getWeeklyItemAdditions`, getAuthHeader());
       console.log("API response (getWeeklyItemAdditions):", response.data);
@@ -71,7 +100,17 @@ export const getWeeklyItemAdditions = createAsyncThunk(
       console.log("Returned (getWeeklyItemAdditions):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -79,7 +118,7 @@ export const getWeeklyItemAdditions = createAsyncThunk(
 // 5. Get Top Selling Products
 export const getTopSellingProducts = createAsyncThunk(
   "dashboard/getTopSellingProducts",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getTopSellingProducts`, getAuthHeader());
       console.log("API response (getTopSellingProducts):", response.data);
@@ -87,7 +126,17 @@ export const getTopSellingProducts = createAsyncThunk(
       console.log("Returned (getTopSellingProducts):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -95,7 +144,7 @@ export const getTopSellingProducts = createAsyncThunk(
 // 6. Get Recent Orders
 export const getRecentOrders = createAsyncThunk(
   "dashboard/getRecentOrders",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getRecentOrders`, getAuthHeader());
       console.log("API response (getRecentOrders):", response.data);
@@ -103,7 +152,17 @@ export const getRecentOrders = createAsyncThunk(
       console.log("Returned (getRecentOrders):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -111,7 +170,7 @@ export const getRecentOrders = createAsyncThunk(
 // 7. Get Total Items
 export const getTotalItems = createAsyncThunk(
   "dashboard/getTotalItems",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getTotalItems`, getAuthHeader());
       console.log("API response (getTotalItems):", response.data);
@@ -119,7 +178,17 @@ export const getTotalItems = createAsyncThunk(
       console.log("Returned (getTotalItems):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -127,7 +196,7 @@ export const getTotalItems = createAsyncThunk(
 // 8. Get Total Values
 export const getTotalValues = createAsyncThunk(
   "dashboard/getTotalValues",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getTotalValues`, getAuthHeader());
       console.log("API response (getTotalValues):", response.data);
@@ -135,7 +204,17 @@ export const getTotalValues = createAsyncThunk(
       console.log("Returned (getTotalValues):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -143,7 +222,7 @@ export const getTotalValues = createAsyncThunk(
 // 9. Get Category Wise Stock
 export const getCategoryWiseStock = createAsyncThunk(
   "dashboard/getCategoryWiseStock",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getCategoryWiseStock`, getAuthHeader());
       console.log("API response (getCategoryWiseStock):", response.data);
@@ -151,7 +230,17 @@ export const getCategoryWiseStock = createAsyncThunk(
       console.log("Returned (getCategoryWiseStock):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -159,7 +248,7 @@ export const getCategoryWiseStock = createAsyncThunk(
 // 10. Get Low Stock Items
 export const getLowStockItems = createAsyncThunk(
   "dashboard/getLowStockItems",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getLowStockItems`, getAuthHeader());
       console.log("API response (getLowStockItems):", response.data);
@@ -167,7 +256,17 @@ export const getLowStockItems = createAsyncThunk(
       console.log("Returned (getLowStockItems):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -175,7 +274,7 @@ export const getLowStockItems = createAsyncThunk(
 // 11. Get Out Of Stock Items
 export const getOutOfStockItems = createAsyncThunk(
   "dashboard/getOutOfStockItems",
-  async (_, { rejectWithValue }) => {
+  async (_, thunkAPI) => {
     try {
       const response = await axios.get(`${API_URL}/getOutOfStockItems`, getAuthHeader());
       console.log("API response (getOutOfStockItems):", response.data);
@@ -183,7 +282,17 @@ export const getOutOfStockItems = createAsyncThunk(
       console.log("Returned (getOutOfStockItems):", result);
       return result;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Error occurred");
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+
+      console.log(message === "Invalid token.", "message");
+
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

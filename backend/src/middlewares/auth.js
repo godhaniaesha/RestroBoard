@@ -79,7 +79,7 @@ export const canCreateLeave = (req, res, next) => {
     if (role === 'manager' || role === 'chef' || role === 'waiter') {
         return next();
     }
-    return sendForbiddenResponse(res, "Access denied. Only Managers, Saifs, and Waiters can create leave requests.");
+    return sendForbiddenResponse(res, "Access denied. Only Managers, chefs, and Waiters can create leave requests.");
 };
 
 export const canChangeLeaveStatus = async (req, res, next) => {

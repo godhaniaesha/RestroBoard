@@ -60,7 +60,7 @@ export default function HotelOverview() {
                 <span><FaMapMarkerAlt className="me-2 text-primary" />{hotel?.address || '123 Main Street, Food City, India'}</span><br />
                 <span><FaPhoneAlt className="me-2 text-primary" />{hotel?.phone || '+91 98765 43210'}</span>
               </div>
-              <Button variant="dark" className={styles['d_ho-btn']}>Book Now</Button>
+              {/* <Button variant="dark" className={styles['d_ho-btn']}>Book Now</Button> */}
             </Col>
             <Col md={6} className={`text-center ${styles['d_ho-hero-imgcol']}`}>
               <div className={styles['d_ho-hero-imgwrap']}>

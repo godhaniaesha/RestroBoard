@@ -10,8 +10,10 @@ import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
 import Spinner from "../Spinner";
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-export default function EditSupplier({ setActiveItem, supplierId: propSupplierId, onNavigate }) {
+export default function EditSupplier({ setActiveItem, supplierId: propSupplierId}) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { supplierData, loading, success, error } = useSelector(
     (state) => state.supplier
@@ -70,14 +72,14 @@ export default function EditSupplier({ setActiveItem, supplierId: propSupplierId
       setSupplierImg(null);
       setSupplierImgPreviewUrl(null);
       localStorage.removeItem("editSupplierId");
-      onNavigate("supplier-list");
+      navigate("supplier-list");
     }
 
     if (error) {
       toast.error(error);
       dispatch(clearSupplierState());
     }
-  }, [success, error, dispatch, onNavigate]);
+  }, [success, error, dispatch, navigate]);
 
   const removeSupplierImage = () => {
     setSupplierImg(null);
@@ -247,7 +249,7 @@ export default function EditSupplier({ setActiveItem, supplierId: propSupplierId
               className="btn btn-secondary mx-2"
               onClick={() => {
                 localStorage.removeItem("editSupplierId");
-                onNavigate("supplier-list");
+                navigate("supplier-list");
               }}
             >
               Cancel

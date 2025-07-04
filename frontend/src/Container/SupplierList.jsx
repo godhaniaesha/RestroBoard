@@ -5,10 +5,12 @@ import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import "../Style/Z_table.css";
 import Spinner from "../Spinner";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
+import { useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 5;
 
-function SupplierList({ onNavigate }) {
+function SupplierList() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { suppliers, loading } = useSelector((state) => state.supplier);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,7 +38,7 @@ function SupplierList({ onNavigate }) {
 
   const handleEdit = (id) => {
     localStorage.setItem('supplierId-local', id)
-    onNavigate('supplier-edit', id)
+    navigate('supplier-edit', id)
   };
 
   const handleDelete = (id) => {

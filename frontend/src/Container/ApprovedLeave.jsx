@@ -8,8 +8,10 @@ import { getRegisterById } from "../redux/slice/user.slice";
 import { jwtDecode } from "jwt-decode";
 import "../Style/Z_table.css";
 import { FaCaretLeft, FaCaretRight, FaRegEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-function ApprovedLeave({ onNavigate }) {
+function ApprovedLeave() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -213,7 +215,7 @@ function ApprovedLeave({ onNavigate }) {
                               onClick={() => {
                                 if (!isEditDisabled) {
                                   localStorage.setItem("editleaveid", leave._id);
-                                  onNavigate("edit-leaves", leave._id);
+                                  navigate("edit-leaves", leave._id);
                                   setShouldRefresh(true); // trigger refresh on return
                                 }
                               }}
@@ -232,10 +234,19 @@ function ApprovedLeave({ onNavigate }) {
                   })
                 ) : (
                   <tr>
-                    <td className="Z_AL_Td" colSpan={isAdminOrManager ? 8 : 7}>
-                      No leave records found.
-                    </td>
-                  </tr>
+                  <td colSpan="12" className="Z_empListNoDataContainer">
+                    <div style={{ textAlign: "center", padding: "2rem 0" }}>
+                      <img
+                        src={require('../Image/hey.jpg')}
+                        alt="No data"
+                        className="Z_noDataImage"
+                      />
+                      {/* <div style={{ color: "#888", marginTop: "1rem", fontSize: "1.1rem" }}>
+                        No categories found.
+                      </div> */}
+                    </div>
+                  </td>
+                </tr>
                 )}
               </tbody>
             </table>

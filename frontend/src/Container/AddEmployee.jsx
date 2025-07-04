@@ -11,9 +11,11 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-function AddEmployee({ employeeId, onSuccess, onCancel }) {
+function AddEmployee({ employeeId, onSuccess, onCancel}) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     loading,
     error,
@@ -37,7 +39,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
 
   const roleOptions = [
     { value: "manager", label: "Manager" },
-    { value: "chef", label: "Chef" },
+    { value: "chef", label: "chef" },
     { value: "waiter", label: "Waiter" },
   ];
 
@@ -92,6 +94,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel }) {
         });
         setImageFile(null);
         setImagePreviewUrl(null);
+        navigate('/employees-list');
         const fileInput = document.getElementById("imageInput");
         if (fileInput) fileInput.value = "";
       }

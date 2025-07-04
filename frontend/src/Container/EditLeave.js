@@ -11,6 +11,7 @@ import CustomCalendar from "../Component/CustomCalendar";
 import XCustomSelect from "../Component/XCustomSelect";
 import { toast, ToastContainer } from "react-toastify";
 import { getRegisterById } from "../redux/slice/user.slice";
+import { useNavigate } from "react-router-dom";
 
 const LEAVE_TYPES = [
     { value: "Sick Leave", label: "Sick Leave" },
@@ -25,7 +26,8 @@ const LEAVE_STATUSES = [
     { value: "cancelled", label: "Cancelled" },
 ];
 
-export default function EditLeave({ onNavigate, leaveid }) {
+export default function EditLeave({  leaveid }) {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { loading, success, error, leaves } = useSelector((state) => state.leave);
     const { userData } = useSelector((state) => state.user);
@@ -179,8 +181,8 @@ export default function EditLeave({ onNavigate, leaveid }) {
             setEndDate("");
             setEndTime("");
             setReason("");
-            if (onNavigate) {
-                onNavigate("leaves-approved");
+            if (navigate) {
+                navigate("leaves-approved");
             }
         }
 
@@ -199,13 +201,13 @@ export default function EditLeave({ onNavigate, leaveid }) {
 
             // Delay navigation to allow toast to display
             setTimeout(() => {
-                if (onNavigate) {
-                    onNavigate("leaves-approved");
+                if (navigate) {
+                    navigate("leaves-approved");
                 }
             }, 2500); // 2.5 seconds
         }
 
-    }, [success, error, dispatch, leaveId, onNavigate]);
+    }, [success, error, dispatch, leaveId, navigate]);
 
     return (
         <>
@@ -315,7 +317,7 @@ export default function EditLeave({ onNavigate, leaveid }) {
                             <button
                                 type="button"
                                 className="btn btn-secondary mx-2"
-                                onClick={() => onNavigate && onNavigate("leaves-approved")}
+                                onClick={() => navigate && navigate("leaves-approved")}
                             >
                                 Cancel
                             </button>

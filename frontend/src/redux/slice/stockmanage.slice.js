@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const fetchItems = createAsyncThunk(
     'stock/fetchItems',
-    async (_, { rejectWithValue }) => {
+    async (_, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             const config = token
@@ -12,15 +12,25 @@ export const fetchItems = createAsyncThunk(
             const response = await axios.get('http://localhost:3000/api/getAllItems', config);
             // Adjust if your backend returns data in a different property
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
-        }
+} catch (err) {
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+      
+      console.log(message === "Invalid token.", "message");
+      
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
     }
 );
 
 export const deleteItem = createAsyncThunk(
     'stock/deleteItem',
-    async (id, { rejectWithValue }) => {
+    async (id, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             const config = token
@@ -28,15 +38,25 @@ export const deleteItem = createAsyncThunk(
                 : {};
             await axios.delete(`http://localhost:3000/api/deleteItem/${id}`, config);
             return id;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
-        }
+} catch (err) {
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+      
+      console.log(message === "Invalid token.", "message");
+      
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
     }
 );
 
 export const createItem = createAsyncThunk(
     'stock/createItem',
-    async (formData, { rejectWithValue }) => {
+    async (formData, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             const config = {
@@ -48,15 +68,25 @@ export const createItem = createAsyncThunk(
             const response = await axios.post('http://localhost:3000/api/createItem', formData, config);
             // Adjust if your backend returns data in a different property
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
-        }
+} catch (err) {
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+      
+      console.log(message === "Invalid token.", "message");
+      
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
     }
 );
 
 export const updateItem = createAsyncThunk(
     'stock/updateItem',
-    async ({ id, formData }, { rejectWithValue }) => {
+    async ({ id, formData }, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             const config = {
@@ -67,15 +97,25 @@ export const updateItem = createAsyncThunk(
             };
             const response = await axios.put(`http://localhost:3000/api/updateItem/${id}`, formData, config);
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
-        }
+} catch (err) {
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+      
+      console.log(message === "Invalid token.", "message");
+      
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
     }
 );
 
 export const fetchItemById = createAsyncThunk(
     'stock/fetchItemById',
-    async (id, { rejectWithValue }) => {
+    async (id, thunkAPI) => {
         try {
             const token = localStorage.getItem('token');
             const config = token
@@ -83,9 +123,19 @@ export const fetchItemById = createAsyncThunk(
                 : {};
             const response = await axios.get(`http://localhost:3000/api/getItemById/${id}`, config);
             return response.data.result;
-        } catch (error) {
-            return rejectWithValue(error.response?.data?.message || error.message);
-        }
+} catch (err) {
+      const message = err.response?.data?.message || "Error occurred";
+      console.log(message, "message");
+      
+      console.log(message === "Invalid token.", "message");
+      
+      if (message === "Invalid token.") {
+        localStorage.removeItem('user');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
     }
 );
 

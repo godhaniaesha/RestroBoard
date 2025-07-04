@@ -8,8 +8,10 @@ import '../Style/x_app.css';
 import uplod from '../Image/cloud-upload.svg';
 import Spinner from '../Spinner';
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
-export default function AddDishes({onNavigate}) {
+export default function AddDishes() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { categories, loading: categoryLoading } = useSelector((state) => state.category);
 
@@ -47,7 +49,7 @@ export default function AddDishes({onNavigate}) {
   };
 
   const badgeOptions = [
-    'Best Seller', "Chef's Choice", 'Most Loved', 'South Indian Special',
+    'Best Seller', "chef's Choice", 'Most Loved', 'South Indian Special',
     'Most Ordered', 'Snack Star', 'Vegetarian Delight',
     'Tandoor Special', 'Punjabi Favorite', 'Mumbai Street Food',
   ];
@@ -72,7 +74,7 @@ export default function AddDishes({onNavigate}) {
     const resultAction = await dispatch(createDish(formData));
     if (createDish.fulfilled.match(resultAction)) {
       toast.success('Dish added successfully!');
-      onNavigate('hotel-information');
+      navigate('hotel-information');
       setForm({
         name: '',
         description: '',

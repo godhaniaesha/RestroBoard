@@ -207,9 +207,9 @@ export const getAllEmployee = async (req, res) => {
             return sendUnauthorizedResponse(res, "Authentication required");
         }
 
-        if (!req.user.isAdmin) {
-            return sendForbiddenResponse(res, "Access denied. Only admins can view all Employee.");
-        }
+        // if (!req.user.isAdmin) {
+        //     return sendForbiddenResponse(res, "Access denied. Only admins can view all Employee.");
+        // }
 
         // Find all Employee with role 'waiter'
         const Employee = await Register.find({

@@ -17,7 +17,7 @@ const dishSchema = mongoose.Schema({
     },
     badge_Tag: {
         type: String,
-        enum: ["Best Seller", "Chef's Choice", "Most Loved", "South Indian Special", "Most Ordered", "Snack Star", "Vegetarian Delight", "Tandoor Special", "Punjabi Favorite"]
+        enum: ["Best Seller", "chef's Choice", "Most Loved", "South Indian Special", "Most Ordered", "Snack Star", "Vegetarian Delight", "Tandoor Special", "Punjabi Favorite"]
     },
     description: {
         type: String

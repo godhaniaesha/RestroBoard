@@ -6,8 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
 import { IoClose } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-export default function AddHO({ onNavigate }) {
+export default function AddHO() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { hotels } = useSelector((state) => state.hotel);
 
@@ -117,7 +119,7 @@ export default function AddHO({ onNavigate }) {
         await dispatch(createHotel(formData)).unwrap();
         toast.success("Hotel created successfully!");
       }
-      onNavigate("hotel-information");
+      navigate("hotel-information");
     } catch (error) {
       toast.error(error?.message || "Failed to save hotel.");
     }
