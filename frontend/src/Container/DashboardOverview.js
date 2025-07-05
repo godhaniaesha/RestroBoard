@@ -94,6 +94,11 @@ export default function DashboardOverview() {
 
   const confirmDelete = () => {
     if (itemToDelete) {
+      dispatch(deleteItem(itemToDelete._id)).then(() => {
+        // Refresh dashboard data after delete
+        dispatch(getLowStockItems());
+        dispatch(getOutOfStockItems());
+      });
       closeDeleteModal();
     }
   };
@@ -104,6 +109,9 @@ export default function DashboardOverview() {
 
   const handleFormSuccess = () => {
     setEditItemId(null);
+    // Refresh dashboard data after edit
+    dispatch(getLowStockItems());
+    dispatch(getOutOfStockItems());
   };
 
   // Combine low stock and out of stock items from dashboard

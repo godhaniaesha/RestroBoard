@@ -51,11 +51,11 @@ export default function AddCategory({ categoryId}) {
   useEffect(() => {
     if (updateSuccess) {
       dispatch(resetUpdateSuccess());
-      navigate('category-list');
+      navigate('/category-list');
     }
     if (createSuccess) {
       dispatch(resetCreateSuccess());
-      navigate('category-list');
+      navigate('/category-list');
     }
   }, [createSuccess, updateSuccess, navigate, dispatch]);
 
@@ -165,7 +165,7 @@ export default function AddCategory({ categoryId}) {
             </div>
             {error && <div className="col-12 text-danger">{error}</div>}
             <div className="col-12 d-flex justify-content-center x_btn_main">
-              <button type="button" className="btn btn-secondary mx-2" onClick={() => navigate('category-list')}>Cancel</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={() => navigate('/category-list')}>Cancel</button>
               <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
                 {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
               </button>

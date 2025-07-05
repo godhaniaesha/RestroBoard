@@ -227,6 +227,8 @@ function EmployeeList({ setActiveItem }) {
                     )}
                   </tbody>
                 </table>
+                {totalPages > 1 && (
+
                 <div className="Z_pagination_container">
                   <button
                     className="Z_pagination_btn"
@@ -282,8 +284,9 @@ function EmployeeList({ setActiveItem }) {
                     disabled={currentPage === totalPages}
                   >
                     <FaCaretRight />
-                  </button>
-                </div>
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>

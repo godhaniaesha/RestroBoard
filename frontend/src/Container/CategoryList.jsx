@@ -23,7 +23,7 @@ function CategoryList() {
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    navigate('category-add', id);
+    navigate('/category-add', id);
   };
 
   const openDeleteModal = (category) => {
@@ -148,6 +148,7 @@ function CategoryList() {
                   )}
               </tbody>
             </table>
+            {totalPages > 1 && (
             <div className="Z_pagination_container">
               <button
                 className="Z_pagination_btn"
@@ -205,6 +206,7 @@ function CategoryList() {
                 <FaCaretRight />
               </button>
             </div>
+            )}
           </div>
         </div>
       </section>

@@ -250,7 +250,7 @@ function ApprovedLeave() {
                 )}
               </tbody>
             </table>
-
+            {totalPages > 1 && (
             <div className="Z_pagination_container">
               <button
                 className="Z_pagination_btn"
@@ -280,6 +280,7 @@ function ApprovedLeave() {
                 <FaCaretRight />
               </button>
             </div>
+            )}
           </div>
         )}
       </div>
