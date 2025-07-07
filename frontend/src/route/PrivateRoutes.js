@@ -23,6 +23,7 @@ import ApprovedLeave from '../Container/ApprovedLeave';
 import Calender from '../Container/Calender';
 import AddLeave from '../Container/AddLeave';
 import Profile from '../Container/Profile';
+import EditLeave from '../Container/EditLeave';
 
 const PrivateRoutes = () => {
     return (
@@ -51,6 +52,7 @@ const PrivateRoutes = () => {
                 <Route path="leaves-approved" element={<ApprovedLeave />} />
                 <Route path="leaves-calendar" element={<Calender />} />
                 <Route path="leave-add" element={<AddLeave />} />
+                <Route path="leave-edit/:id" element={<EditLeave />} />
                 <Route path="profile" element={<Profile />} />
             </Route>
         </Routes>

@@ -26,7 +26,10 @@ const LEAVE_STATUSES = [
     { value: "cancelled", label: "Cancelled" },
 ];
 
-export default function EditLeave({  leaveid }) {
+
+export default function EditLeave() {
+    const params = new URLSearchParams(window.location.search);
+    const leaveid = params?.id || null; // Get leave ID from URL params if available
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { loading, success, error, leaves } = useSelector((state) => state.leave);
@@ -149,7 +152,7 @@ export default function EditLeave({  leaveid }) {
         console.log("Current User Role:", currentUserRole);
 
         const payload = {
-           
+
             leave_type: selectedLeaveType.value,
             start_date: new Date(isoStartDate).toISOString(),
             start_time: startTime,
@@ -182,7 +185,7 @@ export default function EditLeave({  leaveid }) {
             setEndTime("");
             setReason("");
             if (navigate) {
-                navigate("leaves-approved");
+                navigate("/leaves-approved");
             }
         }
 
@@ -202,7 +205,7 @@ export default function EditLeave({  leaveid }) {
             // Delay navigation to allow toast to display
             setTimeout(() => {
                 if (navigate) {
-                    navigate("leaves-approved");
+                    navigate("/leaves-approved");
                 }
             }, 2500); // 2.5 seconds
         }
@@ -317,7 +320,7 @@ export default function EditLeave({  leaveid }) {
                             <button
                                 type="button"
                                 className="btn btn-secondary mx-2"
-                                onClick={() => navigate && navigate("leaves-approved")}
+                                onClick={() => navigate && navigate("/leaves-approved")}
                             >
                                 Cancel
                             </button>

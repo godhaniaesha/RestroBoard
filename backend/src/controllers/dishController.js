@@ -37,7 +37,7 @@ export const createDish = async (req, res) => {
                     console.error("Failed to delete unused image:", err);
                 }
             }
-            return sendBadRequestResponse(res, "dish_name already registered for a Dish.");
+            return sendBadRequestResponse(res, `${dish_name} already exists`);
         }
 
         // Check if category_id exists

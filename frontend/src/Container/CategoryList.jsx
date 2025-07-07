@@ -23,7 +23,8 @@ function CategoryList() {
   }, [dispatch]);
 
   const handleEdit = (id) => {
-    navigate('/category-add', id);
+    localStorage.setItem("categoryId", id);
+    navigate('/category-add');
   };
 
   const openDeleteModal = (category) => {

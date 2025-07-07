@@ -192,15 +192,13 @@ function ApprovedLeave() {
                         <td className="Z_AL_Td">
                           {approverNames[leave.approvedBy] || "Not updated"}
                         </td>
-                        <td className="Z_AL_Td">
-                          <span
-                            className={`Z_AL_status Z_AL_status--${
-                              leave.leave_status || "pending"
-                            }`}
-                          >
-                            {leave.leave_status || "Pending"}
-                          </span>
-                        </td>
+                       <td className="Z_AL_Td">
+  <span
+    className={`Z_AL_status Z_AL_status--${(leave.leave_status || "pending").toLowerCase()}`}
+  >
+    {leave.leave_status || "Pending"}
+  </span>
+</td>
                         {isAdminOrManager && (
                           <td className="Z_AL_Td">
                             <button
@@ -215,7 +213,7 @@ function ApprovedLeave() {
                               onClick={() => {
                                 if (!isEditDisabled) {
                                   localStorage.setItem("editleaveid", leave._id);
-                                  navigate("edit-leaves", leave._id);
+                                  navigate(`/leave-edit/${leave._id}`);
                                   setShouldRefresh(true); // trigger refresh on return
                                 }
                               }}

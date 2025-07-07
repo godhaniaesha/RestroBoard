@@ -119,7 +119,7 @@ export default function AddHO() {
         await dispatch(createHotel(formData)).unwrap();
         toast.success("Hotel created successfully!");
       }
-      navigate("hotel-information");
+      navigate("/hotel-information");
     } catch (error) {
       toast.error(error?.message || "Failed to save hotel.");
     }

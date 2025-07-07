@@ -219,8 +219,9 @@ function Register() {
                     style={{
                       position: "absolute",
                       right: 30,
-                      top: "37%",
+                      top: "17%",
                       cursor: "pointer",
+                      color: "#1f2e3d",
                     }}
                     onClick={() => setShowPassword((prev) => !prev)}
                   >
@@ -322,8 +323,9 @@ function Register() {
                     style={{
                       position: "absolute",
                       right: 30,
-                      top: "36%",
+                      top: "17%",
                       cursor: "pointer",
+                      color: "#1f2e3d",
                     }}
                     onClick={() => setShowNewPassword((prev) => !prev)}
                   >
@@ -343,8 +345,9 @@ function Register() {
                     style={{
                       position: "absolute",
                       right: 30,
-                      top: "36%",
+                      top: "17%",
                       cursor: "pointer",
+                      color: "#1f2e3d",
                     }}
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                   >
