@@ -295,7 +295,7 @@ export default function AddHO() {
                 onChange={handleChange}
                 placeholder="Describe your hotel..."
                 required
-                maxLength={300}
+                maxLength={500}
               ></textarea>
             </div>
 

@@ -24,6 +24,7 @@ import Calender from '../Container/Calender';
 import AddLeave from '../Container/AddLeave';
 import Profile from '../Container/Profile';
 import EditLeave from '../Container/EditLeave';
+import { AddCategoryWrapper } from '../Container/AddCategory';
 
 const PrivateRoutes = () => {
     return (
@@ -36,7 +37,7 @@ const PrivateRoutes = () => {
                 <Route path="employees-edit/:id" element={<EditEmployee />} />
                 <Route path="category-list" element={<CategoryList />} />
                 <Route path="category-add" element={<AddCategory />} />
-                <Route path="category-edit/:id" element={<AddCategory />} />
+                <Route path="category-edit/:id" element={<AddCategoryWrapper />} />
                 <Route path="inventory-stock" element={<StockManagement />} />
                 <Route path="inventory-add" element={<AddItems />} />
                 <Route path="supplier-list" element={<SupplierList />} />

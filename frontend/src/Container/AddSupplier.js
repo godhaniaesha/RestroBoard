@@ -6,9 +6,11 @@
   import "../Style/x_app.css";
   import { IoClose } from "react-icons/io5";
   import { ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 export default function AddSupplier() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -65,6 +67,7 @@ export default function AddSupplier() {
         if (fileInput) {
           fileInput.value = "";
         }
+        navigate('/supplier-list');
         dispatch(clearSupplierState());
       }
       if (error) {
@@ -196,13 +199,15 @@ export default function AddSupplier() {
                   Drop your files here
                 </div>
               )}
-              <input
-                id="supplierImgInput"
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleImageChange}
-              />
+              {!imagePreview && (
+                <input
+                  id="supplierImgInput"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                />
+              )}
               {imagePreview && (
                 <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
                   <img src={imagePreview} alt="Supplier" className="x_uploaded-image" />
