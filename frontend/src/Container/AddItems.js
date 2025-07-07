@@ -214,7 +214,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
       toast.error('Supplier is required.');
       return;
     }
-    if (!itemId && !supplierImg) {
+    if (!itemId && !imageFile) {
       toast.error('Please upload an item image.');
       return;
     }
@@ -264,17 +264,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
               type="file"
               accept="image/*"
               style={{ display: 'none' }}
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  const file = e.target.files[0];
-                  if (!validateImage(file)) {
-                    e.target.value = '';
-                    return;
-                  }
-                  setSupplierImg(file);
-                  setSupplierImgPreviewUrl(URL.createObjectURL(file));
-                }
-              }}
+              onChange={handleImageChange}
             />
             {imagePreview && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">

@@ -49,7 +49,6 @@ export default function AddSupplier() {
     useEffect(() => {
       if (success) {
         toast.success(success);
-
         // ✅ Reset form
         setFormData({
           name: "",
@@ -60,21 +59,14 @@ export default function AddSupplier() {
           ingredients_supplied: "",
           role: "supplyer",
         });
-
-        setSupplierImg(null);
-        if (supplierImgPreviewUrl) {
-          URL.revokeObjectURL(supplierImgPreviewUrl);
-          setSupplierImgPreviewUrl(null);
-        }
-
+        setImageFile(null);
+        setImagePreview(null);
         const fileInput = document.getElementById("supplierImgInput");
         if (fileInput) {
           fileInput.value = "";
         }
-
         dispatch(clearSupplierState());
       }
-
       if (error) {
         toast.error(error);
         dispatch(clearSupplierState());
@@ -83,18 +75,18 @@ export default function AddSupplier() {
 
     useEffect(() => {
       return () => {
-        if (supplierImgPreviewUrl) {
-          URL.revokeObjectURL(supplierImgPreviewUrl);
+        if (imagePreview && imagePreview.startsWith("blob:")) {
+          URL.revokeObjectURL(imagePreview);
         }
       };
-    }, [supplierImgPreviewUrl]);
+    }, [imagePreview]);
 
-    const removeSupplierImage = () => {
-      setSupplierImg(null);
-      if (supplierImgPreviewUrl) {
-        URL.revokeObjectURL(supplierImgPreviewUrl);
-        setSupplierImgPreviewUrl(null);
+    const removeImage = () => {
+      setImageFile(null);
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
       }
+      setImagePreview(null);
       const fileInput = document.getElementById("supplierImgInput");
       if (fileInput) {
         fileInput.value = "";
@@ -106,6 +98,22 @@ export default function AddSupplier() {
         ...prev,
         [e.target.name]: e.target.value,
       }));
+    };
+
+    const handleImageChange = (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        if (!validateImage(file)) {
+          e.target.value = '';
+          return;
+        }
+        setImageFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
     };
 
     const handleSubmit = (e) => {
@@ -154,34 +162,19 @@ export default function AddSupplier() {
         toast.error('Ingredients supplied is required.');
         return;
       }
-      if (!supplierImg) {
+      if (!imageFile) {
         toast.error('Please upload a supplier image.');
         return;
       }
-
       const submitData = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, value);
       });
-      setImageFile(null);
-      setImagePreview(null);
-      const fileInput = document.getElementById("supplierImgInput");
-      if (fileInput) fileInput.value = "";
-      dispatch(clearSupplierState());
-    }
-  //   if (error) {
-  //     toast.error(error);
-  //     dispatch(clearSupplierState());
-  //   }
-  // }, [success, error, dispatch]);
-
-  useEffect(() => {
-    return () => {
-      if (imagePreview && imagePreview.startsWith("blob:")) {
-        URL.revokeObjectURL(imagePreview);
+      if (imageFile) {
+        submitData.append("supplyer_image", imageFile);
       }
+      dispatch(createSupplier(submitData));
     };
-  }, [imagePreview]);
 
     return (
       <>
@@ -189,12 +182,12 @@ export default function AddSupplier() {
         <section className="x_employee-section">
           <h4 className="x_employee-heading">Add Supplier Form</h4>
           <div className="x_popup">
-            <form
-              className={`x_dropzone x_dropzone-multiple dz-clickable ${supplierImg ? "x_has-image" : ""}`}
-              onClick={() => document.getElementById("supplierImgInput").click()}
+            <div
+              className={`x_dropzone x_dropzone-multiple dz-clickable ${imagePreview ? "x_has-image" : ""}`}
+              onClick={() => !imagePreview && document.getElementById("supplierImgInput").click()}
               style={{ cursor: "pointer" }}
             >
-              {!supplierImg && (
+              {!imagePreview && (
                 <div
                   className="dz-message x_dz-message"
                   onClick={() => document.getElementById("supplierImgInput").click()}
@@ -208,33 +201,22 @@ export default function AddSupplier() {
                 type="file"
                 accept="image/*"
                 style={{ display: "none" }}
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    const file = e.target.files[0];
-                    if (!validateImage(file)) {
-                      e.target.value = '';
-                      return;
-                    }
-                    setSupplierImg(file);
-                    setSupplierImgPreviewUrl(URL.createObjectURL(file));
-                  }
-                }}
+                onChange={handleImageChange}
               />
-              {supplierImg && supplierImgPreviewUrl && (
+              {imagePreview && (
                 <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
-                  <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
+                  <img src={imagePreview} alt="Supplier" className="x_uploaded-image" />
                   <button
                     type="button"
                     className="x_remove-image-btn"
-                    onClick={removeSupplierImage}
+                    onClick={removeImage}
                     title="Remove image"
                   >
                     <IoClose />
-                    {/* &times; */}
                   </button>
                 </div>
               )}
-            </form>
+            </div>
 
             <form className="row g-3 mt-3" onSubmit={handleSubmit}>
               <div className="col-md-6">

@@ -11,9 +11,9 @@ import {
 import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function AddCategory({ }) {
   const navigate = useNavigate();
