@@ -15,8 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 
-export default function AddCategory({ categoryId}) {
+export default function AddCategory({ }) {
   const navigate = useNavigate();
+  // const params = new URLSearchParams(window.location.search);
+  const categoryId = localStorage.getItem('categoryId');
   const id = categoryId;
   const dispatch = useDispatch();
 
@@ -224,4 +226,10 @@ export default function AddCategory({ categoryId}) {
       </section>
     </>
   );
+}
+
+// Wrapper for route usage
+export function AddCategoryWrapper() {
+  const { id } = useParams();
+  return <AddCategory categoryId={id} />;
 }

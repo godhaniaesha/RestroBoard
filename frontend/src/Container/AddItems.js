@@ -25,8 +25,9 @@ function AddItems({ itemId, onSuccess, onCancel }) {
   const [category, setCategory] = useState(null);
   const [unit, setUnit] = useState(null);
   const [supplier, setSupplier] = useState(null);
-  const [supplierImg, setSupplierImg] = useState(null);
-  const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
+  // Image states (like AddCategory)
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   // New states for form fields
   const [itemName, setItemName] = useState("");
@@ -57,18 +58,18 @@ function AddItems({ itemId, onSuccess, onCancel }) {
   // Effect to clean up the object URL when the component unmounts or image changes
   useEffect(() => {
     return () => {
-      if (supplierImgPreviewUrl) {
-        URL.revokeObjectURL(supplierImgPreviewUrl);
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
       }
     };
-  }, [supplierImgPreviewUrl]);
+  }, [imagePreview]);
 
   useEffect(() => {
     if (createSuccess || updateSuccess) {
       dispatch(resetCreateSuccess());
       if (onSuccess) onSuccess();
-      setSupplierImg(null);
-      setSupplierImgPreviewUrl(null);
+      setImageFile(null);
+      setImagePreview(null);
       setItemName("");
       setPrice("");
       setQuantity("");
@@ -115,29 +116,35 @@ function AddItems({ itemId, onSuccess, onCancel }) {
         : null
       );
       setExpiryDate(selectedItem.expiry_date ? new Date(selectedItem.expiry_date) : null);
-
       // Image preview logic (like AddCategory.js)
       if (selectedItem.item_image) {
-        setSupplierImgPreviewUrl(`http://localhost:3000${selectedItem.item_image}`);
+        setImagePreview(`http://localhost:3000${selectedItem.item_image}`);
       } else {
-        setSupplierImgPreviewUrl(null);
+        setImagePreview(null);
       }
-      setSupplierImg(null);
+      setImageFile(null);
     }
   }, [itemId, selectedItem]);
-
-  const removeSupplierImage = () => {
-    setSupplierImg(null);
-    if (supplierImgPreviewUrl) {
-      URL.revokeObjectURL(supplierImgPreviewUrl);
-      setSupplierImgPreviewUrl(null);
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
-    // Optionally reset the file input value to allow re-uploading the same file
-    const fileInput = document.getElementById('supplierImgInput');
+  };
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    const fileInput = document.getElementById('itemImageInput');
     if (fileInput) {
       fileInput.value = '';
     }
   };
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -224,8 +231,8 @@ function AddItems({ itemId, onSuccess, onCancel }) {
       expiryDate ? expiryDate.toISOString().split("T")[0] : ""
     );
     formData.append("supplier_id", supplier?.value || "");
-    if (supplierImg) {
-      formData.append("item_image", supplierImg);
+    if (imageFile) {
+      formData.append("item_image", imageFile);
     }
 
     if (itemId) {
@@ -240,33 +247,20 @@ function AddItems({ itemId, onSuccess, onCancel }) {
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <section className="x_employee-section">
         <h4 className="x_employee-heading">{itemId ? "Edit Item" : "Add Item"}</h4>
-
         <div className="x_popup">
-          <form
-            className={`x_dropzone x_dropzone-multiple  dz-clickable ${supplierImg ? 'x_has-image' : ''}`}
-            id="dropzone-multiple"
-            data-dropzone="data-dropzone"
-            action="#!"
-            onClick={() => document.getElementById('supplierImgInput').click()}
+          <div
+            className={`x_dropzone x_dropzone-multiple  dz-clickable ${imagePreview ? 'x_has-image' : ''}`}
+            onClick={() => !imagePreview && document.getElementById('itemImageInput').click()}
             style={{ cursor: 'pointer' }}
           >
-
-            {!supplierImg && (
-              <div
-                className="dz-message x_dz-message"
-                data-dz-message="data-dz-message"
-                onClick={() => document.getElementById('supplierImgInput').click()}
-                style={{ cursor: 'pointer' }}
-              >
+            {!imagePreview && (
+              <div className="dz-message x_dz-message">
                 <img className="me-2" src={uplod} width="25" alt="upload" />
                 Drop your files here
               </div>
-
-
             )}
-
             <input
-              id="supplierImgInput"
+              id="itemImageInput"
               type="file"
               accept="image/*"
               style={{ display: 'none' }}
@@ -282,22 +276,20 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 }
               }}
             />
-            {supplierImgPreviewUrl && (
+            {imagePreview && (
               <div className="dz-preview dz-preview-multiple m-0 d-flex flex-column x_dz-preview x_image-preview">
-                <img src={supplierImgPreviewUrl} alt="Supplier" className="x_uploaded-image" />
+                <img src={imagePreview} alt="Item" className="x_uploaded-image" />
                 <button
                   type="button"
                   className="x_remove-image-btn"
-                  onClick={removeSupplierImage}
+                  onClick={removeImage}
                   title="Remove image"
                 >
                   <IoClose />
-                  {/* &times; */}
                 </button>
               </div>
             )}
-          </form>
-
+          </div>
           <form className="row g-3 mt-3" onSubmit={handleSubmit}>
             <div className="col-md-6">
               <label htmlFor="itemName" className="form-label">

@@ -7,23 +7,24 @@
   import { IoClose } from "react-icons/io5";
   import { ToastContainer } from 'react-toastify';
 
-  export default function AddSupplier() {
-    const dispatch = useDispatch();
+export default function AddSupplier() {
+  const dispatch = useDispatch();
 
-    const [formData, setFormData] = useState({
-      name: "",
-      phone: "",
-      whatsapp_number: "",
-      email: "",
-      address: "",
-      ingredients_supplied: "",
-      role: "supplyer", // ✅ Default role
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    whatsapp_number: "",
+    email: "",
+    address: "",
+    ingredients_supplied: "",
+    role: "supplyer",
+  });
 
-    const [supplierImg, setSupplierImg] = useState(null);
-    const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
+  // Refactored image logic (like AddCategory)
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-    const { loading, error, success } = useSelector((state) => state.supplier);
+  const { loading, error, success } = useSelector((state) => state.supplier);
 
     const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
     const ALLOWED_IMAGE_TYPES = [
@@ -162,13 +163,25 @@
       Object.entries(formData).forEach(([key, value]) => {
         submitData.append(key, value);
       });
+      setImageFile(null);
+      setImagePreview(null);
+      const fileInput = document.getElementById("supplierImgInput");
+      if (fileInput) fileInput.value = "";
+      dispatch(clearSupplierState());
+    }
+  //   if (error) {
+  //     toast.error(error);
+  //     dispatch(clearSupplierState());
+  //   }
+  // }, [success, error, dispatch]);
 
-      if (supplierImg) {
-        submitData.append("supplyer_image", supplierImg);
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
       }
-
-      dispatch(createSupplier(submitData));
     };
+  }, [imagePreview]);
 
     return (
       <>

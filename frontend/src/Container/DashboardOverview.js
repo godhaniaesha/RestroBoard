@@ -325,119 +325,136 @@ export default function DashboardOverview() {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedStock.map((item, idx) => (
-                      <tr className="Z_SM_Tr" key={item._id || idx}>
-                        <td className="Z_SM_Td">
-                          <div className="Z_SM_itemCell">
+                    {paginatedStock.length > 0 ? (
+                      paginatedStock.map((item, idx) => (
+                        <tr className="Z_SM_Tr" key={item._id || idx}>
+                          <td className="Z_SM_Td">
+                            <div className="Z_SM_itemCell">
+                              <img
+                                src={
+                                  item.item_image
+                                    ? `http://localhost:3000${item.item_image}`
+                                    : "https://via.placeholder.com/40"
+                                }
+                                alt={item.item_name}
+                                className="Z_SM_photo"
+                              />
+                              <span>{item.item_name}</span>
+                            </div>
+                          </td>
+                          <td className="Z_SM_Td">{item.category_id?.category_name || ""}</td>
+                          <td className="Z_SM_Td">{`${item.quantity} ${item.unit}`}</td>
+                          <td className="Z_SM_Td">{`$${item.price?.toFixed(2)}`}</td>
+                          <td className="Z_SM_Td">{item.updatedAt ? item.updatedAt.slice(0, 10) : ""}</td>
+                          <td className="Z_SM_Td">
+                            <span
+                              className={`Z_SM_status Z_SM_status--${Number(item.quantity) === 0
+                                ? "out-of-stock"
+                                : Number(item.quantity) <= item.minimum_threshold
+                                  ? "low-stock"
+                                  : "in-stock"
+                                }`}
+                            >
+                              {Number(item.quantity) === 0
+                                ? "Out of Stock"
+                                : Number(item.quantity) <= item.minimum_threshold
+                                  ? "Low Stock"
+                                  : "In Stock"}
+                            </span>
+                          </td>
+                          <td className="Z_SM_Td">
+                            <button
+                              className="Z_SM_actionBtn Z_SM_actionBtn--edit"
+                              title="Edit"
+                              onClick={() => handleEdit(item._id)}
+                            >
+                              <FaRegEdit />
+                            </button>
+                            <button
+                              className="Z_SM_actionBtn Z_SM_actionBtn--delete"
+                              title="Delete"
+                              onClick={() => openDeleteModal(item)}
+                            >
+                              <FaRegTrashAlt />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="7" style={{ textAlign: "center", padding: "2rem 0" }}>
+                          <div>
                             <img
-                              src={
-                                item.item_image
-                                  ? `http://localhost:3000${item.item_image}`
-                                  : "https://via.placeholder.com/40"
-                              }
-                              alt={item.item_name}
-                              className="Z_SM_photo"
+                              src={require('../Image/hey.jpg')}
+                              alt="No data"
+                              style={{ width: "150px", height: "150px", marginBottom: "1rem" }}
                             />
-                            <span>{item.item_name}</span>
+                          
                           </div>
                         </td>
-                        <td className="Z_SM_Td">{item.category_id?.category_name || ""}</td>
-                        <td className="Z_SM_Td">{`${item.quantity} ${item.unit}`}</td>
-                        <td className="Z_SM_Td">{`$${item.price?.toFixed(2)}`}</td>
-                        <td className="Z_SM_Td">{item.updatedAt ? item.updatedAt.slice(0, 10) : ""}</td>
-                        <td className="Z_SM_Td">
-                          <span
-                            className={`Z_SM_status Z_SM_status--${Number(item.quantity) === 0
-                              ? "out-of-stock"
-                              : Number(item.quantity) <= item.minimum_threshold
-                                ? "low-stock"
-                                : "in-stock"
-                              }`}
-                          >
-                            {Number(item.quantity) === 0
-                              ? "Out of Stock"
-                              : Number(item.quantity) <= item.minimum_threshold
-                                ? "Low Stock"
-                                : "In Stock"}
-                          </span>
-                        </td>
-                        <td className="Z_SM_Td">
-                          <button
-                            className="Z_SM_actionBtn Z_SM_actionBtn--edit"
-                            title="Edit"
-                            onClick={() => handleEdit(item._id)}
-                          >
-                            <FaRegEdit />
-                          </button>
-                          <button
-                            className="Z_SM_actionBtn Z_SM_actionBtn--delete"
-                            title="Delete"
-                            onClick={() => openDeleteModal(item)}
-                          >
-                            <FaRegTrashAlt />
-                          </button>
-                        </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
-                <div className="Z_pagination_container">
-                  <button
-                    className="Z_pagination_btn"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    <FaCaretLeft />
-                  </button>
-                  {totalPages <= 4 ? (
-                    [...Array(totalPages)].map((_, idx) => (
-                      <button
-                        key={idx + 1}
-                        className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(idx + 1)}
-                      >
-                        {idx + 1}
-                      </button>
-                    ))
-                  ) : (
-                    <>
-                      <button
-                        className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(1)}
-                      >1</button>
-                      {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
-                      {currentPage > 2 && currentPage < totalPages - 1 && (
+                {totalPages > 1 && (
+                  <div className="Z_pagination_container">
+                    <button
+                      className="Z_pagination_btn"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      <FaCaretLeft />
+                    </button>
+                    {totalPages <= 4 ? (
+                      [...Array(totalPages)].map((_, idx) => (
                         <button
-                          className="Z_pagination_page Z_pagination_active"
-                          onClick={() => handlePageChange(currentPage)}
+                          key={idx + 1}
+                          className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                          onClick={() => handlePageChange(idx + 1)}
                         >
-                          {currentPage}
+                          {idx + 1}
                         </button>
-                      )}
-                      {currentPage < totalPages - 1 && (
+                      ))
+                    ) : (
+                      <>
                         <button
-                          className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
-                          onClick={() => handlePageChange(totalPages - 1)}
+                          className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
+                          onClick={() => handlePageChange(1)}
+                        >1</button>
+                        {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
+                        {currentPage > 2 && currentPage < totalPages - 1 && (
+                          <button
+                            className="Z_pagination_page Z_pagination_active"
+                            onClick={() => handlePageChange(currentPage)}
+                          >
+                            {currentPage}
+                          </button>
+                        )}
+                        {currentPage < totalPages - 1 && (
+                          <button
+                            className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
+                            onClick={() => handlePageChange(totalPages - 1)}
+                          >
+                            {totalPages - 1}
+                          </button>
+                        )}
+                        <button
+                          className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
+                          onClick={() => handlePageChange(totalPages)}
                         >
-                          {totalPages - 1}
+                          {totalPages}
                         </button>
-                      )}
-                      <button
-                        className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(totalPages)}
-                      >
-                        {totalPages}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    className="Z_pagination_btn"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    <FaCaretRight />
-                  </button>
-                </div>
+                      </>
+                    )}
+                    <button
+                      className="Z_pagination_btn"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      <FaCaretRight />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             <DeleteConfirmationModal

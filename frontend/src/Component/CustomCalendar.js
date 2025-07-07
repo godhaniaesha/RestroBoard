@@ -3,16 +3,29 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Style/x_app.css";
 
+function parseToDate(val) {
+  if (!val) return new Date();
+  if (val instanceof Date) return val;
+  if (typeof val === "string") {
+    // Try to parse string in dd/mm/yyyy or yyyy-mm-dd
+    if (val.includes("/")) {
+      // dd/mm/yyyy
+      const [d, m, y] = val.split("/");
+      return new Date(`${y}-${m}-${d}`);
+    }
+    // fallback to Date constructor
+    return new Date(val);
+  }
+  return new Date();
+}
+
 const CustomCalendar = ({ onDateSelect, initialDate }) => {
-  const [selectedDate, setSelectedDate] = useState(
-    initialDate
-      ? new Date(initialDate.split("/").reverse().join("-"))
-      : new Date()
-  );
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState(parseToDate(initialDate));
 
   useEffect(() => {
     if (initialDate) {
-      setSelectedDate(new Date(initialDate.split("/").reverse().join("-")));
+      setSelectedDate(parseToDate(initialDate));
     }
   }, [initialDate]);
 
@@ -29,6 +42,7 @@ const CustomCalendar = ({ onDateSelect, initialDate }) => {
         selected={selectedDate}
         onChange={handleChange}
         inline
+        minDate={today}
         calendarClassName="x_calendar"
         dayClassName={(date) =>
           date.getDate() === selectedDate.getDate() &&
