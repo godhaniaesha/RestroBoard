@@ -340,6 +340,39 @@ body {
   }
 }
 
+.Z_AL_status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+/* Status colors */
+.Z_AL_status--approved {
+  background-color: #4caf50; /* Green */
+}
+
+.Z_AL_status--pending {
+  background-color: #ff9800; /* Orange */
+}
+
+.Z_AL_status--rejected {
+  background-color: #f44336; /* Red */
+}
+
+.Z_AL_status--cancelled {
+  background-color: #9e9e9e; /* Gray */
+}
+
+/* Optional fallback */
+.Z_AL_status--default {
+  background-color: #607d8b;
+}
+
+
 /* =================================
    Pending Leave (Z_LP) Styles
    ================================= */

@@ -6,6 +6,8 @@ import "../Style/Z_table.css";
 import Spinner from "../Spinner";
 import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -23,7 +25,13 @@ function SupplierList() {
   };
   const confirmDelete = () => {
     if (itemToDelete) {
-      dispatch(deleteSupplier(itemToDelete._id));
+      dispatch(deleteSupplier(itemToDelete._id)).then((result) => {
+        if (deleteSupplier.fulfilled.match(result)) {
+          toast.success("Supplier deleted successfully!");
+        } else {
+          toast.error("Failed to delete supplier");
+        }
+      });
       closeDeleteModal();
     }
   };
@@ -38,7 +46,7 @@ function SupplierList() {
 
   const handleEdit = (id) => {
     localStorage.setItem('supplierId-local', id)
-    navigate('supplier-edit', id)
+    navigate(`/supplier-edit/${id}`);
   };
 
   const handleDelete = (id) => {
@@ -112,7 +120,7 @@ function SupplierList() {
                         <button
                           className="Z_empListActionBtn"
                           title="Delete"
-                          onClick={() =>  openDeleteModal(sup._id)}
+                          onClick={() => openDeleteModal(sup)}
                         >
                           <FaRegTrashAlt />
                         </button>
@@ -163,7 +171,13 @@ function SupplierList() {
         isOpen={isModalOpen}
         onClose={closeDeleteModal}
         onConfirm={confirmDelete}
-        itemName={itemToDelete ? itemToDelete.item_name : ""}
+        itemName={itemToDelete ? itemToDelete.name : ""}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        style={{ zIndex: 9999 }}
       />
     </section>
   );

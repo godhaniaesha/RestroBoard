@@ -75,7 +75,7 @@ export default function HotelOverview() {
       </section>
 
       {/* About Section */}
-      <section className="py-5" style={{ background: 'var(--white-color)' }}>
+      <section className="pt-1 pb-5" style={{ background: 'var(--white-color)' }}>
         <Container>
           <Row className="justify-content-center align-items-center">
             <Col md={8} className={` text-center`}>
@@ -89,9 +89,9 @@ export default function HotelOverview() {
       {/* Amenities Section */}
       <section className={`py-5 ${styles['d_ho-features-bg']}`}>
         <Container>
-          <Row className={`mb-5 ${styles['d_ho-features-row']} justify-content-center`}>
+          <Row className={`mb-md-5 mb-1 ${styles['d_ho-features-row']} justify-content-center`}>
             {parsedAmenities.map((amenity, index) => (
-              <Col key={index} xs={6} md={3} className="text-center mb-4">
+              <Col key={index} xs={6} md={3} className="text-center my-md-0 my-2">
                 <div className={styles['d_ho-feature-card']}>
                   {amenityIcons[amenity] || <FaConciergeBell className={styles['d_ho-feature-icon']} />}
                   <div className={styles['d_ho-feature-title']}>{amenity}</div>
@@ -105,9 +105,9 @@ export default function HotelOverview() {
       {/* Dishes Section */}
       <section className={styles['d_ho-dishcards-section']}>
         <Container fluid>
-          <Row className="mb-4">
+          <Row className="mb-md-4 mb-1">
             <Col>
-              <h3 className={`${styles['d_ho-section-title']} text-center mb-4`} style={{ color: 'var(--button-color)' }}>
+              <h3 className={`${styles['d_ho-section-title']} text-center mb-md-4 mb-1`} style={{ color: 'var(--button-color)' }}>
                 Our Signature Dishes
               </h3>
             </Col>
@@ -171,9 +171,9 @@ export default function HotelOverview() {
       {/* Testimonials */}
       <section className={`py-5 ${styles['d_ho-testimonial-bg Z_resp_slider']}`}>
         <Container>
-          <Row className="mb-4">
+          <Row className="mb-md-4 mb-1">
             <Col>
-              <h3 className={`${styles['d_ho-section-title']} text-center mb-4`} style={{ color: 'var(--button-color)' }}>
+              <h3 className={`${styles['d_ho-section-title']} text-center mb-md-4 mb-1`} style={{ color: 'var(--button-color)' }}>
                 <FaQuoteLeft className="me-2 text-primary" /> What Our Guests Say
               </h3>
             </Col>

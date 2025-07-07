@@ -12,14 +12,18 @@ import Spinner from "../Spinner";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
-export default function EditSupplier({ setActiveItem, supplierId: propSupplierId}) {
+export default function EditSupplier({ setActiveItem}) {
+  const params = new URLSearchParams(window.location.search);
+    const propSupplierId = params?._id || null;
+    console.log("propSupplierId:", propSupplierId);
+    
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { supplierData, loading, success, error } = useSelector(
     (state) => state.supplier
   );
 
-  const supplierId = propSupplierId || localStorage.getItem("editSupplierId");
+  const supplierId = propSupplierId || localStorage.getItem("supplierId-local");
 
   useEffect(() => {
     if (propSupplierId) {
@@ -72,7 +76,7 @@ export default function EditSupplier({ setActiveItem, supplierId: propSupplierId
       setSupplierImg(null);
       setSupplierImgPreviewUrl(null);
       localStorage.removeItem("editSupplierId");
-      navigate("supplier-list");
+      navigate("/supplier-list");
     }
 
     if (error) {
@@ -249,7 +253,7 @@ export default function EditSupplier({ setActiveItem, supplierId: propSupplierId
               className="btn btn-secondary mx-2"
               onClick={() => {
                 localStorage.removeItem("editSupplierId");
-                navigate("supplier-list");
+                navigate("/supplier-list");
               }}
             >
               Cancel

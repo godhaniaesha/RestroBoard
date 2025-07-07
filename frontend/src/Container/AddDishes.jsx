@@ -49,9 +49,7 @@ export default function AddDishes() {
   };
 
   const badgeOptions = [
-    'Best Seller', "chef's Choice", 'Most Loved', 'South Indian Special',
-    'Most Ordered', 'Snack Star', 'Vegetarian Delight',
-    'Tandoor Special', 'Punjabi Favorite', 'Mumbai Street Food',
+   "Best Seller", "chef's Choice", "Most Loved", "South Indian Special", "Most Ordered", "Snack Star", "Vegetarian Delight", "Tandoor Special", "Punjabi Favorite"
   ];
 
   const handleChange = (e) => {
@@ -74,7 +72,7 @@ export default function AddDishes() {
     const resultAction = await dispatch(createDish(formData));
     if (createDish.fulfilled.match(resultAction)) {
       toast.success('Dish added successfully!');
-      navigate('hotel-information');
+      navigate('/hotel-information');
       setForm({
         name: '',
         description: '',

@@ -1,191 +1,214 @@
 :root {
-    --primary-bg-color: #d8e1e9;
-    --white-color: #eceff3;
-    --dark-color: #1f2e3d;
-    --button-color: #1f2e3d;
-    --hover-button-color: #163b60;
-    --today-bg-color: #384e64;
-    --restaurant-leave-color: #6a8691;
-    --user-leave-color: #967E76;
-  }
-  
-  .d_calender-wrapper {
-    background-color: var(--primary-bg-color);
-    /* min-height: 100vh; */
-  }
-  
-  .d_calender-card {
-    background-color: var(--white-color);
-    border-radius: 14px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
-  }
-  
-  .d_calender-header {
-    background-color: var(--button-color);
-    color: var(--white-color);
-    padding: 1rem;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
-  }
-  .d_calender-header h5 {
-      color: var(--dark-color);
-  }
-  .d_calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    padding-top: 1rem;
-  }
-  
-  .d_calendar-day-name {
-    font-weight: 600;
-    text-align: center;
-    color: var(--dark-color);
-  }
-  
+  --primary-bg-color: #d8e1e9;
+  --white-color: #eceff3;
+  --dark-color: #1f2e3d;
+  --button-color: #1f2e3d;
+  --hover-button-color: #163b60;
+  --today-bg-color: #384e64;
+  --restaurant-leave-color: #6a8691;
+  --user-leave-color: #967e76;
+}
+
+.d_calender-wrapper {
+  background-color: var(--primary-bg-color);
+  /* min-height: 100vh; */
+}
+
+.d_calender-card {
+  background-color: var(--white-color);
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.d_calender-header {
+  background-color: var(--button-color);
+  color: var(--white-color);
+  padding: 1rem;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+.d_calender-header h5 {
+  color: var(--dark-color);
+}
+.d_calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding-top: 1rem;
+}
+
+.d_calendar-day-name {
+  font-weight: 600;
+  text-align: center;
+  color: var(--dark-color);
+}
+
+.d_calendar-day {
+  height: 60px;
+  background-color: var(--white-color);
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+  padding-top: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.d_calendar-day:hover {
+  background-color: var(--hover-button-color);
+  color: white;
+}
+
+.d_today {
+  background-color: var(--today-bg-color) !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.d_restaurant-leave {
+  background-color: var(--restaurant-leave-color);
+  color: white;
+}
+
+.d_user-leave {
+  background-color: var(--user-leave-color);
+  color: white;
+  font-weight: 600;
+}
+
+.d_leave-users {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 4px;
+  width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.d_user-badge {
+  background-color: var(--dark-color);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d_empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+}
+
+.d_tooltip {
+  white-space: pre-line;
+  font-size: 0.85rem;
+  background-color: var(--dark-color);
+  color: var(--white-color);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.d_legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  color: var(--dark-color);
+  align-items: center;
+}
+
+.d_box {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 3px;
+  margin-right: 6px;
+}
+
+.d_red {
+  background-color: var(--restaurant-leave-color);
+}
+
+.d_orange {
+  background-color: var(--user-leave-color);
+}
+
+.d_today_box {
+  background-color: var(--today-bg-color);
+}
+
+.d_empty:hover {
+  background-color: transparent !important;
+}
+.d_legend div {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
   .d_calendar-day {
-    height: 60px;
-    background-color: var(--white-color);
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    text-align: center;
-    padding-top: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .d_calendar-day:hover {
-    background-color: var(--hover-button-color);
-    color: white;
-  }
-  
-  .d_today {
-    background-color: var(--today-bg-color) !important;
-    color: white !important;
-    font-weight: bold;
-  }
-  
-  .d_restaurant-leave {
-    background-color: var(--restaurant-leave-color);
-    color: white;
-  }
-  
-  .d_user-leave {
-    background-color: var(--user-leave-color);
-    color: white;
-    font-weight: 600;
-  }
-  
-  .d_leave-users {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2px;
-    margin-top: 4px;
-  }
-  
-  .d_user-badge {
-    background-color: var(--dark-color);
-    color: white;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    font-size: 0.65rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .d_empty {
-    background-color: transparent;
-    border: none;
-    cursor: default;
-  }
-  
-  .d_tooltip {
-    white-space: pre-line;
+    height: 50px;
     font-size: 0.85rem;
-    background-color: var(--dark-color);
-    color: var(--white-color);
-    padding: 6px 10px;
-    border-radius: 6px;
+    padding-top: 10px;
   }
-  
+
+  .d_calendar-grid {
+    gap: 4px;
+  }
+
+  .d_calender-header h5 {
+    font-size: 1rem;
+  }
+   .d_leave-users {
+    margin-top: 0px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+}
+@media (max-width: 480px) {
+  .d_calendar-day {
+    height: 31px;
+    font-size: 12px;
+    padding-top: 5px;
+  }
+  .d_calendar-day-name {
+    font-size: 12px;
+  }
   .d_legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    font-size: 0.9rem;
-    margin-top: 1rem;
-    color: var(--dark-color);
-    align-items: center;
-  }
-  
-  .d_box {
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    border-radius: 3px;
-    margin-right: 6px;
-  }
-  
-  .d_red {
-    background-color: var(--restaurant-leave-color);
-  }
-  
-  .d_orange {
-    background-color: var(--user-leave-color);
-  }
-  
-  .d_today_box {
-    background-color: var(--today-bg-color);
-  }
-  
-.d_empty:hover{
-    background-color: transparent!important;
-}
-.d_legend div{
+    /* flex-direction: column; */
+    display: block;
     font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-  
-  @media (max-width: 768px) {
-    .d_calendar-day {
-      height: 50px;
-      font-size: 0.85rem;
-      padding-top: 10px;
-    }
-  
-    .d_calendar-grid {
-      gap: 4px;
-    }
-  
-    .d_calender-header h5 {
-      font-size: 1rem;
-    }
+    gap: 0;
+    justify-content: start;
   }
-  @media (max-width: 480px) {
-    .d_calendar-day {
-        height: 31px;
-        font-size: 12px;
-        padding-top: 5px;
-    }
-    .d_calendar-day-name{
-        font-size: 12px;
-    }
-    .d_legend {
-        /* flex-direction: column; */
-        display: block;
-        font-size: 15px;
-        gap: 0;
-        justify-content: start;
-        
-    }
-    .d_box{
-        margin: 0px !important;
-    }
+  .d_box {
+    margin: 0px !important;
+  }
+  .d_calender-wrapper .btn {
+    font-size: 16px;
+    padding: 8px 7px;
+  }
+  .d_calender-wrapper .d_user-badge {
+    width: 10px;
+    height: 10px;
+    font-size: 8px;
+  }
+  .d_leave-users {
+    margin-top: -4px;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+  }
 }
