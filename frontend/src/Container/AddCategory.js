@@ -12,6 +12,8 @@ import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 export default function AddCategory({ categoryId}) {
   const navigate = useNavigate();
@@ -25,6 +27,26 @@ export default function AddCategory({ categoryId}) {
   const [categoryDescription, setCategoryDescription] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+  const ALLOWED_IMAGE_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
+
+  const validateImage = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error('Only JPG, PNG, GIF, or WEBP images are allowed.');
+      return false;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error('Image size should not exceed 2MB.');
+      return false;
+    }
+    return true;
+  };
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -63,6 +85,10 @@ export default function AddCategory({ categoryId}) {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      if (!validateImage(file)) {
+        e.target.value = '';
+        return;
+      }
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -83,6 +109,26 @@ export default function AddCategory({ categoryId}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!/^[A-Za-z ]+$/.test(categoryName)) {
+      toast.error('Category name can only contain letters and spaces.');
+      return;
+    }
+    if (!categoryName.trim()) {
+      toast.error('Category name is required.');
+      return;
+    }
+    if (!/^[A-Za-z0-9 ,.()!"'\-]+$/.test(categoryDescription)) {
+      toast.error('Category description contains invalid characters.');
+      return;
+    }
+    if (!categoryDescription.trim()) {
+      toast.error('Category description is required.');
+      return;
+    }
+    if (!isEditMode && !imageFile) {
+      toast.error('Please upload a category image.');
+      return;
+    }
     const formData = new FormData();
     formData.append('category_name', categoryName);
     formData.append('category_description', categoryDescription);
@@ -100,6 +146,7 @@ export default function AddCategory({ categoryId}) {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <section className="x_employee-section">
         <h4 className="x_employee-heading">{isEditMode ? 'Edit Category' : 'Add Category'}</h4>
         <div className="x_popup">
@@ -148,6 +195,7 @@ export default function AddCategory({ categoryId}) {
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
                 required
+                maxLength={50}
               />
             </div>
             <div className="col-12">
@@ -161,6 +209,7 @@ export default function AddCategory({ categoryId}) {
                 value={categoryDescription}
                 onChange={(e) => setCategoryDescription(e.target.value)}
                 required
+                maxLength={200}
               ></textarea>
             </div>
             {error && <div className="col-12 text-danger">{error}</div>}

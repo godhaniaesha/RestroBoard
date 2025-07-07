@@ -8,6 +8,7 @@ import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
 import { IoClose } from "react-icons/io5";
+import { toast, ToastContainer } from 'react-toastify';
 
 function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
@@ -32,6 +33,26 @@ function AddItems({ itemId, onSuccess, onCancel }) {
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [minThreshold, setMinThreshold] = useState("");
+
+  const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+  const ALLOWED_IMAGE_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
+
+  const validateImage = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error('Only JPG, PNG, GIF, or WEBP images are allowed.');
+      return false;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error('Image size should not exceed 2MB.');
+      return false;
+    }
+    return true;
+  };
 
   // Effect to clean up the object URL when the component unmounts or image changes
   useEffect(() => {
@@ -147,6 +168,49 @@ function AddItems({ itemId, onSuccess, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Item name validation: letters, numbers, spaces
+    if (!/^[A-Za-z0-9 ]+$/.test(itemName)) {
+      toast.error('Item name can only contain letters, numbers, and spaces.');
+      return;
+    }
+    if (!itemName.trim()) {
+      toast.error('Item name is required.');
+      return;
+    }
+    // Price validation: positive number
+    if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(price) || Number(price) <= 0) {
+      toast.error('Price must be a positive number.');
+      return;
+    }
+    // Quantity validation: positive number
+    if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(quantity) || Number(quantity) <= 0) {
+      toast.error('Quantity must be a positive number.');
+      return;
+    }
+    // Minimum threshold validation: positive integer
+    if (!/^[0-9]+$/.test(minThreshold) || Number(minThreshold) <= 0) {
+      toast.error('Minimum threshold must be a positive integer.');
+      return;
+    }
+    // Category validation
+    if (!category) {
+      toast.error('Category is required.');
+      return;
+    }
+    // Unit validation
+    if (!unit) {
+      toast.error('Unit is required.');
+      return;
+    }
+    // Supplier validation
+    if (!supplier) {
+      toast.error('Supplier is required.');
+      return;
+    }
+    if (!itemId && !supplierImg) {
+      toast.error('Please upload an item image.');
+      return;
+    }
     const formData = new FormData();
     // Collect all form fields
     formData.append("item_name", itemName);
@@ -173,6 +237,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <section className="x_employee-section">
         <h4 className="x_employee-heading">{itemId ? "Edit Item" : "Add Item"}</h4>
 
@@ -208,6 +273,10 @@ function AddItems({ itemId, onSuccess, onCancel }) {
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
                   const file = e.target.files[0];
+                  if (!validateImage(file)) {
+                    e.target.value = '';
+                    return;
+                  }
                   setSupplierImg(file);
                   setSupplierImgPreviewUrl(URL.createObjectURL(file));
                 }
@@ -242,6 +311,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 placeholder="Enter item name"
                 value={itemName}
                 onChange={e => setItemName(e.target.value)}
+                maxLength={50}
               />
             </div>
 
@@ -272,6 +342,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 placeholder="Enter price"
                 value={price}
                 onChange={e => setPrice(e.target.value)}
+                maxLength={10}
               />
             </div>
 
@@ -287,6 +358,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 placeholder="Enter quantity"
                 value={quantity}
                 onChange={e => setQuantity(e.target.value)}
+                maxLength={10}
               />
             </div>
 
@@ -316,13 +388,14 @@ function AddItems({ itemId, onSuccess, onCancel }) {
                 Minimum Threshold
               </label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 id="min_threshold"
                 name="min_threshold"
                 placeholder="Enter minimum threshold"
                 value={minThreshold}
                 onChange={e => setMinThreshold(e.target.value)}
+                maxLength={5}
               />
             </div>
 

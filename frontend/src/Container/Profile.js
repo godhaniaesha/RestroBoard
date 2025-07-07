@@ -74,6 +74,30 @@ export default function Profile() {
     };
 
     const saveProfile = () => {
+        // Name validation: only letters and spaces
+        if (!/^[A-Za-z ]+$/.test(formData.name.trim())) {
+            alert('Name can only contain letters and spaces.');
+            return;
+        }
+        // Email validation: stricter regex
+        if (!/^([a-zA-Z0-9_\-.+]+)@([a-zA-Z0-9\-.]+)\.([a-zA-Z]{2,})$/.test(formData.email.trim())) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        // Phone validation: 10 digits
+        if (!/^[0-9]{10}$/.test(formData.phone.trim())) {
+            alert('Phone number must be exactly 10 digits.');
+            return;
+        }
+        // Address validation: allow letters, numbers, spaces, and basic punctuation
+        if (!/^[A-Za-z0-9 ,.()!"'\-]+$/.test(formData.address.trim())) {
+            alert('Address contains invalid characters.');
+            return;
+        }
+        if (!formData.address.trim()) {
+            alert('Address is required.');
+            return;
+        }
         const [firstName, ...rest] = formData.name.trim().split(' ');
         const lastName = rest.join(' ');
 
@@ -157,8 +181,8 @@ export default function Profile() {
                                 <div id="profile-edit-form">
                                     <div className="row justify-content-center">
                                         <div className="col-md-8">
-                                            <input type="text" id="name" className="form-control form-control-lg text-center mb-3" value={formData.name} onChange={handleInputChange} placeholder="Full Name" />
-                                            <input type="text" id="role" className="form-control text-center mb-3" value={formData.role} onChange={handleInputChange} placeholder="Job Title" />
+                                            <input type="text" id="name" className="form-control form-control-lg text-center mb-3" value={formData.name} onChange={handleInputChange} placeholder="Full Name" maxLength={50} />
+                                            <input type="text" id="role" className="form-control text-center mb-3" value={formData.role} onChange={handleInputChange} placeholder="Job Title" maxLength={30} />
                                         </div>
                                     </div>
                                 </div>
@@ -196,9 +220,9 @@ export default function Profile() {
                                             </div>
                                         ) : (
                                             <div id="contact-edit-form">
-                                                <input type="email" id="email" className="form-control mb-3" value={formData.email} onChange={handleInputChange} placeholder="Email" />
-                                                <input type="tel" id="phone" className="form-control mb-3" value={formData.phone} onChange={handleInputChange} placeholder="Phone" />
-                                                <input type="text" id="address" className="form-control mb-3" value={formData.address} onChange={handleInputChange} placeholder="Address" />
+                                                <input type="email" id="email" className="form-control mb-3" value={formData.email} onChange={handleInputChange} placeholder="Email" maxLength={100} />
+                                                <input type="tel" id="phone" className="form-control mb-3" value={formData.phone} onChange={handleInputChange} placeholder="Phone" maxLength={10} />
+                                                <input type="text" id="address" className="form-control mb-3" value={formData.address} onChange={handleInputChange} placeholder="Address" maxLength={200} />
                                             </div>
                                         )}
                                     </div>

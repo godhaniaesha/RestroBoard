@@ -10,6 +10,7 @@ import uplod from "../Image/cloud-upload.svg";
 import "../Style/x_app.css";
 import Spinner from "../Spinner";
 import { IoClose } from "react-icons/io5";
+import { toast } from 'react-toastify';
 
 function EditEmployee() {
   const dispatch = useDispatch();
@@ -23,6 +24,13 @@ function EditEmployee() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [supplierImg, setSupplierImg] = useState(null);
   const [supplierImgPreviewUrl, setSupplierImgPreviewUrl] = useState(null);
+  const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+  const ALLOWED_IMAGE_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
 
   useEffect(() => {
     if (employeeId) dispatch(getRegisterById(employeeId));
@@ -78,8 +86,73 @@ function EditEmployee() {
     return new Date(`${year}-${month}-${day}`).toISOString();
   };
 
+  const validateImage = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error('Only JPG, PNG, GIF, or WEBP images are allowed.');
+      return false;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error('Image size should not exceed 2MB.');
+      return false;
+    }
+    return true;
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
+    const firstNameValue = document.getElementById("firstName").value.trim();
+    const lastNameValue = document.getElementById("lastName").value.trim();
+    if (!/^[A-Za-z ]+$/.test(firstNameValue)) {
+      toast.error('First name can only contain letters and spaces.');
+      return;
+    }
+    if (!/^[A-Za-z ]+$/.test(lastNameValue)) {
+      toast.error('Last name can only contain letters and spaces.');
+      return;
+    }
+    if (!document.getElementById("firstName").value.trim()) {
+      toast.error('First name is required.');
+      return;
+    }
+    if (!document.getElementById("lastName").value.trim()) {
+      toast.error('Last name is required.');
+      return;
+    }
+    const emailValue = document.getElementById("email").value.trim();
+    if (!/^([a-zA-Z0-9_\-.+]+)@([a-zA-Z0-9\-.]+)\.([a-zA-Z]{2,})$/.test(emailValue)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+    if (!document.getElementById("email").value.trim()) {
+      toast.error('Email is required.');
+      return;
+    }
+    const phoneValue = document.getElementById("phone").value.trim();
+    if (!/^[0-9]{10}$/.test(phoneValue)) {
+      toast.error('Phone number must be exactly 10 digits.');
+      return;
+    }
+    if (!document.getElementById("phone").value.trim()) {
+      toast.error('Phone is required.');
+      return;
+    }
+    const addressValue = document.getElementById("address").value.trim();
+    if (!/^[A-Za-z0-9 ,.()!"'\-]+$/.test(addressValue)) {
+      toast.error('Address contains invalid characters.');
+      return;
+    }
+    if (!addressValue) {
+      toast.error('Address is required.');
+      return;
+    }
+    if (!selectedOption) {
+      toast.error('Role is required.');
+      return;
+    }
+    if (!joiningDate) {
+      toast.error('Joining date is required.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append("firstName", document.getElementById("firstName").value);
@@ -133,6 +206,10 @@ function EditEmployee() {
             onChange={(e) => {
               if (e.target.files && e.target.files[0]) {
                 const file = e.target.files[0];
+                if (!validateImage(file)) {
+                  e.target.value = '';
+                  return;
+                }
                 setSupplierImg(file);
                 setSupplierImgPreviewUrl(URL.createObjectURL(file));
               }
@@ -168,6 +245,7 @@ function EditEmployee() {
               id="firstName"
               defaultValue={userData.firstName || ""}
               name="firstName"
+              maxLength={30}
             />
           </div>
 
@@ -179,6 +257,7 @@ function EditEmployee() {
               id="lastName"
               defaultValue={userData.lastName || ""}
               name="lastName"
+              maxLength={30}
             />
           </div>
 
@@ -190,6 +269,7 @@ function EditEmployee() {
               id="email"
               defaultValue={userData.email || ""}
               name="email"
+              maxLength={100}
             />
           </div>
 
@@ -201,6 +281,7 @@ function EditEmployee() {
               id="phone"
               defaultValue={userData.phone || ""}
               name="phone"
+              maxLength={10}
             />
           </div>
 
@@ -258,6 +339,7 @@ function EditEmployee() {
               name="address"
               rows="3"
               defaultValue={userData.address || ""}
+              maxLength={200}
             />
           </div>
 

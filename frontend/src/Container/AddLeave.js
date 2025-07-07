@@ -259,6 +259,7 @@ useEffect(() => {
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Please provide a reason for your leave request"
                 required
+                maxLength={200}
               ></textarea>
             </div>
 

@@ -108,7 +108,12 @@ function CategoryList() {
                             <span>No Image</span>
                           )}
                         </td>
-                        <td className="Z_empListTd">{cat.category_name}</td>
+                        <td
+                          className="Z_empListTd"
+                          
+                        >
+                          {cat.category_name}
+                        </td>
                         <td className="Z_empListTd">
                           {cat.category_description}
                         </td>

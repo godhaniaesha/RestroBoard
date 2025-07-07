@@ -12,6 +12,9 @@ import "../Style/x_app.css";
 import uplod from "../Image/cloud-upload.svg";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AddEmployee({ employeeId, onSuccess, onCancel}) {
   const dispatch = useDispatch();
@@ -42,6 +45,26 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
     { value: "chef", label: "chef" },
     { value: "waiter", label: "Waiter" },
   ];
+
+  const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+  const ALLOWED_IMAGE_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
+
+  const validateImage = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error('Only JPG, PNG, GIF, or WEBP images are allowed.');
+      return false;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error('Image size should not exceed 2MB.');
+      return false;
+    }
+    return true;
+  };
 
   // Fetch employee data if in edit mode
   useEffect(() => {
@@ -134,6 +157,10 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      if (!validateImage(file)) {
+        e.target.value = '';
+        return;
+      }
       setImageFile(file);
       setImagePreviewUrl(URL.createObjectURL(file));
     }
@@ -141,15 +168,53 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Name validation: only letters and spaces
+    if (!/^[A-Za-z ]+$/.test(formState.firstName)) {
+      toast.error('First name can only contain letters and spaces.');
+      return;
+    }
+    if (!/^[A-Za-z ]+$/.test(formState.lastName)) {
+      toast.error('Last name can only contain letters and spaces.');
+      return;
+    }
+    if (!formState.firstName.trim()) {
+      toast.error('First name is required.');
+      return;
+    }
+    if (!formState.lastName.trim()) {
+      toast.error('Last name is required.');
+      return;
+    }
+    // Email validation: stricter regex
+    if (!/^([a-zA-Z0-9_\-.+]+)@([a-zA-Z0-9\-.]+)\.([a-zA-Z]{2,})$/.test(formState.email)) {
+      toast.error('Please enter a valid email address.');
+      return;
+    }
+    if (!formState.email.trim()) {
+      toast.error('Email is required.');
+      return;
+    }
+    // Phone validation: 10 digits, only numbers
+    if (!/^[0-9]{10}$/.test(formState.phone)) {
+      toast.error('Phone number must be exactly 10 digits.');
+      return;
+    }
+    if (!formState.phone.trim()) {
+      toast.error('Phone is required.');
+      return;
+    }
     if (!formState.role) {
-      alert("Please select a role.");
+      toast.error('Role is required.');
       return;
     }
     if (!isEditMode && !formState.password) {
-      alert("Password is required for new employees.");
+      toast.error('Password is required for new employees.');
       return;
     }
-
+    if (!isEditMode && !imageFile) {
+      toast.error('Please upload an employee image.');
+      return;
+    }
     const formData = new FormData();
     formData.append("firstName", formState.firstName);
     formData.append("lastName", formState.lastName);
@@ -172,6 +237,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
 
   return (
     <>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <section className="x_employee-section">
         <h4 className="x_employee-heading">
           {isEditMode ? "Edit Employee" : "Add Employee"} Form
@@ -234,6 +300,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                 value={formState.firstName}
                 onChange={handleInputChange}
                 required
+                maxLength={30}
               />
             </div>
 
@@ -250,6 +317,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                 value={formState.lastName}
                 onChange={handleInputChange}
                 required
+                maxLength={30}
               />
             </div>
 
@@ -266,6 +334,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                 value={formState.email}
                 onChange={handleInputChange}
                 required
+                maxLength={100}
               />
             </div>
 
@@ -282,6 +351,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                 value={formState.phone}
                 onChange={handleInputChange}
                 required
+                maxLength={10}
               />
             </div>
 
@@ -300,6 +370,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                     value={formState.password}
                     onChange={handleInputChange}
                     required
+                    maxLength={30}
                   />
                   <button
                     type="button"
@@ -346,6 +417,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                 placeholder="Enter full address"
                 value={formState.address}
                 onChange={handleInputChange}
+                maxLength={200}
               ></textarea>
             </div>
 
