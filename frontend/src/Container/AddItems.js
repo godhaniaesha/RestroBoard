@@ -9,9 +9,11 @@ import uplod from "../Image/cloud-upload.svg";
 import XCustomSelect from "../Component/XCustomSelect";
 import { IoClose } from "react-icons/io5";
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 function AddItems({ itemId, onSuccess, onCancel }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { selectedItem, loading, error, createSuccess, updateSuccess } = useSelector((state) => state.stock);
   const suppliers = useSelector((state) => state.supplier.suppliers);
   const categories = useSelector((state) => state.category.categories);
@@ -78,6 +80,7 @@ function AddItems({ itemId, onSuccess, onCancel }) {
       setUnit(null);
       setSupplier(null);
       setExpiryDate(null);
+      navigate('/inventory-stock')
     }
   }, [createSuccess, updateSuccess, dispatch, onSuccess]);
 

@@ -79,7 +79,9 @@ export default function EditSupplier({ setActiveItem}) {
         whatsapp_number: supplierData.whatsapp_number || "",
         email: supplierData.email || "",
         address: supplierData.address || "",
-        ingredients_supplied: supplierData.ingredients_supplied || "",
+        ingredients_supplied: Array.isArray(supplierData.ingredients_supplied)
+          ? supplierData.ingredients_supplied.join(", ")
+          : (supplierData.ingredients_supplied || ""),
         role: supplierData.role || "supplier",
       });
 
@@ -160,11 +162,14 @@ export default function EditSupplier({ setActiveItem}) {
       toast.error('Address is required.');
       return;
     }
-    if (!/^[A-Za-z0-9 ,.()!"'\-]+$/.test(formData.ingredients_supplied)) {
+    const ingredientsSupplied = typeof formData.ingredients_supplied === "string"
+      ? formData.ingredients_supplied
+      : String(formData.ingredients_supplied);
+    if (!/^[A-Za-z0-9 ,.()!"'\-]+$/.test(ingredientsSupplied)) {
       toast.error('Ingredients supplied contains invalid characters.');
       return;
     }
-    if (!formData.ingredients_supplied.trim()) {
+    if (!ingredientsSupplied.trim()) {
       toast.error('Ingredients supplied is required.');
       return;
     }

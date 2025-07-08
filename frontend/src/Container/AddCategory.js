@@ -15,10 +15,10 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export default function AddCategory({ }) {
+export default function AddCategory({ categoryId }) {
   const navigate = useNavigate();
   // const params = new URLSearchParams(window.location.search);
-  const categoryId = localStorage.getItem('categoryId');
+
   const id = categoryId;
   const dispatch = useDispatch();
 

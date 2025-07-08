@@ -57,10 +57,20 @@ const Sidebar = ({ userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSet
   const navigate = useNavigate();
   const location = useLocation();
 
-  const activeItem =
-    (userRole && ["admin", "manager"].includes(userRole.toLowerCase()))
-      ? (location.pathname.substring(1) || 'dashboard-overview')
-      : (location.pathname.substring(1) || 'leaves-calendar');
+  // Custom logic for category active state
+  let activeItem;
+  if (
+    location.pathname === '/category-list' ||
+    location.pathname === '/category-add' ||
+    location.pathname.startsWith('/category-edit/')
+  ) {
+    activeItem = 'category-list';
+  } else {
+    activeItem =
+      (userRole && ["admin", "manager"].includes(userRole.toLowerCase()))
+        ? (location.pathname.substring(1) || 'dashboard-overview')
+        : (location.pathname.substring(1) || 'leaves-calendar');
+  }
 
   const prevActiveItemRef = useRef(activeItem);
   const prevIsOpenRef = useRef(isOpen);
@@ -105,6 +115,12 @@ const Sidebar = ({ userRole, isOpen, isMobile, isHovered, onToggleSidebar, onSet
             id: "category-add",
             label: "Add Category",
             icon: <HiViewGridAdd style={{ width: "16px", height: "16px" }} />,
+          },
+          {
+            id: "category-edit/",
+            label: "Edit Category",
+            icon: <FaEdit style={{ width: "16px", height: "16px" }} />,
+            hidden: true,
           },
         ],
       },
