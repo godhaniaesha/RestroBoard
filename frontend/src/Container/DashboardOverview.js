@@ -396,6 +396,7 @@ export default function DashboardOverview() {
                     )}
                   </tbody>
                 </table>
+              </div>
                 {totalPages > 1 && (
                   <div className="Z_pagination_container">
                     <button
@@ -455,7 +456,6 @@ export default function DashboardOverview() {
                     </button>
                   </div>
                 )}
-              </div>
             </div>
             <DeleteConfirmationModal
               isOpen={isModalOpen}

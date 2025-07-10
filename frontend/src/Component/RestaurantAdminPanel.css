@@ -455,7 +455,8 @@
 .d_main_admin .profile-name {
   font-size: 14px;
   font-weight: 500;
-  color: #fff;
+  color: #1f2e3d;
+  margin-bottom: 0px !important;
 }
 
 .d_main_admin .dropdown-menu {

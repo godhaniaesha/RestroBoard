@@ -248,38 +248,38 @@ function ApprovedLeave() {
                 )}
               </tbody>
             </table>
-            {totalPages > 1 && (
-            <div className="Z_pagination_container">
-              <button
-                className="Z_pagination_btn"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <FaCaretLeft />
-              </button>
-
-              {[...Array(totalPages)].map((_, idx) => (
-                <button
-                  key={idx + 1}
-                  className={`Z_pagination_page${
-                    currentPage === idx + 1 ? " Z_pagination_active" : ""
-                  }`}
-                  onClick={() => handlePageChange(idx + 1)}
-                >
-                  {idx + 1}
-                </button>
-              ))}
-
-              <button
-                className="Z_pagination_btn"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <FaCaretRight />
-              </button>
-            </div>
-            )}
           </div>
+        )}
+        {totalPages > 1 && (
+        <div className="Z_pagination_container">
+          <button
+            className="Z_pagination_btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <FaCaretLeft />
+          </button>
+
+          {[...Array(totalPages)].map((_, idx) => (
+            <button
+              key={idx + 1}
+              className={`Z_pagination_page${
+                currentPage === idx + 1 ? " Z_pagination_active" : ""
+              }`}
+              onClick={() => handlePageChange(idx + 1)}
+            >
+              {idx + 1}
+            </button>
+          ))}
+
+          <button
+            className="Z_pagination_btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <FaCaretRight />
+          </button>
+        </div>
         )}
       </div>
     </section>

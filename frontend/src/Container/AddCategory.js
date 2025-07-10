@@ -83,6 +83,14 @@ export default function AddCategory({ categoryId }) {
     }
   }, [createSuccess, updateSuccess, navigate, dispatch]);
 
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -216,7 +224,9 @@ export default function AddCategory({ categoryId }) {
             </div>
             {error && <div className="col-12 text-danger">{error}</div>}
             <div className="col-12 d-flex justify-content-center x_btn_main">
-              <button type="button" className="btn btn-secondary mx-2" onClick={() => navigate('/category-list')}>Cancel</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={() => window.location.reload()}>
+                Cancel
+              </button>
               <button type="submit" className="btn btn-primary mx-2" disabled={loading}>
                 {loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create')}
               </button>

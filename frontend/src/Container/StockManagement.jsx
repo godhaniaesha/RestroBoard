@@ -200,6 +200,7 @@ function StockManagement() {
               </tbody>
             </table>
           )}
+        </div>
           {totalPages > 1 && (
             <div className="Z_pagination_container">
               <button
@@ -269,7 +270,6 @@ function StockManagement() {
               </button>
             </div>
           )}
-        </div>
       </div>
       <DeleteConfirmationModal
         isOpen={isModalOpen}

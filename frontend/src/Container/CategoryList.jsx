@@ -8,6 +8,11 @@ import DeleteConfirmationModal from "../Component/DeleteConfirmationModal";
 import Spinner from "../Spinner";
 import { useNavigate } from "react-router-dom";
 
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength) + '..' : text;
+}
+
 function CategoryList() {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // No longer needed
@@ -97,7 +102,7 @@ function CategoryList() {
                             <img
                               // ${IMG_URL}${category.image}
                               src={`http://localhost:3000${cat.category_image}`}
-                              alt={cat.category_name}
+                              alt= {truncateText(cat.category_name, 5)}
                               style={{
                                 width: 40,
                                 height: 40,
@@ -113,10 +118,10 @@ function CategoryList() {
                           className="Z_empListTd"
                           
                         >
-                          {cat.category_name}
+                          {truncateText(cat.category_name, 15)}
                         </td>
                         <td className="Z_empListTd">
-                          {cat.category_description}
+                          {truncateText(cat.category_description, 50)}
                         </td>
                         <td className="Z_SM_Td">
                           <button
@@ -154,6 +159,7 @@ function CategoryList() {
                   )}
               </tbody>
             </table>
+          </div>
             {totalPages > 1 && (
             <div className="Z_pagination_container">
               <button
@@ -213,7 +219,6 @@ function CategoryList() {
               </button>
             </div>
             )}
-          </div>
         </div>
       </section>
       <DeleteConfirmationModal

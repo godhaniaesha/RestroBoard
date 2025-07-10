@@ -227,67 +227,67 @@ function EmployeeList({ setActiveItem }) {
                     )}
                   </tbody>
                 </table>
-                {totalPages > 1 && (
+              </>
+            )}
+            {totalPages > 1 && (
 
-                <div className="Z_pagination_container">
+            <div className="Z_pagination_container">
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaCaretLeft />
+              </button>
+              {totalPages <= 4 ? (
+                [...Array(totalPages)].map((_, idx) => (
                   <button
-                    className="Z_pagination_btn"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    key={idx + 1}
+                    className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(idx + 1)}
                   >
-                    <FaCaretLeft />
+                    {idx + 1}
                   </button>
-                  {totalPages <= 4 ? (
-                    [...Array(totalPages)].map((_, idx) => (
-                      <button
-                        key={idx + 1}
-                        className={`Z_pagination_page${currentPage === idx + 1 ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(idx + 1)}
-                      >
-                        {idx + 1}
-                      </button>
-                    ))
-                  ) : (
-                    <>
-                      <button
-                        className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(1)}
-                      >1</button>
-                      {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
-                      {currentPage > 2 && currentPage < totalPages - 1 && (
-                        <button
-                          className="Z_pagination_page Z_pagination_active"
-                          onClick={() => handlePageChange(currentPage)}
-                        >
-                          {currentPage}
-                        </button>
-                      )}
-                      {currentPage < totalPages - 1 && (
-                        <button
-                          className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
-                          onClick={() => handlePageChange(totalPages - 1)}
-                        >
-                          {totalPages - 1}
-                        </button>
-                      )}
-                      <button
-                        className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
-                        onClick={() => handlePageChange(totalPages)}
-                      >
-                        {totalPages}
-                      </button>
-                    </>
+                ))
+              ) : (
+                <>
+                  <button
+                    className={`Z_pagination_page${currentPage === 1 ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(1)}
+                  >1</button>
+                  {currentPage > 3 && <span className="Z_pagination_ellipsis">...</span>}
+                  {currentPage > 2 && currentPage < totalPages - 1 && (
+                    <button
+                      className="Z_pagination_page Z_pagination_active"
+                      onClick={() => handlePageChange(currentPage)}
+                    >
+                      {currentPage}
+                    </button>
+                  )}
+                  {currentPage < totalPages - 1 && (
+                    <button
+                      className={`Z_pagination_page${currentPage === totalPages - 1 ? ' Z_pagination_active' : ''}`}
+                      onClick={() => handlePageChange(totalPages - 1)}
+                    >
+                      {totalPages - 1}
+                    </button>
                   )}
                   <button
-                    className="Z_pagination_btn"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    className={`Z_pagination_page${currentPage === totalPages ? ' Z_pagination_active' : ''}`}
+                    onClick={() => handlePageChange(totalPages)}
                   >
-                    <FaCaretRight />
-                    </button>
-                  </div>
-                )}
-              </>
+                    {totalPages}
+                  </button>
+                </>
+              )}
+              <button
+                className="Z_pagination_btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <FaCaretRight />
+                </button>
+              </div>
             )}
           </div>
         </div>

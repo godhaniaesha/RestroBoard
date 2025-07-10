@@ -144,6 +144,7 @@ function PendingLeave() {
               )}
             </tbody>
           </table>
+        </div>
           <div className="Z_pagination_container">
             <button
               className="Z_pagination_btn"
@@ -201,7 +202,6 @@ function PendingLeave() {
               <FaCaretRight />
             </button>
           </div>
-        </div>
       </div>
     </section>
   );

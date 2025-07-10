@@ -10,7 +10,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ITEMS_PER_PAGE = 5;
-
+function truncateText(text, maxLength) {
+  if (!text) return '';
+  return text.length > maxLength ? text.slice(0, maxLength) + '..' : text;
+}
 function SupplierList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -97,11 +100,11 @@ function SupplierList() {
                       <td className="Z_empListTd">
                         <img
                           src={`http://localhost:3000${sup.supplyer_image}`}
-                          alt={sup.name}
+                          alt= {truncateText(sup.name, 5)}
                           className="Z_empListPhoto"
                         />
                       </td>
-                      <td className="Z_empListTd">{sup.name}</td>
+                      <td className="Z_empListTd">{truncateText(sup.name, 15)}</td>
                       <td className="Z_empListTd">{sup.phone}</td>
                       <td className="Z_empListTd">{sup.email}</td>
                       <td className="Z_empListTd">{sup.whatsapp_number}</td>
