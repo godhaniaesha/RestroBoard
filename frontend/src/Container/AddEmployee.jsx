@@ -325,17 +325,18 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
               <label htmlFor="email" className="form-label">
                 Email Address
               </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                placeholder="name@example.com"
-                value={formState.email}
-                onChange={handleInputChange}
-                required
-                maxLength={100}
-              />
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="name@example.com"
+                  value={formState.email}
+                  onChange={handleInputChange}
+                  required
+                  maxLength={100}
+                  autoComplete="new-email"
+                />
             </div>
 
             <div className="col-md-6">
@@ -361,7 +362,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                   Password
                 </label>
                 <div className="position-relative">
-                  <input
+                <input
                     type={showPassword ? "text" : "password"}
                     className="form-control"
                     id="password"
@@ -371,6 +372,7 @@ function AddEmployee({ employeeId, onSuccess, onCancel}) {
                     onChange={handleInputChange}
                     required
                     maxLength={30}
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"

@@ -229,6 +229,7 @@ function EmployeeList({ setActiveItem }) {
                 </table>
               </>
             )}
+          </div>
             {totalPages > 1 && (
 
             <div className="Z_pagination_container">
@@ -289,7 +290,6 @@ function EmployeeList({ setActiveItem }) {
                 </button>
               </div>
             )}
-          </div>
         </div>
       </section>
       <DeleteConfirmationModal
